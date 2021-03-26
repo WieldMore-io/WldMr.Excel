@@ -2,6 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net461</TargetFrameworks>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <PackageId>WldMr.Excel.Utilities</PackageId>
     <Version>0.0.1</Version>
     <Company>Wieldmore IM Ltd</Company>
