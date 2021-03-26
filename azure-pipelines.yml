@@ -12,6 +12,7 @@ variables:
    patch: $[counter(format('{0}.{1}.{2}', variables['Major'], variables['Minor'], variables['Revision']), 0)]
    packageVersion: $(major).$(minor).$(revision).$(patch)-preview
    NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
+   nugetApiKey: $(NUGET_API_KEY)
 
 name: $(major).$(minor).$(revision).$(patch)-preview
 
@@ -22,7 +23,7 @@ steps:
     command: custom
     custom: tool
     arguments: restore
-  
+
 - task: DotNetCoreCLI@2
   displayName: 'dotnet paket restore'
   inputs:
@@ -49,12 +50,13 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
 
-
-# - task: DotNetCoreCLI@2
-#   displayName: 'dotnet push'
-#   inputs:
-#     command: 'push'
-#     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-#     nuGetFeedType: 'internal'
-#     publishVstsFeed: '67473a16-5083-4137-baa3-2f71cd705f9b'
-
+- task: DotNetCoreCLI@2
+  displayName: Push to nuget.org
+  condition: and(succeeded(), eq(variables['Build.Repository.Uri'], 'https://github.com/WieldMore-io/WldMr.Excel.git'))
+  inputs:
+    command: custom
+    custom: nuget
+    arguments: >
+      push
+      -s https://api.nuget.org/v3/index.json
+      -k $(nugetApiKey) 
