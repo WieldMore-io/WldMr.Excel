@@ -6,8 +6,8 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-   major: 1
-   minor: 0
+   major: 0
+   minor: 1
    revision: 0
    patch: $[counter(format('{0}.{1}.{2}', variables['Major'], variables['Minor'], variables['Revision']), 0)]
    packageVersion: $(major).$(minor).$(revision).$(patch)
@@ -18,9 +18,10 @@ name: $(major).$(minor).$(revision).$(patch)
 steps:
 - task: Cache@2
   inputs:
-    key: 'paket | CommonDataLogic_v1 | "$(Agent.OS)" | paket.lock'
+    key: 'paket | WldMrExcel_1 | "$(Agent.OS)" | paket.lock'
     restoreKeys: |
-      paket | CommonDataLogic_v1 | "$(Agent.OS)" | paket.lock
+      paket | WldMrExcel_1 | "$(Agent.OS)" | paket.lock
+      paket | WldMrExcel_1 | "$(Agent.OS)"
     path: $(NUGET_PACKAGES)
   displayName: Cache NuGet/Paket packages
 
@@ -39,9 +40,10 @@ steps:
     arguments: 'restore'
 
 - task: DotNetCoreCLI@2
-  displayName: 'dotnet restore'
+  displayName: 'dotnet build'
   inputs:
-    command: 'restore'
+    command: 'build'
+    configuration: Release
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet pack'
