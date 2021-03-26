@@ -1,0 +1,19 @@
+{
+    "files.exclude": {
+        "**/bin/": true,
+        "**/obj/": true,
+        "**/build/": true,
+        "**/dist/": true,
+        "**/node_modules/": true,
+        ".ionide/": true,
+        ".local-chromium/": true,
+        ".vs/": true,
+        ".paket/": true,
+        "paket-files/": true
+    },
+    "[fsharp]": {
+        "editor.rulers": [
+            100
+        ]
+    }
+}

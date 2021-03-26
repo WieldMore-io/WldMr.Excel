@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net461</TargetFrameworks>
+    <PackageId>WldMr.Excel.Functions</PackageId>
+    <Version>0.0.1</Version>
+    <Company>Wieldmore IM Ltd</Company>
+    <Authors>PY Rivaille</Authors>
+    <Product>Wieldmore CommonDataLogic layer</Product>
+    <Description>Generic Excel functions written with ExcelDna and F#</Description>
+    <Copyright>Copyright © 2021 PY Rivaille, Wieldmore IM Ltd</Copyright>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="xlDate.fs" />
+    <Compile Include="xlFormat.fs" />
+    <Compile Include="xlRange.fs" />
+    <Compile Include="xlStack.fs" />
+    <Compile Include="xlString.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../WldMr.Excel.Utilities/WldMr.Excel.Utilities.fsproj"/>
+  </ItemGroup>
+  <Import Project="..\.paket\Paket.Restore.targets" />
+</Project>

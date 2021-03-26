@@ -1,0 +1,68 @@
+trigger:
+- master
+
+pool:
+  name: Azure Pipelines
+  vmImage: 'windows-latest'
+
+variables:
+   major: 1
+   minor: 0
+   revision: 0
+   patch: $[counter(format('{0}.{1}.{2}', variables['Major'], variables['Minor'], variables['Revision']), 0)]
+   packageVersion: $(major).$(minor).$(revision).$(patch)
+   NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
+
+name: $(major).$(minor).$(revision).$(patch)
+
+steps:
+- task: Cache@2
+  inputs:
+    key: 'paket | CommonDataLogic_v1 | "$(Agent.OS)" | paket.lock'
+    restoreKeys: |
+      paket | CommonDataLogic_v1 | "$(Agent.OS)" | paket.lock
+    path: $(NUGET_PACKAGES)
+  displayName: Cache NuGet/Paket packages
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet tool restore'
+  inputs:
+    command: custom
+    custom: tool
+    arguments: restore
+  
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet paket restore'
+  inputs:
+    command: custom
+    custom: paket
+    arguments: 'restore'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet restore'
+  inputs:
+    command: 'restore'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet pack'
+  inputs:
+    command: 'pack'
+    packagesToPack: '**/*.fsproj'
+    versioningScheme: 'byEnvVar'
+    versionEnvVar: 'packageVersion'
+    configuration: Release
+    arguments: '/p:Version=$(packageVersion) /p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion)'
+    # nobuild: true
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+
+
+# - task: DotNetCoreCLI@2
+#   displayName: 'dotnet push'
+#   inputs:
+#     command: 'push'
+#     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+#     nuGetFeedType: 'internal'
+#     publishVstsFeed: '67473a16-5083-4137-baa3-2f71cd705f9b'
+

@@ -1,0 +1,28 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+[*]
+indent_style = space
+end_of_line = crlf
+charset = utf-8
+trim_trailing_whitespace = false
+insert_final_newline = false
+
+[*.fs]
+indent_size = 2
+max_line_length=100
+fsharp_max_value_binding_width=100
+fsharp_single_argument_web_mode=true
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+
+[*.fsproj]
+indent_size = 2
+charset = utf-8-bom
+
+[*.csproj]
+indent_size = 2
+charset = utf-8-bom

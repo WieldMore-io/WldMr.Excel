@@ -1,0 +1,19 @@
+STORAGE: NONE
+RESTRICTION: == net461
+NUGET
+  remote: https://api.nuget.org/v3/index.json
+    ExcelDna.Integration (1.1)
+    ExcelDna.Interop (14.0.1)
+    ExcelDna.Registration (1.1)
+      ExcelDna.Integration (>= 1.1)
+    ExcelDna.Registration.FSharp (1.1)
+      ExcelDna.Integration (>= 1.1)
+      ExcelDna.Interop (>= 14.0)
+      ExcelDna.Registration (>= 1.1)
+    FSharp.Core (5.0.1)
+    FSharpPlus (1.1.7)
+      FSharp.Core (>= 4.6.2)
+      System.ValueTuple (>= 4.4)
+    FsToolkit.ErrorHandling (2.1.2)
+    System.ValueTuple (4.5)
+    TypeShape (9.0)
