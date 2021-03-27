@@ -1,5 +1,5 @@
 trigger:
-- master
+- '*'
 
 pool:
   name: Azure Pipelines
@@ -13,6 +13,7 @@ variables:
    packageVersion: $(major).$(minor).$(revision).$(patch)-preview
    NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
    nugetApiKey: $(NUGET_API_KEY)
+   isNotaPR: $[ne(variables['Build.Reason'], 'PullRequest')]
 
 name: $(major).$(minor).$(revision).$(patch)-preview
 
@@ -45,18 +46,17 @@ steps:
     versionEnvVar: 'packageVersion'
     configuration: Release
     arguments: '/p:Version=$(packageVersion) /p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion)'
-    # nobuild: true
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
 
 - task: DotNetCoreCLI@2
   displayName: Push to nuget.org
-  condition: and(succeeded(), eq(variables['Build.Repository.Uri'], 'https://github.com/WieldMore-io/WldMr.Excel.git'))
+  condition: and(succeeded(), eq(variables.pushToNugetOrg, true), eq(variables.isNotaPR, true))
   inputs:
     command: custom
     custom: nuget
     arguments: >
-      push
+      push $(Build.ArtifactStagingDirectory)/*.nupkg
       -s https://api.nuget.org/v3/index.json
-      -k $(nugetApiKey) 
+      -k $(nugetApiKey)
