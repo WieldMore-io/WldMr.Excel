@@ -2,34 +2,52 @@ module WldMr.Excel.String.Format
 
 open ExcelDna.Integration
 open FSharpPlus
+open FsToolkit.ErrorHandling
 
 open WldMr.Excel.Helpers
 
-[<ExcelFunction(Category= "WldMr.String", 
-  Description= """Format an interpolated string
-eg xlFormat("dd-mmm-yy", A1, "d")
-https://docs.microsoft.com/en-us/dotnet/standard/base-types/formatting-types""",
-  HelpTopic="https://docs.microsoft.com/en-us/dotnet/standard/base-types/formatting-types"
-)
-  >]
-let xlFormatA (s:string, o1:obj, t1:obj, o2: obj, t2:obj, o3: obj, t3:obj, o4: obj, t4:obj) =
-  let formatValue (o: obj) (t: obj) =
-    match (o, t) with
-    | (ExcelMissing _, ExcelMissing _) -> "" :> obj |> Result.Ok
-    | (_, _) -> 
-      match t |> XlObj.toString |>> String.toLower with
-      | Ok "d" -> o |> XlObj.toFloat |> map (System.DateTime.FromOADate >> box)
-      | Ok "i" -> o |> XlObj.toFloat |>> (int >> box)
-      | Ok "f" -> o |> XlObj.toFloat |>> box
-      | Ok "s" -> o |> XlObj.toString |>> box
-      | _ -> "Invalid format specifier. Use d, i, f, or s." |> Error
+[<ExcelFunction(Category = "WldMr.String",
+                Description = """Formats an interpolated string as in the .Net world"
+\teg xlFormat("dd-mmm-yy", A1, "d")
+See help link for more details about the syntax""",
+                HelpTopic = "https://docs.microsoft.com/en-us/dotnet/standard/base-types/formatting-types")>]
+let xlFormatA
+  (
+    s: string,
+    o1: obj, t1: obj,
+    o2: obj, t2: obj,
+    o3: obj, t3: obj,
+    o4: obj, t4: obj,
+    o5: obj, t5: obj,
+    o6: obj, t6: obj,
+    o7: obj, t7: obj,
+    o8: obj, t8: obj
+  ) =
+  let convertXlObj (o: obj) (t: obj) =
+    match o, t with
+    | ExcelMissing _, ExcelMissing _ -> "" :> obj |> Ok
+    | _, _ ->
+        match t |> XlObj.toString |>> String.toLower with
+        | Ok "d" ->
+            o |> XlObj.toFloat
+            |>> (System.DateTime.FromOADate >> box)
+        | Ok "i" -> o |> XlObj.toFloat |>> (int >> box)
+        | Ok "f" -> o |> XlObj.toFloat |>> box
+        | Ok "s" -> o |> XlObj.toString |>> box
+        | _ ->
+            "Invalid format specifier. Use d, i, f, or s."
+            |> Error
+        |> Validation.ofResult
 
-  let resToFlatten = monad {
-    let! a1 = formatValue o1 t1
-    and! a2 = formatValue o2 t2
-    and! a3 = formatValue o3 t3
-    and! a4 = formatValue o4 t4
-    Result.protect (fun () -> System.String.Format(s, a1, a2, a3, a4) :> obj) () |> Result.mapError (fun err -> $"{err}")
-  }
-  let res = resToFlatten |> Result.flatten
-  res |> XlObj.ofResult
+  validation {
+    let! args =
+      ([ o1; o2; o3; o4; o5; o6; o7; o8 ],
+       [ t1; t2; t3; t4; t5; t6; t7; t8 ])
+      ||> List.map2 convertXlObj
+      |> List.sequenceValidationA
+      |>> List.toArray
+
+    return! (s, args)
+      |> Result.protect (System.String.Format >> box)
+      |> Result.mapError (fun err -> [ $"{err}" ])
+  } |> XlObj.ofResult
