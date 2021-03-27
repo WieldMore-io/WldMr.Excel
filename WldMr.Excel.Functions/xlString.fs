@@ -6,7 +6,6 @@ open FSharpPlus
 open WldMr.Excel.Helpers
 
 
-
 let stringFilter predicate input: obj[,]=
   let f (o: obj) =
     match o with
@@ -15,7 +14,7 @@ let stringFilter predicate input: obj[,]=
   input |> Array2D.map (f >> box)
 
 
-[<ExcelFunction(Category= "WldMr.String", 
+[<ExcelFunction(Category= "WldMr.String",
   Description= """ """,
   HelpTopic=""
 )
@@ -25,7 +24,7 @@ let xlStringStartsWith (input: obj[,], subString:string): obj[,] =
   |> stringFilter (String.startsWith subString)
 
 
-[<ExcelFunction(Category= "WldMr.String", 
+[<ExcelFunction(Category= "WldMr.String",
   Description= """ """,
   HelpTopic=""
 )
@@ -34,7 +33,7 @@ let xlStringEndsWith (input: obj[,], subString:string): obj[,] =
   input
   |> stringFilter (String.endsWith subString)
 
-[<ExcelFunction(Category= "WldMr.String", 
+[<ExcelFunction(Category= "WldMr.String",
   Description= """ """,
   HelpTopic=""
 )
