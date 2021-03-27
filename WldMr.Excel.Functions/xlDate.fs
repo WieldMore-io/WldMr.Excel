@@ -34,61 +34,11 @@ let rec ithNthDayOfWeek i nth wday dt =
   | 0 -> dt
   | i -> dt |> nextNthDayOfWeek nth wday |> ithNthDayOfWeek (i - 1) nth wday
 
-
-let thirdFridayForMonth y m =
-  let firstDay = DateTime(y, m, 1).DayOfWeek |> int  // Sunday is 0
-  let firstFriday = (6 - firstDay + 6) % 7 + 1
-  DateTime(y, m, firstFriday + 14)
-
-
-let thirdFriday (dt: DateTime) =
-  let m = (12 - dt.Month) % 3 |> dt.AddMonths
-  thirdFridayForMonth m.Year m.Month
-
-let nextThirdFriday dt =
-  let a = thirdFriday dt
-  if a <= dt then
-    dt.AddMonths(3) |> thirdFriday
-  else
-    a
-
-let rec nthThirdFriday n dt =
-  match n with
-  | 0 -> dt
-  | n -> dt |> nextThirdFriday |> nthThirdFriday (n - 1)
-
-
 let validateNthPeriod i =
   if i < 1 || i > 1000 then
     Error ["arg 'NthPeriod' should be between 1 and 1000."]
   else
     Ok i
-
-
-[<ExcelFunction(Category= "WldMr.Date", Description= "Returns the next quarterly third friday")>]
-let xlDateThirdFriday(fromDate: obj, nthPeriod: obj) =
-  let nR =
-    match nthPeriod with
-    | ExcelMissing _
-    | ExcelEmpty _
-    | ExcelString "" -> Ok 1
-    | o ->
-        o
-        |> XlObj.toInt
-        |> Result.mapError (sprintf "arg 'NthPeriod': %s" >> fun x -> [x])
-        |> Validation.bind validateNthPeriod
-
-  let refDateR =
-    match fromDate with
-    | ExcelMissing _
-    | ExcelEmpty _ -> DateTime.Today |> Ok
-    | _ -> XlObj.toDate fromDate |> Result.mapError (sprintf "arg 'RefDate': %s" >> (fun x -> [x]))
-
-  validation {
-    let! n = nR
-    and! refDate = refDateR
-    return nthThirdFriday n refDate |> box
-  } |> XlObj.ofValidation
 
 [<ExcelFunction(Category= "WldMr.Date", Description= "Returns the next quarterly third friday")>]
 let xlDateNthWeekdayOfMonth(fromDate: obj, dayOfWeek: int, nthDay: int, nthPeriod: obj) =
@@ -100,17 +50,26 @@ let xlDateNthWeekdayOfMonth(fromDate: obj, dayOfWeek: int, nthDay: int, nthPerio
     | o ->
         o
         |> XlObj.toInt
-        |> Result.mapError (sprintf "arg 'NthPeriod': %s" >> fun x -> [x])
+        |> Result.mapError (fun e -> [$"arg 'NthPeriod': {e}"])
         |> Validation.bind validateNthPeriod
 
   let refDateR =
     match fromDate with
     | ExcelMissing _
     | ExcelEmpty _ -> DateTime.Today |> Ok
-    | _ -> XlObj.toDate fromDate |> Result.mapError (sprintf "arg 'RefDate': %s" >> (fun x -> [x]))
+    | _ -> XlObj.toDate fromDate |> Result.mapError (fun e -> [$"arg 'RefDate': {e}"])
 
   validation {
     let! n = nR
     and! refDate = refDateR
     return ithNthDayOfWeek nthDay dayOfWeek n refDate |> box
   } |> XlObj.ofValidation
+
+[<ExcelFunction(Category= "WldMr.Date", Description= "Returns the next quarterly third friday")>]
+let xlDateThirdFriday(fromDate: obj, nthPeriod: obj) =
+  xlDateNthWeekdayOfMonth(fromDate, 5, 3, nthPeriod)
+
+
+[<ExcelFunction(Category= "WldMr.Date", Description= "Returns the next quarterly third friday")>]
+let xlDateThirdWednesday(fromDate: obj, nthPeriod: obj) =
+  xlDateNthWeekdayOfMonth(fromDate, 3, 3, nthPeriod)
