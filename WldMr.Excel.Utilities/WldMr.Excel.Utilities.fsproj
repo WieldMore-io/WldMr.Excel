@@ -10,8 +10,14 @@
     <Product>Wieldmore CommonDataLogic layer</Product>
     <Description>FSharp utilities for ExcelDna Addins</Description>
     <Copyright>Copyright © 2021 PY Rivaille</Copyright>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="helpers.fs" />
     <Compile Include="dnaRegistrationHelper.fs" />
