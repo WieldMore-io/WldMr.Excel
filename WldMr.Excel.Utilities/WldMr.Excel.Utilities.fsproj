@@ -9,7 +9,8 @@
     <Authors>PY Rivaille</Authors>
     <Product>Wieldmore CommonDataLogic layer</Product>
     <Description>FSharp utilities for ExcelDna Addins</Description>
-    <Copyright>Copyright © 2021 PY Rivaille, Wieldmore IM Ltd</Copyright>
+    <Copyright>Copyright © 2021 PY Rivaille</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="helpers.fs" />
