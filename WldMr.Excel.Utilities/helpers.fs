@@ -6,10 +6,13 @@ open FSharpPlus
 
 
 module Result =
+  /// The error value is prefixed by "#!Error! "
   let inline toExcel r = r |> Result.defaultWith (fun e -> $"#Error! {e}" :> obj)
 
 
 module Array2D =
+  /// flattens the array as a list of rows, each row being a list
+  /// simplify further processing (although potentially slower)
   let flattenArray array2d =
     [ for x in [ 0 .. (Array2D.length1 array2d) - 1 ] do
         [ for y in [ 0 .. (Array2D.length2 array2d) - 1 ] do
@@ -59,18 +62,27 @@ module ActivePattern =
 
 module XlObj =
   /// try to extract an int out of excel cell value
+  /// does not attempt any conversion (the original excel value must be a number)
   let toInt (o: obj) =
     match o with | :? float as f -> f |> int |> Ok | _ -> "Expected a number" |> Error
 
+  /// try to extract a float out of excel cell value
+  /// does not attempt any conversion (the original excel value must be a number)
   let toFloat (o: obj) =
     match o with | :? float as f -> f |> Ok | _ -> "Expected a number" |> Error
 
+  /// try to extract a datetime out of excel cell value
+  /// does not attempt any conversion (the original excel value must be a number)
   let toDate (o: obj) =
     match o with | :? float as f -> f |> DateTime.FromOADate |> Ok | _ -> "Expected a date" |> Error
 
+  /// try to extract a date without time out of excel cell value
+  /// does not attempt any conversion (the original excel value must be a number)
   let toDateNoTime (o: obj) =
     match o with | :? float as f -> f |> int |> float |> DateTime.FromOADate |> Ok | _ -> "Expected a date" |> Error
 
+  /// try to extract a string without time out of excel cell value
+  /// does not attempt any conversion (the original excel value must be a string)
   let toString (o: obj) =
     match o with | :? string as s -> s |> Ok | _ -> "Expected a string" |> Error
 
@@ -88,12 +100,16 @@ module XlObj =
     | _ ->  Some false |> Ok
 
 
+  /// boxes the float
+  /// if its value is NaN, it is replaced by #N/A!
+  /// does not attempt any conversion (the original excel value must be a string)
   let ofFloat f =
     if Double.IsNaN f then
       ExcelError.ExcelErrorNA :> obj
     else
       f |> box
 
+  /// Summarize the number of errors and returns them prefixed by "#Error!""
   let ofValidation (t: Result<obj, string list>): obj =
     let errorMessage errors =
       let sep = "; "
