@@ -52,7 +52,7 @@ steps:
 
 - task: GithubRelease@0 
   displayName: Create GitHub Release
-  condition: and(succeeded(), eq(variables['Build.Repository.Uri'], 'https://github.com/WieldMore-io/WldMr.Excel.git'))
+  condition: and(succeeded(), eq(variables.pushToGitHubReleases, true))
   inputs:
     gitHubConnection: github.com_PierreYvesR
     repositoryName: WieldMore-io/WldMr.Excel
