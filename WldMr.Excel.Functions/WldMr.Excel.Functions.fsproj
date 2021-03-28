@@ -23,6 +23,7 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="rtdToday.fs" />
     <Compile Include="xlDate.fs" />
     <Compile Include="xlFormat.fs" />
     <Compile Include="xlRange.fs" />
