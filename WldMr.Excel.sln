@@ -3,9 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.6.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WldMr.Excel.Utilities", "WldMr.Excel.Utilities\WldMr.Excel.Utilities.fsproj", "{05518AE8-E253-4546-A59C-376A481FD38D}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "WldMr.Excel.Utilities", "WldMr.Excel.Utilities\WldMr.Excel.Utilities.fsproj", "{05518AE8-E253-4546-A59C-376A481FD38D}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WldMr.Excel.Functions", "WldMr.Excel.Functions\WldMr.Excel.Functions.fsproj", "{041043B4-2D14-4999-9C3D-2A9B93CAEEBC}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "WldMr.Excel.Functions", "WldMr.Excel.Functions\WldMr.Excel.Functions.fsproj", "{041043B4-2D14-4999-9C3D-2A9B93CAEEBC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{072839D5-95AE-4AE9-9C07-CBB77413E62B}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		azure-pipelines.yml = azure-pipelines.yml
+		fsharplint.json = fsharplint.json
+		LICENSE = LICENSE
+		paket.dependencies = paket.dependencies
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +26,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{05518AE8-E253-4546-A59C-376A481FD38D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -44,5 +52,11 @@ Global
 		{041043B4-2D14-4999-9C3D-2A9B93CAEEBC}.Release|x64.Build.0 = Release|Any CPU
 		{041043B4-2D14-4999-9C3D-2A9B93CAEEBC}.Release|x86.ActiveCfg = Release|Any CPU
 		{041043B4-2D14-4999-9C3D-2A9B93CAEEBC}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6AA08573-AB63-46ED-867C-51209C984FB3}
 	EndGlobalSection
 EndGlobal
