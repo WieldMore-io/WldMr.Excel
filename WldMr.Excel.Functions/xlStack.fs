@@ -34,7 +34,7 @@ let xlStackR (x:obj[,], y:obj[,]) =
   let x0, x1 = x |> getSize
   let y0, y1 = x |> getSize
   let res = Array2D.create (x0 + y0) (max x1 y1)  ("" |> box)
-  if y0 > 0 then
+  if x0 > 0 then
     for i = 0 to x0 - 1 do
       for j = 0 to x1 - 1 do
         res.[i, j] <- x.[i,j]
