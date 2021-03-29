@@ -8,6 +8,7 @@ open FSharpPlus
 module Result =
   /// The error value is prefixed by "#!Error! "
   let inline toExcel r = r |> Result.defaultWith (fun e -> $"#Error! {e}" :> obj)
+  let mapArgError errMsg = Result.mapError (fun e -> [$"Arg '{errMsg}': {e}"])
 
 
 module Array2D =
@@ -61,23 +62,29 @@ module ActivePattern =
 
 
 module XlObj =
-  /// try to extract an int out of excel cell value
-  /// does not attempt any conversion (the original excel value must be a number)
+  /// Defaults the value if the input is Missing, Empty or ""
+  let defaultValue defaultFun (o: obj) =
+    match o with
+    | ExcelMissing _ | ExcelEmpty _ | ExcelString "" -> defaultFun () |> box
+    | o -> o
+
+  /// Tries to extract an int out of excel cell value
+  /// Does not attempt any conversion (the original excel value must be a number)
   let toInt (o: obj) =
     match o with | :? float as f -> f |> int |> Ok | _ -> "Expected a number" |> Error
 
-  /// try to extract a float out of excel cell value
-  /// does not attempt any conversion (the original excel value must be a number)
+  /// Tries to extract a float out of excel cell value
+  /// Does not attempt any conversion (the original excel value must be a number)
   let toFloat (o: obj) =
     match o with | :? float as f -> f |> Ok | _ -> "Expected a number" |> Error
 
-  /// try to extract a datetime out of excel cell value
-  /// does not attempt any conversion (the original excel value must be a number)
+  /// Tries to extract a datetime out of excel cell value
+  /// Does not attempt any conversion (the original excel value must be a number)
   let toDate (o: obj) =
     match o with | :? float as f -> f |> DateTime.FromOADate |> Ok | _ -> "Expected a date" |> Error
 
-  /// try to extract a date without time out of excel cell value
-  /// does not attempt any conversion (the original excel value must be a number)
+  /// Tries to extract a date without time out of excel cell value
+  /// Does not attempt any conversion (the original excel value must be a number)
   let toDateNoTime (o: obj) =
     match o with | :? float as f -> f |> int |> float |> DateTime.FromOADate |> Ok | _ -> "Expected a date" |> Error
 
