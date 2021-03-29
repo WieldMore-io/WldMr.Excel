@@ -9,7 +9,7 @@
     <Compile Include="xlDateTest.fs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../../WldMr.Excel.Functions/WldMr.Excel.Functions.fsproj" />
+    <ProjectReference Include="../../src/WldMr.Excel.Functions/WldMr.Excel.Functions.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
