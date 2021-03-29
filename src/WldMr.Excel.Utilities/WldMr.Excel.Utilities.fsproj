@@ -27,5 +27,5 @@
     <Compile Include="helpers.fs" />
     <Compile Include="dnaRegistrationHelper.fs" />
   </ItemGroup>
-  <Import Project="..\.paket\Paket.Restore.targets" />
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

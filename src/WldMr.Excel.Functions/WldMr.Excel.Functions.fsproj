@@ -20,7 +20,7 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
     <None Include="paket.references" />
@@ -32,7 +32,7 @@
     <Compile Include="xlString.fs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../WldMr.Excel.Utilities/WldMr.Excel.Utilities.fsproj"/>
+    <ProjectReference Include="../WldMr.Excel.Utilities/WldMr.Excel.Utilities.fsproj" />
   </ItemGroup>
-  <Import Project="..\.paket\Paket.Restore.targets" />
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
