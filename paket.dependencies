@@ -8,4 +8,10 @@ nuget ExcelDna.Integration
 nuget ExcelDna.Registration.FSharp
 nuget FSharpPlus
 nuget FsToolkit.ErrorHandling
+nuget FsUnit
 nuget TypeShape
+
+
+nuget Microsoft.NET.Test.Sdk
+nuget NUnit
+nuget NUnit3TestAdapter
