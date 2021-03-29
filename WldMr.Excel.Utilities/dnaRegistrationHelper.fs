@@ -1,4 +1,4 @@
-module WldMr.XlUtilities.DnaRegistrationHelper
+module WldMr.Excel.Utilities.Registration
 
 open System
 open System.Linq.Expressions
