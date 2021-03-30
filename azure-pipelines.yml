@@ -15,7 +15,7 @@ variables:
   nugetApiKey: $(NUGET_API_KEY)
   isNotaPR: $[ne(variables['Build.Reason'], 'PullRequest')]
   ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-    buildName: $['PR on $(major).$(minor)']
+    buildName: ${{ format('PR on {0}.{1}', variables['major'] variables['minor']) }}
   ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
     ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
       buildName: $(major).$(minor).$(revision).$(patch)-preview
