@@ -23,7 +23,7 @@ variables:
       buildPrefix: 'branch - '
 
 
-name: $(buildPrefix)$(major).$(minor).$(revision).$(patch)
+name: '$(buildPrefix)$(major).$(minor).$(revision).$(patch) - '
 
 steps:
 - task: DotNetCoreCLI@2
