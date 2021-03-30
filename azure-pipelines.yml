@@ -14,12 +14,12 @@ variables:
   NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
   nugetApiKey: $(NUGET_API_KEY)
   isNotaPR: $[ne(variables['Build.Reason'], 'PullRequest')]
-  ${{ eq(variables['Build.Reason'], 'PullRequest') }}:
+  ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
     buildName: 'PR on $(major).$(minor)'
-  ${{ ne(variables['Build.Reason'], 'PullRequest') }}:
+  ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
     ${{ eq(variables['Build.SourceBranchName'], 'master') }}:
       buildName: $(major).$(minor).$(revision).$(patch)-preview
-    ${{ ne(variables['Build.SourceBranchName'], 'master') }}:
+    ${{ if ne(variables['Build.SourceBranchName'], 'master') }}:
         buildName: 'Not master: $(major).$(minor).$(revision).$(patch)-preview'
 
 
