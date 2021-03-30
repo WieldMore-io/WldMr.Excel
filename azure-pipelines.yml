@@ -17,13 +17,13 @@ variables:
   ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
     buildName: 'PR on $(major).$(minor)'
   ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
-    ${{ eq(variables['Build.SourceBranchName'], 'master') }}:
+    ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
       buildName: $(major).$(minor).$(revision).$(patch)-preview
     ${{ if ne(variables['Build.SourceBranchName'], 'master') }}:
         buildName: 'Not master: $(major).$(minor).$(revision).$(patch)-preview'
 
 
-name: $(major).$(minor).$(revision).$(patch)-preview
+name: $(buildName)
 
 steps:
 - task: DotNetCoreCLI@2
