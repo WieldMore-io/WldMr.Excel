@@ -20,7 +20,7 @@ variables:
     ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
       buildPrefix: 'master - '
     ${{ if ne(variables['Build.SourceBranchName'], 'master') }}:
-      buildPrefix: 'branch - '
+      buildPrefix: $[ variables['Build.SourceBranchName'] ]
 
 
 name: '$(buildPrefix)$(major).$(minor).$(revision).$(patch) - '
