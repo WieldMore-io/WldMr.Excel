@@ -15,15 +15,15 @@ variables:
   nugetApiKey: $(NUGET_API_KEY)
   isNotaPR: $[ne(variables['Build.Reason'], 'PullRequest')]
   ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-    buildName: $[ format('PR - {0} - ', variables['patch']) ]
+    buildPrefix: 'PR - '
   ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
     ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
-      buildName: $(major).$(minor).$(revision).$(patch)-preview
+      buildPrefix: 'master - '
     ${{ if ne(variables['Build.SourceBranchName'], 'master') }}:
-        buildName: 'Not master: $(major).$(minor).$(revision).$(patch)-preview'
+      buildPrefix: 'branch - '
 
 
-name: $(buildName)
+name: $(buildPrefix)$(buildName)
 
 steps:
 - task: DotNetCoreCLI@2
