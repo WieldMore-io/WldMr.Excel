@@ -7,7 +7,7 @@ open WldMr.Excel.Helpers
 let getSize (x: obj[,]) =
   match x.GetLength 0, x.GetLength 1 with
   | 0, _ | _, 0 -> 0, 0
-  | 1, 1 when ExcelMissing .Value :> obj = x.[0, 0] -> 0, 0
+  | 1, 1 when ExcelMissing.Value :> obj = x.[0, 0] -> 0, 0
   | ls -> ls
 
 
@@ -79,12 +79,14 @@ let xlTrimEmpty (x:obj[,]) =
 
 [<ExcelFunction(Category= "WldMr.Range", Description= "Trim #NA from end of array")>]
 let xlTrimNA (x:obj[,]) =
-  let mutable last0 = -1
-  let mutable last1 = -1
-  let x0 = x.GetLength 0
-  let x1 = x.GetLength 1
+  let x0, x1 = x |> getSize
 
-  while last0 = - 1 do
+  if x0 = 0 || x1 = 0 then
+    [[]] |> array2D
+  else
+    let mutable last0 = -1
+    let mutable last1 = -1
+
     for i = x0 - 1 downto 0 do
       for j = x1 - 1 downto 0 do
         match x.[i,j] with
@@ -93,13 +95,17 @@ let xlTrimNA (x:obj[,]) =
         | _ ->
           last0 <- max i last0
 
-  while last1 = - 1 do
-    for j = x1 - 1 downto 0 do
-      for i = last0 downto 0 do
-        match x.[i,j] with
-        | ExcelMissing _
-        | ExcelError ExcelError.ExcelErrorNA -> ()
-        | _ ->
-          last1 <- max j last1
+    if last0 <> -1 then
+      for j = x1 - 1 downto 0 do
+        for i = last0 downto 0 do
+          match x.[i,j] with
+          | ExcelMissing _
+          | ExcelError ExcelError.ExcelErrorNA -> ()
+          | _ ->
+            last1 <- max j last1
 
-  x.[0..last0, 0..last1]
+    if min last0 last1 = -1 then
+      [[]] |> array2D
+    else
+      x.[0..last0, 0..last1]
+
