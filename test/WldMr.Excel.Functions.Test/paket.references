@@ -1,4 +1,7 @@
 FSharp.Core
+FSharpPlus
+ExcelDna.Integration
+
 FsUnit
 Microsoft.NET.Test.Sdk
 NUnit
