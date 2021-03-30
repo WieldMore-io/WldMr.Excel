@@ -7,44 +7,45 @@ open WldMr.Excel.Helpers
 let getSize (x: obj[,]) =
   match x.GetLength 0, x.GetLength 1 with
   | 0, _ | _, 0 -> 0, 0
+  | 1, 1 when ExcelMissing .Value :> obj = x.[0, 0] -> 0, 0
   | ls -> ls
 
 
 [<ExcelFunction(Category= "WldMr.Range", Description= "Stack two arrays vertically")>]
-let xlStackC (x:obj[,], y:obj[,]) =
+let xlStackH (x:obj[,], y:obj[,]) =
   let x0, x1 = x |> getSize
-  let y0, y1 = x |> getSize
-  let res = Array2D.create (max x0 y0) (x1 + y1)  ("" |> box)
-  if x0 > 0 then
-    for i = 0 to x0 - 1 do
-      for j = 0 to x1 - 1 do
-        res.[i, j] <- x.[i,j]
-  if y0 > 0 then
-    for i = 0 to y0 - 1 do
-      for j = 0 to y1 - 1 do
-        res.[i, j + x1] <- y.[i,j]
+  let y0, y1 = y |> getSize
   if x0 + y0 = 0 then
     ExcelError.ExcelErrorNA |> box
   else
+    let res = Array2D.create (max x0 y0) (x1 + y1)  ("" |> box)
+    if x0 > 0 then
+      for i = 0 to x0 - 1 do
+        for j = 0 to x1 - 1 do
+          res.[i, j] <- x.[i,j]
+    if y0 > 0 then
+      for i = 0 to y0 - 1 do
+        for j = 0 to y1 - 1 do
+          res.[i, j + x1] <- y.[i,j]
     res |> box
 
 
 [<ExcelFunction(Category= "WldMr.Range", Description= "Stack two arrays side by side")>]
-let xlStackR (x:obj[,], y:obj[,]) =
+let xlStackV (x:obj[,], y:obj[,]) =
   let x0, x1 = x |> getSize
-  let y0, y1 = x |> getSize
+  let y0, y1 = y |> getSize
   let res = Array2D.create (x0 + y0) (max x1 y1)  ("" |> box)
-  if x0 > 0 then
-    for i = 0 to x0 - 1 do
-      for j = 0 to x1 - 1 do
-        res.[i, j] <- x.[i,j]
-  if y0 > 0 then
-    for i = 0 to y0 - 1 do
-      for j = 0 to y1 - 1 do
-        res.[i + x0, j] <- y.[i,j]
   if x0 + y0 = 0 then
     ExcelError.ExcelErrorNA |> box
   else
+    if x0 > 0 then
+      for i = 0 to x0 - 1 do
+        for j = 0 to x1 - 1 do
+          res.[i, j] <- x.[i,j]
+    if y0 > 0 then
+      for i = 0 to y0 - 1 do
+        for j = 0 to y1 - 1 do
+          res.[i + x0, j] <- y.[i,j]
     res |> box
 
 
