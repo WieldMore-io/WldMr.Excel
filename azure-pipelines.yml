@@ -6,16 +6,24 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-   major: 0
-   minor: 1
-   revision: 0
-   patch: $[counter(format('{0}.{1}.{2}', variables['Major'], variables['Minor'], variables['Revision']), 0)]
-   packageVersion: $(major).$(minor).$(revision).$(patch)-preview
-   NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
-   nugetApiKey: $(NUGET_API_KEY)
-   isNotaPR: $[ne(variables['Build.Reason'], 'PullRequest')]
+  major: 0
+  minor: 1
+  revision: 0
+  patch: $[counter(format('{0}.{1}.{2}', variables['Major'], variables['Minor'], variables['Revision']), 0)]
+  packageVersion: $(major).$(minor).$(revision).$(patch)-preview
+  NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
+  nugetApiKey: $(NUGET_API_KEY)
+  isNotaPR: $[ne(variables['Build.Reason'], 'PullRequest')]
+  ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+    buildPrefix: 'PR - '
+  ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+    ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
+      buildPrefix: 'master - '
+    ${{ if ne(variables['Build.SourceBranchName'], 'master') }}:
+      buildPrefix: $[ variables['Build.SourceBranchName'] ]
 
-name: $(major).$(minor).$(revision).$(patch)-preview
+
+name: '$(buildPrefix)$(major).$(minor).$(revision).$(patch) - '
 
 steps:
 - task: DotNetCoreCLI@2
