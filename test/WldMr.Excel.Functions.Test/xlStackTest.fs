@@ -22,6 +22,7 @@ module Array2D =
 [<AutoOpen>]
 module Range =
   let singleCell (v:'a) = [[v |> box]] |> array2D
+  let emptyArray: obj[,] = [[]] |> array2D
 
 
 [<TestFixture>]
@@ -35,23 +36,32 @@ type ``xlStackV``() =
   [<Test>]
   member __.``works with cells``() =
     (
-      [[1.0 |> box]] |> array2D,
-      [[2.0 |> box]] |> array2D
+      singleCell 1.0,
+      singleCell 2.0
     )
     |> Range.xlStackV
     |> (fun x -> x :?> obj[,])
     |> Array2D.shouldEqual ( [[1.0 |> box]; [2.0 |> box]] |> array2D )
 
-
-    ([[1.0 |> box]] |> array2D, [[ExcelMissing.Value |> box]] |> array2D)
+    (
+      singleCell 1.0,
+      singleCell ExcelMissing.Value
+    )
     |> Range.xlStackV
     |> (fun x -> x :?> obj[,])
-    |> Array2D.shouldEqual ( [[1.0 |> box]] |> array2D )
+    |> Array2D.shouldEqual (singleCell 1.0)
+
+    (
+      singleCell 1.0,
+      singleCell "a"
+    )
+    |> Range.xlStackV
+    |> (fun x -> x :?> obj[,])
+    |> Array2D.shouldEqual ( [[1.0 |> box]; ["a" |> box]] |> array2D )
 
 
 [<TestFixture>]
 type ``xlStackH``() =
-  let emptyArray: obj[,] = [[]] |> array2D
 
   [<Test>]
   member __.``returns NA when inputs are empty``() =
@@ -60,24 +70,32 @@ type ``xlStackH``() =
   [<Test>]
   member __.``works with cells``() =
     (
-      [[1.0 |> box]] |> array2D,
-      [[2.0 |> box]] |> array2D
+      singleCell 1.0,
+      singleCell 2.0
     )
     |> Range.xlStackH
     |> (fun x -> x :?> obj[,])
     |> Array2D.shouldEqual ( [[1.0 |> box; 2.0 |> box]] |> array2D )
 
-
-    ([[1.0 |> box]] |> array2D, [[ExcelMissing.Value |> box]] |> array2D)
+    (
+      singleCell 1.0,
+      singleCell ExcelMissing.Value
+    )
     |> Range.xlStackH
     |> (fun x -> x :?> obj[,])
-    |> Array2D.shouldEqual ( [[1.0 |> box]] |> array2D )
+    |> Array2D.shouldEqual (singleCell 1.0)
 
+    (
+      singleCell 1.0,
+      singleCell "a"
+    )
+    |> Range.xlStackH
+    |> (fun x -> x :?> obj[,])
+    |> Array2D.shouldEqual ( [[1.0 |> box; "a" |> box]] |> array2D )
 
 
 [<TestFixture>]
 type ``xlTrimNA``() =
-  let emptyArray: obj[,] = [[]] |> array2D
 
   [<Test>]
   member __.``returns empty array when input is NA``() =
