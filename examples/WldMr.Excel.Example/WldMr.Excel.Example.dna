@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DnaLibrary Name="WldMr.Excel.Example" RuntimeVersion="v4.0" xmlns="http://schemas.excel-dna.net/addin/2018/05/dnalibrary">
+  <ExternalLibrary Path="WldMr.Excel.Example.dll" ExplicitExports="false" LoadFromBytes="true" Pack="true" IncludePdb="false" />
+  <ExternalLibrary Path="WldMr.Excel.Functions.dll" ExplicitExports="false" LoadFromBytes="true" Pack="true" IncludePdb="false" />
+</DnaLibrary>
