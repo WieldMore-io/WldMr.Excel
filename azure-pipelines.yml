@@ -51,7 +51,9 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: 'dotnet test'
   inputs:
-    projects: 'src/**/*.fsproj;test/**/*.fsproj'
+    projects: |
+      src/**/*.fsproj
+      test/**/*.fsproj
     command: 'test'
 
 - task: DotNetCoreCLI@2
