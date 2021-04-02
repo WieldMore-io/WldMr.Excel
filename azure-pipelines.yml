@@ -40,14 +40,6 @@ steps:
     custom: paket
     arguments: 'restore'
 
-# - task: DotNetCoreCLI@2
-#   displayName: 'dotnet restore'
-#   inputs:
-#     projects: |
-#       src/**/*.fsproj
-#       test/**/*.fsproj
-#     command: 'restore'
-
 - task: DotNetCoreCLI@2
   displayName: 'dotnet test'
   inputs:
@@ -81,7 +73,6 @@ steps:
     tag: $(packageVersion)
     assets: |
       $(Build.ArtifactStagingDirectory)
-
 
 - task: DotNetCoreCLI@2
   displayName: Push to nuget.org
