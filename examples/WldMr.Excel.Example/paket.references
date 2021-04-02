@@ -1,0 +1,4 @@
+ExcelDna.Addin copy_local: true
+ExcelDna.Integration
+ExcelDna.IntelliSense
+FSharp.Core

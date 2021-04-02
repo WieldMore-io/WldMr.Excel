@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <!--<EmbedUntrackedSources>true</EmbedUntrackedSources>-->
+    <!--<EmbedUntrackedSources>true</EmbedUntrackedSources>-->
+    <!--<DebugType>embedded</DebugType>-->
+    <!--<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
+  </PropertyGroup>
+  <PropertyGroup>
+    <Authors>PY Rivaille</Authors>
+    <Description>An basic example used to quickly test with Excel</Description>
+    <Version>0.0.1</Version>
+    <Copyright>MIT</Copyright>
+    <!-- <PackageId></PackageId> -->
+    <!-- <Version></Version> -->
+    <!-- <Company></Company> -->
+    <!-- <Product></Product> -->
+    <!-- <PackageLicenseExpression></PackageLicenseExpression> -->
+    <!-- <PublishRepositoryUrl>true</PublishRepositoryUrl> -->
+  </PropertyGroup>
+  <!--<PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>-->
+  <!--<ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>-->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <RunExcelDnaPack>false</RunExcelDnaPack>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ExcelDnaAllowPackageReferenceProjectStyle>true</ExcelDnaAllowPackageReferenceProjectStyle>
+    <RunExcelDnaSetDebuggerOptions>false</RunExcelDnaSetDebuggerOptions>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="scripts\GenerateLaunchSettings.fsx" />
+    <None Include="paket.references" />
+    <None Include="DebugSettings.fsx" />
+    <None Include="WldMr.Excel.Example.dna" />
+    <Compile Include="Addin.fs" />
+    <Compile Include="TestFunction.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\WldMr.Excel.Functions\WldMr.Excel.Functions.fsproj" />
+    <ProjectReference Include="..\..\src\WldMr.Excel.Utilities\WldMr.Excel.Utilities.fsproj" />
+  </ItemGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
+</Project>

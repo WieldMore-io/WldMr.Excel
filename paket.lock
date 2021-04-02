@@ -2,7 +2,11 @@ STORAGE: NONE
 RESTRICTION: == net461
 NUGET
   remote: https://api.nuget.org/v3/index.json
+    ExcelDna.AddIn (1.1.1)
+      ExcelDna.Integration (1.1)
     ExcelDna.Integration (1.1)
+    ExcelDna.IntelliSense (1.4.2)
+      ExcelDna.Integration (>= 1.1)
     ExcelDna.Interop (14.0.1)
     ExcelDna.Registration (1.1)
       ExcelDna.Integration (>= 1.1)
