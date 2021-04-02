@@ -43,13 +43,13 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: 'dotnet restore'
   inputs:
-    projects: 'src/**/*.fsproj'
+    projects: 'src/**/*.fsproj;test/**/*.fsproj'
     command: 'restore'
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet test'
   inputs:
-    projects: 'src/**/*.fsproj'
+    projects: 'src/**/*.fsproj;test/**/*.fsproj'
     command: 'test'
 
 - task: DotNetCoreCLI@2
@@ -76,7 +76,7 @@ steps:
     isPreRelease: true
     tag: $(packageVersion)
     assets: |
-      $(Build.ArtifactStagingDirectory)/*.nupkg
+      $(Build.ArtifactStagingDirectory)
 
 
 - task: DotNetCoreCLI@2
@@ -86,6 +86,6 @@ steps:
     command: custom
     custom: nuget
     arguments: >
-      push $(Build.ArtifactStagingDirectory)/*.nupkg
+      push $(Build.ArtifactStagingDirectory)
       -s https://api.nuget.org/v3/index.json
       -k $(nugetApiKey)
