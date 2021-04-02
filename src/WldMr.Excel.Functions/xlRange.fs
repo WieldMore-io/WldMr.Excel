@@ -8,7 +8,7 @@ open ExcelDna.Integration
 
 let parseArg parseF t (errMap: string -> string) (o:obj)=
   match o with
-  | ExcelEmpty _
+  | ExcelMissing _
   | ExcelEmpty _
   | ExcelString "" -> t |> Ok
   | o ->
@@ -19,13 +19,13 @@ let parseArg parseF t (errMap: string -> string) (o:obj)=
 
 [<ExcelFunction(Category= "WldMr.Range",
   Description=
-    "Selects a subrange of rows from the input range.
-The 'Start' and 'End' arguments use the following convention:
-\t 0   means the first row
-\t 1   means the second row
-\t    ... and so on ...
-\t-2   means the second-to-last row
-\t-1   means the last row"
+    "Selects a subrange of rows from the input range.\r\n" +
+      "The 'Start' and 'End' arguments use the following convention:\r\n" +
+      "  0   means the first row\r\n" +
+      "  1   means the second row\r\n" +
+      "       ... and so on ...\r\n" +
+      "  t-2   means the second-to-last row\r\n" +
+      "  t-1   means the last row"
 )>]
 let xlRangeSubRows
   (

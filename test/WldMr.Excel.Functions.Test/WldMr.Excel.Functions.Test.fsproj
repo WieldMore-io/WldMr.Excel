@@ -4,10 +4,11 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="xlStackTest.fs" />
     <None Include="paket.references" />
     <Compile Include="init.fs" />
     <Compile Include="xlDateTest.fs" />
+    <Compile Include="xlRangeTest.fs" />
+    <Compile Include="xlStackTest.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../../src/WldMr.Excel.Functions/WldMr.Excel.Functions.fsproj" />
