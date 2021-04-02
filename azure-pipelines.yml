@@ -43,18 +43,20 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: 'dotnet restore'
   inputs:
+    projects: 'src/**/*.fsproj'
     command: 'restore'
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet test'
   inputs:
+    projects: 'src/**/*.fsproj'
     command: 'test'
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet pack'
   inputs:
     command: 'pack'
-    packagesToPack: '**/*.fsproj'
+    packagesToPack: 'src/**/*.fsproj'
     versioningScheme: 'byEnvVar'
     versionEnvVar: 'packageVersion'
     configuration: Release
