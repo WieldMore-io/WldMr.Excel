@@ -64,8 +64,9 @@ steps:
   inputs:
     command: 'pack'
     packagesToPack: 'src/**/*.fsproj'
-    versioningScheme: 'byEnvVar'
-    versionEnvVar: 'packageVersion'
+    versioningScheme: 'off'
+    nobuild: true
+    #versionEnvVar: 'packageVersion'
     configuration: '$(buildConfiguration)'
 
 - publish: $(Build.ArtifactStagingDirectory)
