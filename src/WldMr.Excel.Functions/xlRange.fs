@@ -54,9 +54,9 @@ let xlSlice
     let endCol = if ec >= 0 then ec else nCols + ec
     let slice = range.[startRow..endRow, startCol..endCol]
     if slice.LongLength = 0L then
-      return slice |> box
-    else
       return ExcelError.ExcelErrorNA |> box
+    else
+      return slice |> box
   }
   res |> XlObj.ofValidation
 
