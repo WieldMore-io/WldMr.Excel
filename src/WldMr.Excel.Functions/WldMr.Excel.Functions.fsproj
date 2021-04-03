@@ -17,8 +17,7 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <DebugType>embedded</DebugType>
 
-    <!-- Any of the following breaks sourcelink-->
-    <!--<EmbedUntrackedSources>true</EmbedUntrackedSources>-->
+    <!-- Any of the following breaks sourcelink -->
     <!--<IncludeSymbols>true</IncludeSymbols>-->
     <!--<SymbolPackageFormat>snupkg</SymbolPackageFormat>-->
     <!--<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>-->
