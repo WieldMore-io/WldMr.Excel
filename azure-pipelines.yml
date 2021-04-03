@@ -58,6 +58,8 @@ steps:
     configuration: Release
     arguments: '/p:Version=$(packageVersion) /p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion)'
 
+- script: echo 'oOo $(TF_BUILD) oOo'
+
 - publish: $(Build.ArtifactStagingDirectory)
   artifact: nupkgs
 
