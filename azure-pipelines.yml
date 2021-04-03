@@ -62,12 +62,11 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: 'dotnet pack'
   inputs:
-    command: 'pack'
-    packagesToPack: 'src/**/*.fsproj'
-    versioningScheme: 'off'
-    nobuild: true
-    #versionEnvVar: 'packageVersion'
-    configuration: '$(buildConfiguration)'
+    command: 'custom'
+    custom: pack
+    projects: src/**/*.fsproj
+    arguments: '-p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion) --configuration $(buildConfiguration)'
+
 
 - publish: $(Build.ArtifactStagingDirectory)
   artifact: nupkgs
