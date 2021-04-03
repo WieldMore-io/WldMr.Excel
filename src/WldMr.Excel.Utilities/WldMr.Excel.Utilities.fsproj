@@ -11,6 +11,7 @@
     <Description>FSharp utilities for ExcelDna Addins</Description>
     <Copyright>Copyright © 2021 PY Rivaille</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/WieldMore-io/WldMr.Excel</PackageProjectUrl>
   </PropertyGroup>
   <PropertyGroup>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
