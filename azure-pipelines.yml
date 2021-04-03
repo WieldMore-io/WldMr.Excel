@@ -9,6 +9,7 @@ variables:
   major: 0
   minor: 1
   revision: 0
+  buildConfiguration: 'Release'
   patch: $[counter(format('{0}.{1}.{2}', variables['Major'], variables['Minor'], variables['Revision']), 0)]
   packageVersion: $(major).$(minor).$(revision).$(patch)-preview
   NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
@@ -41,12 +42,23 @@ steps:
     arguments: 'restore'
 
 - task: DotNetCoreCLI@2
+  displayName: 'dotnet build'
+  inputs:
+    projects: |
+      src/**/*.fsproj
+      test/**/*.fsproj
+    command: 'build'
+    configuration: '$(buildConfiguration)'
+    arguments: '-p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion)'
+
+- task: DotNetCoreCLI@2
   displayName: 'dotnet test'
   inputs:
     projects: |
       src/**/*.fsproj
       test/**/*.fsproj
     command: 'test'
+    configuration: '$(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet pack'
@@ -55,10 +67,7 @@ steps:
     packagesToPack: 'src/**/*.fsproj'
     versioningScheme: 'byEnvVar'
     versionEnvVar: 'packageVersion'
-    configuration: Release
-    arguments: '/p:Version=$(packageVersion) /p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion)'
-
-- script: echo 'oOo $(TF_BUILD) oOo'
+    configuration: '$(buildConfiguration)'
 
 - publish: $(Build.ArtifactStagingDirectory)
   artifact: nupkgs
