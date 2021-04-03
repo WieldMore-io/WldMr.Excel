@@ -81,6 +81,6 @@ steps:
     command: custom
     custom: nuget
     arguments: >
-      push $(Build.ArtifactStagingDirectory)
+      push $(Build.ArtifactStagingDirectory)/*.nupkg $(Build.ArtifactStagingDirectory)/*.snupkg
       -s https://api.nuget.org/v3/index.json
       -k $(nugetApiKey)
