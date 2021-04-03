@@ -20,9 +20,11 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
-  <!--<PropertyGroup Condition="'$(TF_BUILD)' == 'True'">
+  <!-- Breaks SourceLink if enabled -->
+  <!-- <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
+    <DeterministicSourcePaths>true</DeterministicSourcePaths>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-  </PropertyGroup>-->
+  </PropertyGroup> -->
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
