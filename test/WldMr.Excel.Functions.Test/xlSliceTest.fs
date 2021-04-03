@@ -1,4 +1,4 @@
-namespace xlStack
+namespace Range
 
 open NUnit.Framework
 open FSharpPlus

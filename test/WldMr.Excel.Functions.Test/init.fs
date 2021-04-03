@@ -15,7 +15,7 @@ namespace WldMr.Excel
     open System.Diagnostics
 
     [<DebuggerStepThrough>]
-    let shouldEqual (actual: 'a[,]) (expected: 'a[,]) =
+    let shouldEqual (expected: 'a[,]) (actual: 'a[,]) =
       actual |> Array2D.flattenArray |> shouldEqual (expected |> Array2D.flattenArray)
 
 
@@ -23,9 +23,9 @@ namespace WldMr.Excel
   module Range =
     open ExcelDna.Integration
     let singleCell (v:'a) = [[v |> box]] |> array2D
-    let emptyArray: obj[,] = [[]] |> array2D
+    let emptyArray: obj[,] = [] |> array2D
     let missing = ExcelMissing.Value |> box
-    
+
 
   module Test =
     let returnedAnArray (x:obj) =

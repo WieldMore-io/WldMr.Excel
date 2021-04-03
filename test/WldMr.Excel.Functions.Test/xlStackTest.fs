@@ -1,4 +1,4 @@
-namespace xlStack
+namespace Stack
 
 open NUnit.Framework
 open FSharpPlus
@@ -12,11 +12,9 @@ open WldMr.Excel.Helpers
 
 [<TestFixture>]
 type ``xlStackV``() =
-  let emptyArray: obj[,] = [[]] |> array2D
-
   [<Test>]
-  member __.``returns NA when inputs are empty``() =
-    Range.xlStackV(emptyArray, emptyArray) |> should be (equal ExcelError.ExcelErrorNA)
+  member __.``returns empty when inputs are empty``() =
+    Range.xlStackV(emptyArray, emptyArray) |> Array2D.shouldEqual emptyArray
 
   [<Test>]
   member __.``works with cells``() =
@@ -25,7 +23,6 @@ type ``xlStackV``() =
       singleCell 2.0
     )
     |> Range.xlStackV
-    |> (fun x -> x :?> obj[,])
     |> Array2D.shouldEqual ( [[1.0 |> box]; [2.0 |> box]] |> array2D )
 
     (
@@ -33,7 +30,6 @@ type ``xlStackV``() =
       singleCell ExcelMissing.Value
     )
     |> Range.xlStackV
-    |> (fun x -> x :?> obj[,])
     |> Array2D.shouldEqual (singleCell 1.0)
 
     (
@@ -41,16 +37,29 @@ type ``xlStackV``() =
       singleCell "a"
     )
     |> Range.xlStackV
-    |> (fun x -> x :?> obj[,])
     |> Array2D.shouldEqual ( [[1.0 |> box]; ["a" |> box]] |> array2D )
+
+  [<Test>]
+  member __.``can stack 1x2 with 2x1``() =
+    (
+      [[3.0 |> box]; ["a" |> box]] |> array2D,
+      [[1.0 |> box; 2.0 |> box]] |> array2D
+    )
+    |> Range.xlStackV
+    |> Array2D.shouldEqual (
+      [[3.0 |> box; objNA]
+       ["a" |> box; objNA]
+       [1.0 |> box; 2.0 |> box]
+      ]
+      |> array2D
+    )
 
 
 [<TestFixture>]
 type ``xlStackH``() =
-
   [<Test>]
   member __.``returns NA when inputs are empty``() =
-    Range.xlStackV(emptyArray, emptyArray) |> should be (equal ExcelError.ExcelErrorNA)
+    Range.xlStackV(emptyArray, emptyArray) |> Array2D.shouldEqual emptyArray
 
   [<Test>]
   member __.``works with cells``() =
@@ -59,7 +68,6 @@ type ``xlStackH``() =
       singleCell 2.0
     )
     |> Range.xlStackH
-    |> (fun x -> x :?> obj[,])
     |> Array2D.shouldEqual ( [[1.0 |> box; 2.0 |> box]] |> array2D )
 
     (
@@ -67,7 +75,6 @@ type ``xlStackH``() =
       singleCell ExcelMissing.Value
     )
     |> Range.xlStackH
-    |> (fun x -> x :?> obj[,])
     |> Array2D.shouldEqual (singleCell 1.0)
 
     (
@@ -75,7 +82,6 @@ type ``xlStackH``() =
       singleCell "a"
     )
     |> Range.xlStackH
-    |> (fun x -> x :?> obj[,])
     |> Array2D.shouldEqual ( [[1.0 |> box; "a" |> box]] |> array2D )
 
 
