@@ -42,23 +42,22 @@ steps:
     arguments: 'restore'
 
 - task: DotNetCoreCLI@2
-  displayName: 'dotnet build'
+  displayName: 'dotnet build $(buildConfiguration)'
   inputs:
     projects: |
       src/**/*.fsproj
       test/**/*.fsproj
     command: 'build'
-    configuration: '$(buildConfiguration)'
-    arguments: '-p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion)'
+    arguments: '-p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion) --configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
-  displayName: 'dotnet test'
+  displayName: 'dotnet test $(buildConfiguration)'
   inputs:
     projects: |
       src/**/*.fsproj
       test/**/*.fsproj
     command: 'test'
-    configuration: '$(buildConfiguration)'
+    arguments: '-p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion) --configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet pack'
