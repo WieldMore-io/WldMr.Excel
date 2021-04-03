@@ -7,7 +7,7 @@
     <None Include="paket.references" />
     <Compile Include="init.fs" />
     <Compile Include="xlDateTest.fs" />
-    <Compile Include="xlRangeTest.fs" />
+    <Compile Include="xlSliceTest.fs" />
     <Compile Include="xlStackTest.fs" />
   </ItemGroup>
   <ItemGroup>

@@ -19,86 +19,46 @@ let parseArg parseF t (errMap: string -> string) (o:obj)=
 
 [<ExcelFunction(Category= "WldMr.Range",
   Description=
-    "Selects a subrange of rows from the input range.\r\n" +
-      "The 'Start' and 'End' arguments use the following convention:\r\n" +
-      "  0   means the first row\r\n" +
-      "  1   means the second row\r\n" +
-      "       ... and so on ...\r\n" +
-      "  t-2   means the second-to-last row\r\n" +
-      "  t-1   means the last row"
+    "Selects a subrange of an array.\r\n" +
+    "The arguments use the following convention:\r\n" +
+    "  1   means the 1st row/column\r\n" +
+    "       ... \r\n" +
+    " -2   means the second-to-last row/column\r\n" +
+    " -1   means the last row/column"
 )>]
-let xlRangeSubRows
+let xlSlice
   (
-    [<ExcelArgument(Description="the range to select")>]
+    [<ExcelArgument(Description="input range")>]
       range:obj[,],
-    [<ExcelArgument(Description="the first row to return")>]
-      start: obj,
-    [<ExcelArgument(Description="the last row to return", Name="end")>]
-      finish: obj
+    [<ExcelArgument(Description="the first row to return, defaults to 1")>]
+      fromRow: obj,
+    [<ExcelArgument(Description="the last row to return, defaults to -1")>]
+      toRow: obj,
+    [<ExcelArgument(Description="the first column to return, defaults to 1")>]
+      fromColumn: obj,
+    [<ExcelArgument(Description="the last column to return, defaults to -1")>]
+      toColumn: obj
   ) =
   let res = validation {
-    let! s0 = start |> parseArg XlObj.toInt 0 (fun e -> $"arg 'Start': {e}" )
-    and! e0 = finish |> parseArg XlObj.toInt -1 (fun e -> $"arg 'End': {e}" )
-    //and! i = i |> parseArg XlObj.toInt 1 (fun e -> $"arg 'start': {e}" )
+    let! base1_sr = fromRow |> parseArg XlObj.toInt 1 (fun e -> $"arg 'FromRow': {e}" )
+    and! er = toRow |> parseArg XlObj.toInt -1 (fun e -> $"arg 'ToRow': {e}" )
+    and! base1_sc = fromRow |> parseArg XlObj.toInt 1 (fun e -> $"arg 'FromColumn': {e}" )
+    and! ec = toColumn |> parseArg XlObj.toInt -1 (fun e -> $"arg 'ToColumn': {e}" )
+    let sr = base1_sr - 1
+    let sc = base1_sc - 1
     let nRows = range.GetLength 0
-    let s = if s0 >= 0 then s0 else nRows + s0
-    let e = if e0 >= 0 then e0 else nRows + e0
-    let rowList = range |> Array2D.flattenArray |> fun l -> l.[s..e]
-    do! rowList |> Result.requireNotEmpty ["No row selected"]
-    return rowList |> array2D
-  }
-  res |>> box |> XlObj.ofValidation
-
-
-//[<ExcelFunction(Category= "WldMr.Range",
-//  Name="Range.Subrows",
-//  Description=
-//    "Selects a subrange of rows from the input range.
-//The 'First' and 'End' arguments use the following convention:
-//\t 0   means the first row
-//\t 1   means the second row
-//\t    ... and so on ...
-//\t-2   means the second-to-last row
-//\t-1   means the last row"
-//)>]
-//let renamedXlRangeSubRows(a: obj[,],b: obj, c:obj) =
-//  xlRangeSubRows(a, b, c)
-
-
-[<ExcelFunction(Category= "WldMr.Range",
-  Description=
-    "Selects a subrange of columns from the input range.
-The 'Start' and 'End' arguments use the following convention:
-\t 0   means the first column
-\t 1   means the second column
-\t    ... and so on ...
-\t-2   means the second-to-last column
-\t-1   means the last column"
-)>]
-let xlRangeSubColumns
-  (
-    [<ExcelArgument(Description="the range to select")>]
-      range:obj[,],
-    [<ExcelArgument(Description="the first column to return")>]
-      start: obj,
-    [<ExcelArgument(Description="the last column to return", Name="end")>]
-      finish: obj
-  ) =
-  let res = validation {
-    let! s0 = start |> parseArg XlObj.toInt 0 (fun e -> $"arg 'Start': {e}" )
-    and! e0 = finish |> parseArg XlObj.toInt -1 (fun e -> $"arg 'End': {e}" )
-    //and! i = i |> parseArg XlObj.toInt 1 (fun e -> $"arg 'start': {e}" )
     let nCols = range.GetLength 1
-    let s = if s0 >= 0 then s0 else nCols + s0
-    let e = if e0 >= 0 then e0 else nCols + e0
-    let colList = range |> Array2D.flattenArray |> List.map (fun l -> l.[s..e])
-    do! match colList with
-        | [] -> ["No column selected"] |> Error
-        | x::_ -> x |> Result.requireNotEmpty ["No column selected"]
-    return colList |> array2D
+    let startRow = if sr >= 0 then sr else nRows + sr
+    let startCol = if sc >= 0 then sc else nCols + sc
+    let endRow = if er >= 0 then er else nRows + er
+    let endCol = if ec >= 0 then ec else nCols + ec
+    let slice = range.[startRow..endRow, startCol..endCol]
+    if slice.LongLength = 0L then
+      return slice |> box
+    else
+      return ExcelError.ExcelErrorNA |> box
   }
-  res |>> box |> XlObj.ofValidation
-
+  res |> XlObj.ofValidation
 
 
 let boolOptionFold f zero bos =

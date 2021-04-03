@@ -11,13 +11,13 @@ open WldMr.Excel.Helpers
 
 
 [<TestFixture>]
-type ``xlRangeSubRows``() =
+type ``xlSlice``() =
   let emptyArray: obj[,] = [[]] |> array2D
 
   [<Test>]
   member __.``arguments are defaulted``() =
     let a22 = [[1; 2];[3;4]] |>> (map box) |> array2D
-    (a22, ExcelMissing.Value |> box, ExcelMissing.Value |> box)
-    |> SubRange.xlRangeSubRows
+    (a22, missing, missing, missing, missing)
+    |> SubRange.xlSlice
     |> Test.returnedAnArray
     |> Array2D.shouldEqual a22
