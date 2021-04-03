@@ -8,6 +8,7 @@
     <Compile Include="init.fs" />
     <Compile Include="xlDateTest.fs" />
     <Compile Include="xlSliceTest.fs" />
+    <Compile Include="xlStringTest.fs" />
     <Compile Include="xlStackTest.fs" />
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,15 @@ open System
 open FSharpPlus
 
 
+[<AutoOpen>]
+module SingletonValue =
+  let objEmpty = ExcelEmpty.Value :> obj
+  let objMissing = ExcelMissing.Value :> obj
+  let objNA = ExcelError.ExcelErrorNA :> obj
+  let objName = ExcelError.ExcelErrorName :> obj
+  let objGettingData = ExcelError.ExcelErrorGettingData :> obj
+
+
 module Result =
   /// The error value is prefixed by "#!Error! "
   let inline toExcel r = r |> Result.defaultWith (fun e -> $"#Error! {e}" :> obj)
@@ -16,8 +25,8 @@ module Array2D =
   /// simplify further processing (although potentially slower)
   let flattenArray array2d =
     [ for x in [ 0 .. (Array2D.length1 array2d) - 1 ] do
-        [ for y in [ 0 .. (Array2D.length2 array2d) - 1 ] do
-            yield array2d.[x, y] ] ]
+      [ for y in [ 0 .. (Array2D.length2 array2d) - 1 ] do
+        yield array2d.[x, y] ] ]
 
 
 [<AutoOpen>]
@@ -131,9 +140,6 @@ module XlObj =
     t |> Result.either id (fun err -> $"#Error! {err}" :> obj)
 
 
-
-
-
 module ExcelAsync =
   let wrap<'T> (funName: string) (hashInt: int) (errorMessage: string) (waitingMessage: string) (f: unit -> obj): obj =
     let asyncResult = ExcelAsyncUtil.Run(funName, hashInt, new ExcelFunc(f))
@@ -155,7 +161,6 @@ module ExcelAsync =
                     Observable.subscribe (fun value -> observer.OnNext (value)) observable
             })
     ExcelAsyncUtil.Observe (functionName, parameters, obsSource)
-
 
 
 module XlArray =
