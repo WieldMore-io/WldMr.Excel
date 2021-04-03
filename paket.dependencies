@@ -5,7 +5,6 @@ framework: net461
 
 nuget FSharp.Core
 nuget ExcelDna.Integration
-nuget ExcelDna.Registration.FSharp
 nuget ExcelDna.Addin
 nuget ExcelDna.IntelliSense
 nuget FSharpPlus
