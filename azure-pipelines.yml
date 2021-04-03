@@ -49,7 +49,7 @@ steps:
       test/**/*.fsproj
     command: 'build'
     arguments: >-
-        -p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion) 
+        -p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)
         --configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
@@ -57,10 +57,10 @@ steps:
   inputs:
     projects: |
       src/**/*.fsproj
-      test/**/*.fsproj
+      tests/**/*.fsproj
     command: 'test'
     arguments: >-
-        -p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion) 
+        -p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)
         --configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
@@ -70,7 +70,7 @@ steps:
     custom: pack
     projects: src/**/*.fsproj
     arguments: >-
-        -p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion) 
+        -p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)
         --configuration $(buildConfiguration)
         -o $(Build.ArtifactStagingDirectory)
 
