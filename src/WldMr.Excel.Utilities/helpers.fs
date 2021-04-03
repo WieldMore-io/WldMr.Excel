@@ -141,11 +141,11 @@ module XlObj =
 
 
 module ExcelAsync =
-  let wrap<'T> (funName: string) (hashInt: int) (errorMessage: string) (waitingMessage: string) (f: unit -> obj): obj =
-    let asyncResult = ExcelAsyncUtil.Run(funName, hashInt, new ExcelFunc(f))
+  let wrap<'T> (funName: string) (hash: int) (errMsg: obj) (waitMsg: obj) (f: unit -> obj): obj =
+    let asyncResult = ExcelAsyncUtil.Run(funName, hash, new ExcelFunc(f))
     match asyncResult with
-    | null -> errorMessage |> box
-    | ExcelError(ExcelError.ExcelErrorNA) -> waitingMessage |> box
+    | null -> errMsg
+    | ExcelError(ExcelError.ExcelErrorNA) -> waitMsg
     | :? System.Tuple<string, string> as tu ->
         let t1, t2 = tu
         (if t1 = null then t2 else t1) |> box
