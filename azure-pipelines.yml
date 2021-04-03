@@ -9,6 +9,7 @@ variables:
   major: 0
   minor: 1
   revision: 0
+  buildConfiguration: 'Release'
   patch: $[counter(format('{0}.{1}.{2}', variables['Major'], variables['Minor'], variables['Revision']), 0)]
   packageVersion: $(major).$(minor).$(revision).$(patch)-preview
   NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
@@ -41,22 +42,37 @@ steps:
     arguments: 'restore'
 
 - task: DotNetCoreCLI@2
-  displayName: 'dotnet test'
+  displayName: 'dotnet build $(buildConfiguration)'
+  inputs:
+    projects: |
+      src/**/*.fsproj
+      test/**/*.fsproj
+    command: 'build'
+    arguments: >-
+        -p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion) 
+        --configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet test $(buildConfiguration)'
   inputs:
     projects: |
       src/**/*.fsproj
       test/**/*.fsproj
     command: 'test'
+    arguments: >-
+        -p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion) 
+        --configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet pack'
   inputs:
-    command: 'pack'
-    packagesToPack: 'src/**/*.fsproj'
-    versioningScheme: 'byEnvVar'
-    versionEnvVar: 'packageVersion'
-    configuration: Release
-    arguments: '/p:Version=$(packageVersion) /p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion)'
+    command: 'custom'
+    custom: pack
+    projects: src/**/*.fsproj
+    arguments: >-
+        -p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion) 
+        --configuration $(buildConfiguration)
+        -o $(Build.ArtifactStagingDirectory)
 
 - publish: $(Build.ArtifactStagingDirectory)
   artifact: nupkgs
