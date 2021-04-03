@@ -67,7 +67,7 @@ steps:
     projects: src/**/*.fsproj
     arguments: >-
         -p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion) 
-        -configuration $(buildConfiguration)
+        --configuration $(buildConfiguration)
         -o $(Build.ArtifactStagingDirectory)
 
 - publish: $(Build.ArtifactStagingDirectory)
