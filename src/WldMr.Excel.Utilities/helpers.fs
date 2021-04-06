@@ -72,9 +72,14 @@ module ActivePattern =
 
 module XlObj =
   /// Defaults the value if the input is Missing, Empty or ""
-  let defaultValue defaultFun (o: obj) =
+  let defaultWith defaultFun (o: obj) =
     match o with
     | ExcelMissing _ | ExcelEmpty _ | ExcelString "" -> defaultFun () |> box
+    | o -> o
+
+  let defaultValue v (o: obj) =
+    match o with
+    | ExcelMissing _ | ExcelEmpty _ | ExcelString "" -> v |> box
     | o -> o
 
   /// Tries to extract an int out of excel cell value
@@ -114,6 +119,15 @@ module XlObj =
     | ExcelNum _ -> Some true |> Ok
     | ExcelBool b -> Some b |> Ok
     | _ ->  Some false |> Ok
+
+
+  let toBool (o:obj) =
+    match o with
+    | ExcelEmpty _ | ExcelMissing _ | ExcelString "" -> false |> Ok
+    | ExcelError _ | ExcelNum 0.0 -> false |> Ok
+    | ExcelNum _ -> true |> Ok
+    | ExcelBool b -> b |> Ok
+    | _ ->  "Expected a boolean" |> Error
 
 
   /// boxes the float

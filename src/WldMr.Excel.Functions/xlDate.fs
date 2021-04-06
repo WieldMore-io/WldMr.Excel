@@ -49,9 +49,9 @@ let xlDateNthWeekdayOfMonth
   ) =
   validation {
     let! dow = dayOfWeek |> XlObj.toInt |> Result.mapArgError "DayOfWeek" 
-    and! refDate = refDate |> XlObj.defaultValue DateTime.Today.ToOADate |> XlObj.toDate |> Result.mapArgError "RefDate"
+    and! refDate = refDate |> XlObj.defaultWith DateTime.Today.ToOADate |> XlObj.toDate |> Result.mapArgError "RefDate"
     and! nth = nthSuchDay |> XlObj.toInt |> Result.mapArgError "NthSuchDay"
-    and! period = nthPeriod |> XlObj.defaultValue (konst 1.0) |> XlObj.toInt |> Result.mapArgError "NthPeriod"
+    and! period = nthPeriod |> XlObj.defaultValue 1.0 |> XlObj.toInt |> Result.mapArgError "NthPeriod"
 
     do! (0 < nth && nth < 6) |> Result.requireTrue ["arg 'NthSuchDay' should be between 1 and 5"]
     do! (0 < period && period < 1001) |> Result.requireTrue ["arg 'NthPeriod' should be between 1 and 1000"]

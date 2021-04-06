@@ -12,7 +12,6 @@ open WldMr.Excel.Helpers
 
 [<TestFixture>]
 type ``xlSlice``() =
-  let emptyArray: obj[,] = [[]] |> array2D
 
   [<Test>]
   member __.``arguments are defaulted``() =
