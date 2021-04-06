@@ -50,8 +50,8 @@ let xlSlice
     let nCols = range.GetLength 1
     let startRow = if sr >= 0 then sr else nRows + sr
     let startCol = if sc >= 0 then sc else nCols + sc
-    let endRow = if er >= 0 then er else nRows + er
-    let endCol = if ec >= 0 then ec else nCols + ec
+    let endRow = if er >= 0 then er - 1 else nRows + er
+    let endCol = if ec >= 0 then ec - 1 else nCols + ec
     let slice = range.[startRow..endRow, startCol..endCol]
     if slice.LongLength = 0L then
       return ExcelError.ExcelErrorNA |> box
