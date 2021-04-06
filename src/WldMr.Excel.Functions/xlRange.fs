@@ -42,7 +42,7 @@ let xlSlice
   let res = validation {
     let! base1_sr = fromRow |> parseArg XlObj.toInt 1 (fun e -> $"arg 'FromRow': {e}" )
     and! er = toRow |> parseArg XlObj.toInt -1 (fun e -> $"arg 'ToRow': {e}" )
-    and! base1_sc = fromRow |> parseArg XlObj.toInt 1 (fun e -> $"arg 'FromColumn': {e}" )
+    and! base1_sc = fromColumn |> parseArg XlObj.toInt 1 (fun e -> $"arg 'FromColumn': {e}" )
     and! ec = toColumn |> parseArg XlObj.toInt -1 (fun e -> $"arg 'ToColumn': {e}" )
     let sr = base1_sr - 1
     let sc = base1_sc - 1
