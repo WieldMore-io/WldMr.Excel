@@ -27,11 +27,11 @@ let xlStringStartsWith
       input: obj[,],
     [<ExcelArgument(Description="The text string value to be searched for at the start of the input")>]
       prefix: string,
-    [<ExcelArgument(Description="If TRUE, a and A are considered equal, if FALSE, a and A are different.\r\n Defaults to TRUE")>]
+    [<ExcelArgument(Description="If TRUE or omitted, a and A are considered equal, if FALSE, a and A are different")>]
       ignoreCase: obj
   ) =
   monad {
-    let! ic = ignoreCase |> XlObj.defaultValue (true |> box) |> XlObj.toBool
+    let! ic = ignoreCase |> XlObj.toBoolWithDefault true
     input
     |> stringFilter (fun s -> s.StartsWith(prefix, ic, System.Globalization.CultureInfo.InvariantCulture))
     |> box
@@ -52,11 +52,11 @@ let xlStringEndsWith
       input: obj[,],
     [<ExcelArgument(Description="The text string value to be searched for at the end of the input")>]
       suffix: string,
-    [<ExcelArgument(Description="If TRUE, a and A are considered equal, if FALSE, a and A are different.\r\n Defaults to TRUE")>]
+    [<ExcelArgument(Description="If TRUE or omitted, a and A are considered equal, if FALSE, a and A are different")>]
       ignoreCase: obj
   ) =
   monad {
-    let! ic = ignoreCase |> XlObj.defaultValue (true |> box) |> XlObj.toBool
+    let! ic = ignoreCase |> XlObj.toBoolWithDefault true
     input
     |> stringFilter (fun s -> s.EndsWith(suffix, ic, System.Globalization.CultureInfo.InvariantCulture))
     |> box
@@ -76,11 +76,11 @@ let xlStringContains
       input: obj[,],
     [<ExcelArgument(Description="The text string value to be searched within the input")>]
       subString: string,
-    [<ExcelArgument(Description="If TRUE, a and A are considered equal, if FALSE, a and A are different.\r\n Defaults to TRUE")>]
+    [<ExcelArgument(Description="If TRUE or omitted, a and A are considered equal, if FALSE, a and A are different")>]
       ignoreCase: obj
   ) =
   monad {
-    let! ic = ignoreCase |> XlObj.defaultValue (true |> box) |> XlObj.toBool
+    let! ic = ignoreCase |> XlObj.toBoolWithDefault true
     input
     |> stringFilter (fun s -> if ic then s.ToLowerInvariant().Contains(subString.ToLowerInvariant()) else s.Contains(subString))
     |> box

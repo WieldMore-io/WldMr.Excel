@@ -130,6 +130,18 @@ module XlObj =
     | _ ->  "Expected a boolean" |> Error
 
 
+  let toBoolWithDefault d (o:obj) =
+    match o with
+    | ExcelEmpty _ -> false |> Ok
+    | ExcelMissing _ -> d |> Ok
+    | ExcelNum 0.0 -> false |> Ok
+    | ExcelNum _ -> true |> Ok
+    | ExcelBool b -> b |> Ok
+    | ExcelString s when s.ToLower() = "true" -> true |> Ok
+    | ExcelString s when s.ToLower() = "false" -> false |> Ok
+    | _ ->  "Expected a boolean" |> Error
+
+
   /// boxes the float
   /// if its value is NaN, it is replaced by #N/A!
   /// does not attempt any conversion (the original excel value must be a string)
