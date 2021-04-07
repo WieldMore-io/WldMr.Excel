@@ -3,6 +3,7 @@ module WldMr.Excel.String.Basic
 open ExcelDna.Integration
 open FSharpPlus
 open WldMr.Excel.Helpers
+open FsToolkit.ErrorHandling
 
 
 let stringFilter predicate input: obj[,]=
@@ -25,10 +26,16 @@ let xlStringStartsWith
     [<ExcelArgument(Description="The text string value (or range of values) which start is being queried")>]
       input: obj[,],
     [<ExcelArgument(Description="The text string value to be searched for at the start of the input")>]
-      prefix:string
-  ): obj[,] =
-  input
-  |> stringFilter (String.startsWith prefix)
+      prefix: string,
+    [<ExcelArgument(Description="If TRUE or omitted, a and A are considered equal, if FALSE, a and A are different")>]
+      ignoreCase: obj
+  ) =
+  monad {
+    let! ic = ignoreCase |> XlObj.toBoolWithDefault true
+    input
+    |> stringFilter (fun s -> s.StartsWith(prefix, ic, System.Globalization.CultureInfo.InvariantCulture))
+    |> box
+  } |> XlObj.ofResult
 
 
 [<ExcelFunction(
@@ -44,10 +51,16 @@ let xlStringEndsWith
     [<ExcelArgument(Description="The text string value (or range of values) which end is being queried")>]
       input: obj[,],
     [<ExcelArgument(Description="The text string value to be searched for at the end of the input")>]
-      suffix:string
-  ): obj[,] =
-  input
-  |> stringFilter (String.endsWith suffix)
+      suffix: string,
+    [<ExcelArgument(Description="If TRUE or omitted, a and A are considered equal, if FALSE, a and A are different")>]
+      ignoreCase: obj
+  ) =
+  monad {
+    let! ic = ignoreCase |> XlObj.toBoolWithDefault true
+    input
+    |> stringFilter (fun s -> s.EndsWith(suffix, ic, System.Globalization.CultureInfo.InvariantCulture))
+    |> box
+  } |> XlObj.ofResult
 
 
 [<ExcelFunction(Category= "WldMr.String",
@@ -62,7 +75,13 @@ let xlStringContains
     [<ExcelArgument(Description="The text string value (or range of values) which is being queried")>]
       input: obj[,],
     [<ExcelArgument(Description="The text string value to be searched within the input")>]
-      subString:string
-  ): obj[,] =
-  input
-  |> stringFilter (String.isSubString subString)
+      subString: string,
+    [<ExcelArgument(Description="If TRUE or omitted, a and A are considered equal, if FALSE, a and A are different")>]
+      ignoreCase: obj
+  ) =
+  monad {
+    let! ic = ignoreCase |> XlObj.toBoolWithDefault true
+    input
+    |> stringFilter (fun s -> if ic then s.ToLowerInvariant().Contains(subString.ToLowerInvariant()) else s.Contains(subString))
+    |> box
+  } |> XlObj.ofResult
