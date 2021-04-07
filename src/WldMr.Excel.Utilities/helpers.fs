@@ -112,46 +112,55 @@ module XlObj =
   /// - Errors, exact 0 are treated as False (as expected)
   /// - Strings are treated as False (debatable)
   /// - non-zero numbers are treated as True
+  /// behaves similarly to Excel functions that take a range (see =AND(...))
   let toBoolOption (o:obj) =
     match o with
     | ExcelEmpty _ | ExcelMissing _ | ExcelString "" -> None |> Ok
-    | ExcelError _ | ExcelNum 0.0 -> Some false |> Ok
-    | ExcelNum _ -> Some true |> Ok
+    | ExcelError _ -> false |> Some |> Ok
+    | ExcelNum f -> f = 0.0 |> Some |> Ok
     | ExcelBool b -> Some b |> Ok
-    | _ ->  Some false |> Ok
+    | ExcelString s when s.ToLower() = "true" -> true |> Some |> Ok
+    | ExcelString s when s.ToLower() = "false" -> false |> Some |> Ok
+    | _ -> Some false |> Ok
 
 
+  /// Force-converts an Excel obj input to a boolean
+  /// Behaviour is as close to Excel as possible
+  /// - missing, empty are false
+  /// - Exactxact 0 are treated as False (as expected)
+  /// - Strings are treated as False (debatable)
+  /// - non-zero numbers are treated as True
   let toBool (o:obj) =
     match o with
-    | ExcelEmpty _ | ExcelMissing _ | ExcelString "" -> false |> Ok
-    | ExcelError _ | ExcelNum 0.0 -> false |> Ok
-    | ExcelNum _ -> true |> Ok
-    | ExcelBool b -> b |> Ok
-    | _ ->  "Expected a boolean" |> Error
-
-
-  let toBoolWithDefault d (o:obj) =
-    match o with
-    | ExcelEmpty _ -> false |> Ok
-    | ExcelMissing _ -> d |> Ok
-    | ExcelNum 0.0 -> false |> Ok
-    | ExcelNum _ -> true |> Ok
+    | ExcelEmpty _ | ExcelMissing _ -> false |> Ok
+    | ExcelNum f -> f = 0.0 |> Ok
     | ExcelBool b -> b |> Ok
     | ExcelString s when s.ToLower() = "true" -> true |> Ok
     | ExcelString s when s.ToLower() = "false" -> false |> Ok
-    | _ ->  "Expected a boolean" |> Error
+    | _ -> "Expected a boolean" |> Error
 
 
-  /// boxes the float
-  /// if its value is NaN, it is replaced by #N/A!
+  /// Force-converts an Excel obj input to a boolean, using a default value if missing or empty
+  /// Behaviour is as close to Excel as possible
+  /// - Exact 0 are treated as False (as expected)
+  /// - Strings are treated as False (debatable)
+  /// - non-zero numbers are treated as True
+  let toBoolWithDefault d (o:obj) =
+    match o with
+    | ExcelMissing _ -> d |> Ok
+    | _ -> o |> toBool
+
+
+  /// Boxes the float
+  /// If its value is NaN, it is replaced by #N/A!.
   /// does not attempt any conversion (the original excel value must be a string)
   let ofFloat f =
     if Double.IsNaN f then
-      ExcelError.ExcelErrorNA :> obj
+      objNA
     else
       f |> box
 
-  /// Summarize the number of errors and returns them prefixed by "#Error!""
+  /// Summarizes the number of errors and returns them prefixed by "#Error!""
   let ofValidation (t: Result<obj, string list>): obj =
     let errorMessage errors =
       let sep = "; "
@@ -164,6 +173,13 @@ module XlObj =
 
   let ofResult<'E> (t: Result<obj, 'E>): obj =
     t |> Result.either id (fun err -> $"#Error! {err}" :> obj)
+
+
+  /// Returns a column array from a sequence which elements get boxed
+  let inline columnOfSeq r =
+    let v = r |>> box |> Array.ofSeq
+    Array2D.init v.Length 1 (fun i j -> v.[i])
+    |> box
 
 
 module ExcelAsync =
@@ -187,12 +203,6 @@ module ExcelAsync =
                     Observable.subscribe (fun value -> observer.OnNext (value)) observable
             })
     ExcelAsyncUtil.Observe (functionName, parameters, obsSource)
-
-
-module XlArray =
-  let columnFromSeq r =
-    let v = r |> Array.ofSeq
-    Array2D.init v.Length 1 (fun i j -> v.[i])
 
 
 module Generic =

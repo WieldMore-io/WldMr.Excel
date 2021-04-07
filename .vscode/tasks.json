@@ -20,6 +20,23 @@
             }
         },
         {
+            "label": "dotnet test",
+            "command": "dotnet",
+            "type": "shell",
+            "args": [
+                "test",
+                "./test/WldMr.Excel.Functions.Test/"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
             "label": "dotnet paket restore",
             "command": "dotnet",
             "type": "shell",
