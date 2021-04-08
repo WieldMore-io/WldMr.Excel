@@ -41,17 +41,19 @@ let xlSlice
   ) =
   let res = validation {
     let! base1_sr = fromRow |> parseArg XlObj.toInt 1 (fun e -> $"arg 'FromRow': {e}" )
-    and! er = toRow |> parseArg XlObj.toInt -1 (fun e -> $"arg 'ToRow': {e}" )
+    and! base1_er = toRow |> parseArg XlObj.toInt -1 (fun e -> $"arg 'ToRow': {e}" )
     and! base1_sc = fromColumn |> parseArg XlObj.toInt 1 (fun e -> $"arg 'FromColumn': {e}" )
-    and! ec = toColumn |> parseArg XlObj.toInt -1 (fun e -> $"arg 'ToColumn': {e}" )
+    and! base1_ec = toColumn |> parseArg XlObj.toInt -1 (fun e -> $"arg 'ToColumn': {e}" )
     let sr = base1_sr - 1
     let sc = base1_sc - 1
+    let er = base1_er - 1
+    let ec = base1_ec - 1
     let nRows = range.GetLength 0
     let nCols = range.GetLength 1
-    let startRow = if sr >= 0 then sr else nRows + sr
-    let startCol = if sc >= 0 then sc else nCols + sc
-    let endRow = if er >= 0 then er - 1 else nRows + er
-    let endCol = if ec >= 0 then ec - 1 else nCols + ec
+    let startRow = if sr >= 0 then sr else nRows + sr + 1
+    let startCol = if sc >= 0 then sc else nCols + sc + 1
+    let endRow = if er >= 0 then er else nRows + er + 1
+    let endCol = if ec >= 0 then ec else nCols + ec + 1
     let slice = range.[startRow..endRow, startCol..endCol]
     if slice.LongLength = 0L then
       return ExcelError.ExcelErrorNA |> box

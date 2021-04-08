@@ -30,6 +30,14 @@ type ``xlSlice``() =
     |> Array2D.shouldEqual a33.[1..1, *]
 
   [<Test>]
+  member __.``select last row``() =
+    let a33 = [[11; 12; 13];[21;22;23];[31; 32; 33]] |>> (map box) |> array2D
+    (a33, -1.0, -1.0, missing, missing)
+    |> SubRange.xlSlice
+    |> Test.returnedAnArray
+    |> Array2D.shouldEqual a33.[2..2, *]
+
+  [<Test>]
   member __.``select columns``() =
     let a33 = [[11; 12; 13];[21;22;23];[31; 32; 33]] |>> (map box) |> array2D
     (a33, 2.0, -2.0, missing, missing)
