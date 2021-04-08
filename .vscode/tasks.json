@@ -37,6 +37,23 @@
             }
         },
         {
+            "label": "dotnet watch test",
+            "command": "dotnet",
+            "type": "shell",
+            "args": [
+                "watch", "test",
+                "--project", "./test/WldMr.Excel.Functions.Test/"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
             "label": "dotnet paket restore",
             "command": "dotnet",
             "type": "shell",
