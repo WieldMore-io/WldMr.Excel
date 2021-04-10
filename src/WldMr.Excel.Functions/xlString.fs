@@ -6,13 +6,33 @@ open WldMr.Excel.Helpers
 open FsToolkit.ErrorHandling
 
 
-let stringFilter predicate input: obj[,]=
+let stringFilter predicate input: obj[,] =
   let f (o: obj) =
     match o with
     | ExcelString s -> s |> predicate
     | _ -> false
   input |> Array2D.map (f >> box)
 
+
+open System.Text.RegularExpressions
+
+let regexFilter regex ignoreCase input: Result<obj[,], string> =
+  let regexOptions =
+    if ignoreCase then
+      RegexOptions.Compiled ||| RegexOptions.CultureInvariant ||| RegexOptions.IgnoreCase
+    else
+      RegexOptions.Compiled ||| RegexOptions.CultureInvariant
+  monad {
+    let! r =
+      Result.protect (fun () -> new System.Text.RegularExpressions.Regex(regex, regexOptions)) ()
+      |> Result.mapError (fun ex -> ex.ToString())
+
+    let f (o: obj) =
+      match o with
+      | ExcelString s -> s |> r.IsMatch
+      | _ -> false
+    input |> Array2D.map (f >> box)
+  }
 
 [<ExcelFunction(Category= "WldMr.String",
   IsThreadSafe=true,
@@ -28,13 +48,21 @@ let xlStringStartsWith
     [<ExcelArgument(Description="The text string value to be searched for at the start of the input")>]
       prefix: string,
     [<ExcelArgument(Description="If TRUE or omitted, a and A are considered equal, if FALSE, a and A are different")>]
-      ignoreCase: obj
+      ignoreCase: obj,
+    [<ExcelArgument(Description="If TRUE, 'prefix' is a regular expression, if FALSE or omitted, 'prefix' is a literal")>]
+      useRegex: obj
   ) =
   monad {
     let! ic = ignoreCase |> XlObj.toBoolWithDefault true
-    input
-    |> stringFilter (fun s -> s.StartsWith(prefix, ic, System.Globalization.CultureInfo.InvariantCulture))
-    |> box
+    let! ur = useRegex |> XlObj.toBoolWithDefault false
+    if ur then
+      let adjPrefix = if prefix.StartsWith "^" then prefix else "^" + prefix 
+      let! r = input |> regexFilter adjPrefix ic
+      r |> box
+    else
+      input
+      |> stringFilter (fun s -> s.StartsWith(prefix, ic, System.Globalization.CultureInfo.InvariantCulture))
+      |> box
   } |> XlObj.ofResult
 
 
@@ -53,13 +81,21 @@ let xlStringEndsWith
     [<ExcelArgument(Description="The text string value to be searched for at the end of the input")>]
       suffix: string,
     [<ExcelArgument(Description="If TRUE or omitted, a and A are considered equal, if FALSE, a and A are different")>]
-      ignoreCase: obj
+      ignoreCase: obj,
+    [<ExcelArgument(Description="If TRUE, 'suffix' is a regular expression, if FALSE or omitted, 'suffix' is a literal")>]
+      useRegex: obj
   ) =
   monad {
     let! ic = ignoreCase |> XlObj.toBoolWithDefault true
-    input
-    |> stringFilter (fun s -> s.EndsWith(suffix, ic, System.Globalization.CultureInfo.InvariantCulture))
-    |> box
+    let! ur = useRegex |> XlObj.toBoolWithDefault false
+    if ur then
+      let adjPrefix = if suffix.EndsWith "$" then suffix else suffix + "$" 
+      let! r = input |> regexFilter adjPrefix ic
+      r |> box
+    else
+      input
+      |> stringFilter (fun s -> s.EndsWith(suffix, ic, System.Globalization.CultureInfo.InvariantCulture))
+      |> box
   } |> XlObj.ofResult
 
 
@@ -77,11 +113,18 @@ let xlStringContains
     [<ExcelArgument(Description="The text string value to be searched within the input")>]
       subString: string,
     [<ExcelArgument(Description="If TRUE or omitted, a and A are considered equal, if FALSE, a and A are different")>]
-      ignoreCase: obj
+      ignoreCase: obj,
+    [<ExcelArgument(Description="If TRUE, 'subString' is a regular expression, if FALSE or omitted, 'subString' is a literal")>]
+      useRegex: obj
   ) =
   monad {
     let! ic = ignoreCase |> XlObj.toBoolWithDefault true
-    input
-    |> stringFilter (fun s -> if ic then s.ToLowerInvariant().Contains(subString.ToLowerInvariant()) else s.Contains(subString))
-    |> box
+    let! ur = useRegex |> XlObj.toBoolWithDefault false
+    if ur then
+      let! r = input |> regexFilter subString ic
+      r |> box
+    else
+      input
+      |> stringFilter (fun s -> if ic then s.ToLowerInvariant().Contains(subString.ToLowerInvariant()) else s.Contains(subString))
+      |> box
   } |> XlObj.ofResult
