@@ -17,53 +17,115 @@ type ``StringStartsWith``() =
 
   [<Test>]
   member __.``arguments are defaulted``() =
-    (singleCell "efg", "Ef", missing)
+    (singleCell "efg", "Ef", missing, missing)
     |> Basic.xlStringStartsWith
     |> Test.returnedAnArray
     |> Array2D.shouldEqual (singleCell true)
 
   [<Test>]
   member __.``handles French accents``() =
-    (singleCell "É", "é", missing)
+    (singleCell "É", "é", missing, missing)
     |> Basic.xlStringStartsWith
     |> Test.returnedAnArray
     |> Array2D.shouldEqual (singleCell true)
 
   [<Test>]
   member __.``case sensitive if ignoreCase is set``() =
-    (singleCell "efg", "E", false |> box)
+    (singleCell "efg", "E", true |> box, missing)
+    |> Basic.xlStringStartsWith
+    |> Test.returnedAnArray
+    |> Array2D.shouldEqual (singleCell true)
+
+    (singleCell "efg", "E", false |> box, missing)
     |> Basic.xlStringStartsWith
     |> Test.returnedAnArray
     |> Array2D.shouldEqual (singleCell false)
 
 
-  //[<Test>]
-  //member __.``select columns``() =
-  //  let a33 = [[11; 12; 13];[21;22;23];[31; 32; 33]] |>> (map box) |> array2D
-  //  (a33, 2.0, -2.0, missing, missing)
-  //  |> SubRange.xlSlice
-  //  |> Test.returnedAnArray
-  //  |> Array2D.shouldEqual a33.[1..1, *]
+[<TestFixture>]
+type ``StringStartsWith (Regex)``() =
 
-  //[<Test>]
-  //member __.``select center``() =
-  //  let a33 = [[11; 12; 13]; [21;22;23]; [31; 32; 33]] |>> (map box) |> array2D
-  //  (a33, 2.0, -2.0, 2.0, -2.0)
-  //  |> SubRange.xlSlice
-  //  |> Test.returnedAnArray
-  //  |> Array2D.shouldEqual a33.[1..1, 1..1]
+  [<Test>]
+  member __.``arguments are defaulted``() =
+    (singleCell "efg", "^..g", missing, true)
+    |> Basic.xlStringStartsWith
+    |> Test.returnedAnArray
+    |> Array2D.shouldEqual (singleCell true)
 
-  //[<Test>]
-  //member __.``3, 4, 1, -2``() =
-  //  let a56 =
-  //    [
-  //      [11; 12; 13; 14; 15; 16]
-  //      [21; 22; 23; 24; 25; 26]
-  //      [31; 32; 33; 34; 35; 36]
-  //      [41; 42; 43; 44; 45; 46]
-  //      [51; 52; 53; 54; 55; 56]
-  //    ] |>> (map box) |> array2D
-  //  (a56, 3.0, 4.0, 1.0, -2.0)
-  //  |> SubRange.xlSlice
-  //  |> Test.returnedAnArray
-  //  |> Array2D.shouldEqual a56.[2..3, 0..4]
+  [<Test>]
+  member __.``case sensitive if ignoreCase is set``() =
+    (singleCell "efg", "E.G", true |> box, true)
+    |> Basic.xlStringStartsWith
+    |> Test.returnedAnArray
+    |> Array2D.shouldEqual (singleCell true)
+
+    (singleCell "efg", "E.G", false |> box, true)
+    |> Basic.xlStringStartsWith
+    |> Test.returnedAnArray
+    |> Array2D.shouldEqual (singleCell false)
+
+  [<Test>]
+  member __.``only match at start``() =
+    (singleCell "eefg", "E.G", true |> box, true)
+    |> Basic.xlStringStartsWith
+    |> Test.returnedAnArray
+    |> Array2D.shouldEqual (singleCell false)
+
+[<TestFixture>]
+type ``StringEndsWith``() =
+
+  [<Test>]
+  member __.``arguments are defaulted``() =
+    (singleCell "efg", "fG", missing, missing)
+    |> Basic.xlStringEndsWith
+    |> Test.returnedAnArray
+    |> Array2D.shouldEqual (singleCell true)
+
+  [<Test>]
+  member __.``handles French accents``() =
+    (singleCell "É", "é", missing, missing)
+    |> Basic.xlStringEndsWith
+    |> Test.returnedAnArray
+    |> Array2D.shouldEqual (singleCell true)
+
+  [<Test>]
+  member __.``case sensitive if ignoreCase is false``() =
+    (singleCell "efg", "G", true |> box, missing)
+    |> Basic.xlStringEndsWith
+    |> Test.returnedAnArray
+    |> Array2D.shouldEqual (singleCell true)
+
+    (singleCell "efg", "G", false |> box, missing)
+    |> Basic.xlStringEndsWith
+    |> Test.returnedAnArray
+    |> Array2D.shouldEqual (singleCell false)
+
+
+[<TestFixture>]
+type ``StringEndWith (Regex)``() =
+
+  [<Test>]
+  member __.``arguments are defaulted``() =
+    (singleCell "efg", "E..$", missing, true)
+    |> Basic.xlStringEndsWith
+    |> Test.returnedAnArray
+    |> Array2D.shouldEqual (singleCell true)
+
+  [<Test>]
+  member __.``case sensitive if ignoreCase is false``() =
+    (singleCell "efg", "E.G", true, true)
+    |> Basic.xlStringEndsWith
+    |> Test.returnedAnArray
+    |> Array2D.shouldEqual (singleCell true)
+
+    (singleCell "efg", "E.G", false |> box, true)
+    |> Basic.xlStringEndsWith
+    |> Test.returnedAnArray
+    |> Array2D.shouldEqual (singleCell false)
+
+  [<Test>]
+  member __.``only match at end``() =
+    (singleCell "eefgg", "E.G", true |> box, true)
+    |> Basic.xlStringEndsWith
+    |> Test.returnedAnArray
+    |> Array2D.shouldEqual (singleCell false)
