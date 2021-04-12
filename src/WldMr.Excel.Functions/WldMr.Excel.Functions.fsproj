@@ -37,6 +37,7 @@
     <Compile Include="xlDate.fs" />
     <Compile Include="xlFormat.fs" />
     <Compile Include="xlRange.fs" />
+    <Compile Include="xlSlice.fs" />
     <Compile Include="xlStack.fs" />
     <Compile Include="xlString.fs" />
   </ItemGroup>

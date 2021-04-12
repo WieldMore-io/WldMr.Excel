@@ -1,6 +1,6 @@
 module WldMr.Excel.Date
 
-open WldMr.Excel.Helpers
+open WldMr.Excel.Utilities
 open FsToolkit.ErrorHandling
 
 open System
@@ -48,7 +48,7 @@ let xlDateNthWeekdayOfMonth
       nthPeriod: obj
   ) =
   validation {
-    let! dow = dayOfWeek |> XlObj.toInt |> Result.mapArgError "DayOfWeek" 
+    let! dow = dayOfWeek |> XlObj.toInt |> Result.mapArgError "DayOfWeek"
     and! refDate = refDate |> XlObj.defaultWith DateTime.Today.ToOADate |> XlObj.toDate |> Result.mapArgError "RefDate"
     and! nth = nthSuchDay |> XlObj.toInt |> Result.mapArgError "NthSuchDay"
     and! period = nthPeriod |> XlObj.defaultValue 1.0 |> XlObj.toInt |> Result.mapArgError "NthPeriod"

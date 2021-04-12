@@ -4,7 +4,7 @@ open ExcelDna.Integration
 open FSharpPlus
 open FsToolkit.ErrorHandling
 
-open WldMr.Excel.Helpers
+open WldMr.Excel.Utilities
 
 [<ExcelFunction(Category = "WldMr.String",
                 Description = """Formats an interpolated string as in the .Net world"
