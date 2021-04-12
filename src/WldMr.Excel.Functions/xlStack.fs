@@ -1,20 +1,13 @@
 module WldMr.Excel.Range
 
 open ExcelDna.Integration
-open WldMr.Excel.Helpers
-
-
-let getSize (x: obj[,]) =
-  match x.GetLength 0, x.GetLength 1 with
-  | 0, _ | _, 0 -> 0, 0
-  | 1, 1 when x.[0, 0] = objMissing -> 0, 0
-  | ls -> ls
+open WldMr.Excel.Utilities
 
 
 [<ExcelFunction(Category= "WldMr.Range", Description= "Stack two arrays vertically")>]
 let xlStackH (x:obj[,], y:obj[,]) =
-  let x0, x1 = x |> getSize
-  let y0, y1 = y |> getSize
+  let x0, x1 = x |> XlObj.getSize
+  let y0, y1 = y |> XlObj.getSize
   Array2D.init (max x0 y0) (x1 + y1)
     (fun i j ->
       if j < x1 then
@@ -26,8 +19,8 @@ let xlStackH (x:obj[,], y:obj[,]) =
 
 [<ExcelFunction(Category= "WldMr.Range", Description= "Stack two arrays vertically")>]
 let xlStackV (x:obj[,], y:obj[,]) =
-  let x0, x1 = x |> getSize
-  let y0, y1 = y |> getSize
+  let x0, x1 = x |> XlObj.getSize
+  let y0, y1 = y |> XlObj.getSize
   Array2D.init (x0 + y0) (max x1 y1)
     (fun i j ->
       if i < x0 then
@@ -37,8 +30,8 @@ let xlStackV (x:obj[,], y:obj[,]) =
     )
 
 
-let trimPredicate pred (x:obj[,]) =
-  let x0, x1 = x |> getSize
+let private trimPredicate pred (x:obj[,]) =
+  let x0, x1 = x |> XlObj.getSize
 
   let lastRow =
     seq { for i in x0-1 .. -1 .. 0 do yield x.[i, *] }

@@ -8,7 +8,7 @@ type InitMsgUtils() =
 
 namespace WldMr.Excel
   open FsUnitTyped
-  open WldMr.Excel.Helpers
+  open WldMr.Excel.Utilities
 
 
   module Array2D =
@@ -16,7 +16,7 @@ namespace WldMr.Excel
 
     [<DebuggerStepThrough>]
     let shouldEqual (expected: 'a[,]) (actual: 'a[,]) =
-      actual |> Array2D.flattenArray |> shouldEqual (expected |> Array2D.flattenArray)
+      actual |> Array2D.flatten |> shouldEqual (expected |> Array2D.flatten)
 
 
   [<AutoOpen>]

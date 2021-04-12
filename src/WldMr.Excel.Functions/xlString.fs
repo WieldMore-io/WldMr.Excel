@@ -2,7 +2,7 @@ module WldMr.Excel.String.Basic
 
 open ExcelDna.Integration
 open FSharpPlus
-open WldMr.Excel.Helpers
+open WldMr.Excel.Utilities
 open FsToolkit.ErrorHandling
 
 
@@ -56,7 +56,7 @@ let xlStringStartsWith
     let! ic = ignoreCase |> XlObj.toBoolWithDefault true
     let! ur = useRegex |> XlObj.toBoolWithDefault false
     if ur then
-      let adjPrefix = if prefix.StartsWith "^" then prefix else "^" + prefix 
+      let adjPrefix = if prefix.StartsWith "^" then prefix else "^" + prefix
       let! r = input |> regexFilter adjPrefix ic
       r |> box
     else
@@ -89,7 +89,7 @@ let xlStringEndsWith
     let! ic = ignoreCase |> XlObj.toBoolWithDefault true
     let! ur = useRegex |> XlObj.toBoolWithDefault false
     if ur then
-      let adjPrefix = if suffix.EndsWith "$" then suffix else suffix + "$" 
+      let adjPrefix = if suffix.EndsWith "$" then suffix else suffix + "$"
       let! r = input |> regexFilter adjPrefix ic
       r |> box
     else

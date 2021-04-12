@@ -6,8 +6,7 @@ open FsUnit
 open FsUnitTyped
 
 open WldMr.Excel
-open ExcelDna.Integration
-open WldMr.Excel.Helpers
+open WldMr.Excel.Utilities
 
 
 [<TestFixture>]
@@ -17,7 +16,7 @@ type ``xlSlice``() =
   member __.``arguments are defaulted``() =
     let a22 = [[1; 2]; [3;4]] |>> (map box) |> array2D
     (a22, missing, missing, missing, missing)
-    |> SubRange.xlSlice
+    |> Slice.xlSlice
     |> Test.returnedAnArray
     |> Array2D.shouldEqual a22
 
@@ -25,7 +24,7 @@ type ``xlSlice``() =
   member __.``select rows``() =
     let a33 = [[11; 12; 13];[21;22;23];[31; 32; 33]] |>> (map box) |> array2D
     (a33, 2.0, -2.0, missing, missing)
-    |> SubRange.xlSlice
+    |> Slice.xlSlice
     |> Test.returnedAnArray
     |> Array2D.shouldEqual a33.[1..1, *]
 
@@ -33,7 +32,7 @@ type ``xlSlice``() =
   member __.``select last row``() =
     let a33 = [[11; 12; 13];[21;22;23];[31; 32; 33]] |>> (map box) |> array2D
     (a33, -1.0, -1.0, missing, missing)
-    |> SubRange.xlSlice
+    |> Slice.xlSlice
     |> Test.returnedAnArray
     |> Array2D.shouldEqual a33.[2..2, *]
 
@@ -41,7 +40,7 @@ type ``xlSlice``() =
   member __.``select columns``() =
     let a33 = [[11; 12; 13];[21;22;23];[31; 32; 33]] |>> (map box) |> array2D
     (a33, 2.0, -2.0, missing, missing)
-    |> SubRange.xlSlice
+    |> Slice.xlSlice
     |> Test.returnedAnArray
     |> Array2D.shouldEqual a33.[1..1, *]
 
@@ -49,7 +48,7 @@ type ``xlSlice``() =
   member __.``select center``() =
     let a33 = [[11; 12; 13]; [21;22;23]; [31; 32; 33]] |>> (map box) |> array2D
     (a33, 2.0, -2.0, 2.0, -2.0)
-    |> SubRange.xlSlice
+    |> Slice.xlSlice
     |> Test.returnedAnArray
     |> Array2D.shouldEqual a33.[1..1, 1..1]
 
@@ -64,6 +63,6 @@ type ``xlSlice``() =
         [51; 52; 53; 54; 55; 56]
       ] |>> (map box) |> array2D
     (a56, 3.0, 4.0, 1.0, -2.0)
-    |> SubRange.xlSlice
+    |> Slice.xlSlice
     |> Test.returnedAnArray
     |> Array2D.shouldEqual a56.[2..3, 0..4]

@@ -8,7 +8,7 @@ open FsUnitTyped
 
 open WldMr.Excel
 open ExcelDna.Integration
-open WldMr.Excel.Helpers
+open WldMr.Excel.Utilities
 open WldMr.Excel.String
 
 

@@ -33,7 +33,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="paket.references" />
-    <Compile Include="helpers.fs" />
+    <Compile Include="singletonValues.fs" />
+    <Compile Include="activePatterns.fs" />
+    <Compile Include="xlObj.fs" />
+    <Compile Include="generic.fs" />
+    <Compile Include="async.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
