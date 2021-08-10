@@ -10,7 +10,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <Authors>PY Rivaille</Authors>
-    <Description>An basic example used to quickly test with Excel</Description>
+    <Description>A basic example used to quickly test with Excel</Description>
     <Version>0.0.1</Version>
     <Copyright>MIT</Copyright>
     <!-- <PackageId></PackageId> -->
