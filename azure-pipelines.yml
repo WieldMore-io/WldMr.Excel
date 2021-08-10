@@ -9,6 +9,8 @@ variables:
   major: 0
   minor: 1
   revision: 0
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   patch: $[counter(format('{0}.{1}.{2}', variables['Major'], variables['Minor'], variables['Revision']), 0)]
   packageVersion: $(major).$(minor).$(revision).$(patch)-preview
@@ -42,26 +44,21 @@ steps:
     arguments: 'restore'
 
 - task: DotNetCoreCLI@2
-  displayName: 'dotnet build $(buildConfiguration)'
+  displayName: 'dotnet build'
   inputs:
-    projects: |
-      src/**/*.fsproj
-      tests/**/*.fsproj
     command: 'build'
+    projects: tests/**/*.fsproj
     arguments: >-
         -p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion) 
-        --configuration $(buildConfiguration)'
+        --configuration $(buildConfiguration)
 
 - task: DotNetCoreCLI@2
-  displayName: 'dotnet test $(buildConfiguration)'
+  displayName: 'dotnet test'
   inputs:
-    projects: |
-      src/**/*.fsproj
-      tests/**/*.fsproj
     command: 'test'
     arguments: >-
         -p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion) 
-        --configuration $(buildConfiguration)'
+        --configuration $(buildConfiguration)
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet pack'

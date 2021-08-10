@@ -33,6 +33,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="paket.references" />
+    <Compile Include="OptionExtensions.fs" />
+    <Compile Include="ResultExtensions.fs" />
+    <Compile Include="StringExtensions.fs" />
     <Compile Include="singletonValues.fs" />
     <Compile Include="activePatterns.fs" />
     <Compile Include="xlObj.fs" />

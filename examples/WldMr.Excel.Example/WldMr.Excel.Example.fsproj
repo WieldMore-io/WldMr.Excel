@@ -42,8 +42,8 @@
     <Compile Include="TestFunction.fs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\WldMr.Excel.Functions\WldMr.Excel.Functions.fsproj" />
-    <ProjectReference Include="..\..\src\WldMr.Excel.Utilities\WldMr.Excel.Utilities.fsproj" />
+    <ProjectReference Include="../../src/WldMr.Excel.Functions/WldMr.Excel.Functions.fsproj" />
+    <ProjectReference Include="../../src/WldMr.Excel.Utilities/WldMr.Excel.Utilities.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
