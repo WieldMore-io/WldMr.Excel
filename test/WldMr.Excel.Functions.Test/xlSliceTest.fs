@@ -1,7 +1,6 @@
 namespace Range
 
 open NUnit.Framework
-open FSharpPlus
 open FsUnit
 open FsUnitTyped
 
@@ -12,9 +11,11 @@ open WldMr.Excel.Utilities
 [<TestFixture>]
 type ``xlSlice``() =
 
+  let toArrayObj a = a |> List.map (List.map box) |> array2D
+
   [<Test>]
   member __.``arguments are defaulted``() =
-    let a22 = [[1; 2]; [3;4]] |>> (map box) |> array2D
+    let a22 = [[1; 2]; [3;4]] |> toArrayObj
     (a22, missing, missing, missing, missing)
     |> Slice.xlSlice
     |> Test.returnedAnArray
@@ -22,7 +23,7 @@ type ``xlSlice``() =
 
   [<Test>]
   member __.``select rows``() =
-    let a33 = [[11; 12; 13];[21;22;23];[31; 32; 33]] |>> (map box) |> array2D
+    let a33 = [[11; 12; 13];[21;22;23];[31; 32; 33]] |> toArrayObj
     (a33, 2.0, -2.0, missing, missing)
     |> Slice.xlSlice
     |> Test.returnedAnArray
@@ -30,7 +31,7 @@ type ``xlSlice``() =
 
   [<Test>]
   member __.``select last row``() =
-    let a33 = [[11; 12; 13];[21;22;23];[31; 32; 33]] |>> (map box) |> array2D
+    let a33 = [[11; 12; 13];[21;22;23];[31; 32; 33]] |> toArrayObj
     (a33, -1.0, -1.0, missing, missing)
     |> Slice.xlSlice
     |> Test.returnedAnArray
@@ -38,7 +39,7 @@ type ``xlSlice``() =
 
   [<Test>]
   member __.``select columns``() =
-    let a33 = [[11; 12; 13];[21;22;23];[31; 32; 33]] |>> (map box) |> array2D
+    let a33 = [[11; 12; 13];[21;22;23];[31; 32; 33]] |> toArrayObj
     (a33, 2.0, -2.0, missing, missing)
     |> Slice.xlSlice
     |> Test.returnedAnArray
@@ -46,7 +47,7 @@ type ``xlSlice``() =
 
   [<Test>]
   member __.``select center``() =
-    let a33 = [[11; 12; 13]; [21;22;23]; [31; 32; 33]] |>> (map box) |> array2D
+    let a33 = [[11; 12; 13]; [21;22;23]; [31; 32; 33]] |> toArrayObj
     (a33, 2.0, -2.0, 2.0, -2.0)
     |> Slice.xlSlice
     |> Test.returnedAnArray
@@ -61,7 +62,7 @@ type ``xlSlice``() =
         [31; 32; 33; 34; 35; 36]
         [41; 42; 43; 44; 45; 46]
         [51; 52; 53; 54; 55; 56]
-      ] |>> (map box) |> array2D
+      ] |> toArrayObj
     (a56, 3.0, 4.0, 1.0, -2.0)
     |> Slice.xlSlice
     |> Test.returnedAnArray
