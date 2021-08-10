@@ -2,7 +2,6 @@ namespace String
 
 
 open NUnit.Framework
-open FSharpPlus
 open FsUnit
 open FsUnitTyped
 

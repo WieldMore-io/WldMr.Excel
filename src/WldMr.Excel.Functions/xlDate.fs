@@ -4,7 +4,6 @@ open WldMr.Excel.Utilities
 open FsToolkit.ErrorHandling
 
 open System
-open FSharpPlus
 open ExcelDna.Integration
 
 
