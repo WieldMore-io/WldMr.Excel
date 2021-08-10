@@ -2,7 +2,6 @@ module WldMr.Excel.Slice
 
 open WldMr.Excel.Utilities
 open FsToolkit.ErrorHandling
-open FSharpPlus
 open ExcelDna.Integration
 
 

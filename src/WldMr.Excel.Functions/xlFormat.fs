@@ -1,10 +1,10 @@
 module WldMr.Excel.String.Format
 
 open ExcelDna.Integration
-open FSharpPlus
 open FsToolkit.ErrorHandling
 
 open WldMr.Excel.Utilities
+open WldMr
 
 [<ExcelFunction(Category = "WldMr.String",
                 Description = """Formats an interpolated string as in the .Net world"
@@ -27,13 +27,13 @@ let xlFormatA
     match o, t with
     | ExcelMissing _, ExcelMissing _ -> "" :> obj |> Ok
     | _, _ ->
-        match t |> XlObj.toString |>> String.toLower with
+        match t |> XlObj.toString |> Result.map String.toLower with
         | Ok "d" ->
             o |> XlObj.toFloat
-            |>> (System.DateTime.FromOADate >> box)
-        | Ok "i" -> o |> XlObj.toFloat |>> (int >> box)
-        | Ok "f" -> o |> XlObj.toFloat |>> box
-        | Ok "s" -> o |> XlObj.toString |>> box
+            |> Result.map (System.DateTime.FromOADate >> box)
+        | Ok "i" -> o |> XlObj.toFloat |> Result.map (int >> box)
+        | Ok "f" -> o |> XlObj.toFloat |> Result.map box
+        | Ok "s" -> o |> XlObj.toString |> Result.map box
         | _ ->
             "Invalid format specifier. Use d, i, f, or s."
             |> Error
@@ -45,7 +45,7 @@ let xlFormatA
        [ t1; t2; t3; t4; t5; t6; t7; t8 ])
       ||> List.map2 convertXlObj
       |> List.sequenceValidationA
-      |>> List.toArray
+      |> Result.map List.toArray
 
     return! (s, args)
       |> Result.protect (System.String.Format >> box)

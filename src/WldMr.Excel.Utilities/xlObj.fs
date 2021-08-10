@@ -2,7 +2,6 @@ namespace WldMr.Excel.Utilities
 
 open ExcelDna.Integration
 open System
-open FSharpPlus
 
 
 module Array2D =
@@ -119,10 +118,14 @@ module XlObj =
       | x::[] -> $"#Error! {x}"
       | xs -> $"#Error! {xs.Length} errors: {String.Join(sep, xs)}"
 
-    t |> Result.either id (errorMessage >> box)
+    match t with
+    | Ok v -> v
+    | Error e -> e |> errorMessage |> box
 
   let ofResult<'E> (t: Result<obj, 'E>): obj =
-    t |> Result.defaultWith (fun err -> $"#Error! {err}" :> obj)
+    match t with
+    | Ok v -> v
+    | Error err -> $"#Error! {err}" :> obj
 
 
   /// Returns a column array from a sequence which elements get boxed

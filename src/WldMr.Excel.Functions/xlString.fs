@@ -1,9 +1,9 @@
 module WldMr.Excel.String.Basic
 
-open ExcelDna.Integration
-open FSharpPlus
 open WldMr.Excel.Utilities
+open WldMr
 open FsToolkit.ErrorHandling
+open ExcelDna.Integration
 
 
 let stringFilter predicate input: obj[,] =
@@ -22,7 +22,7 @@ let regexFilter regex ignoreCase input: Result<obj[,], string> =
       RegexOptions.Compiled ||| RegexOptions.CultureInvariant ||| RegexOptions.IgnoreCase
     else
       RegexOptions.Compiled ||| RegexOptions.CultureInvariant
-  monad {
+  result {
     let! r =
       Result.protect (fun () -> new System.Text.RegularExpressions.Regex(regex, regexOptions)) ()
       |> Result.mapError (fun ex -> ex.ToString())
@@ -31,7 +31,7 @@ let regexFilter regex ignoreCase input: Result<obj[,], string> =
       match o with
       | ExcelString s -> s |> r.IsMatch
       | _ -> false
-    input |> Array2D.map (f >> box)
+    return input |> Array2D.map (f >> box)
   }
 
 [<ExcelFunction(Category= "WldMr.String",
@@ -52,17 +52,18 @@ let xlStringStartsWith
     [<ExcelArgument(Description="If TRUE, 'prefix' is a regular expression, if FALSE or omitted, 'prefix' is a literal")>]
       useRegex: obj
   ) =
-  monad {
+  result {
     let! ic = ignoreCase |> XlObj.toBoolWithDefault true
     let! ur = useRegex |> XlObj.toBoolWithDefault false
     if ur then
       let adjPrefix = if prefix.StartsWith "^" then prefix else "^" + prefix
       let! r = input |> regexFilter adjPrefix ic
-      r |> box
+      return r |> box
     else
-      input
-      |> stringFilter (fun s -> s.StartsWith(prefix, ic, System.Globalization.CultureInfo.InvariantCulture))
-      |> box
+      let r =
+        input
+        |> stringFilter (fun s -> s.StartsWith(prefix, ic, System.Globalization.CultureInfo.InvariantCulture))
+      return r |> box
   } |> XlObj.ofResult
 
 
@@ -85,17 +86,18 @@ let xlStringEndsWith
     [<ExcelArgument(Description="If TRUE, 'suffix' is a regular expression, if FALSE or omitted, 'suffix' is a literal")>]
       useRegex: obj
   ) =
-  monad {
+  result {
     let! ic = ignoreCase |> XlObj.toBoolWithDefault true
     let! ur = useRegex |> XlObj.toBoolWithDefault false
     if ur then
       let adjPrefix = if suffix.EndsWith "$" then suffix else suffix + "$"
       let! r = input |> regexFilter adjPrefix ic
-      r |> box
+      return r |> box
     else
-      input
-      |> stringFilter (fun s -> s.EndsWith(suffix, ic, System.Globalization.CultureInfo.InvariantCulture))
-      |> box
+      let r =
+        input
+        |> stringFilter (fun s -> s.EndsWith(suffix, ic, System.Globalization.CultureInfo.InvariantCulture))
+      return r |> box
   } |> XlObj.ofResult
 
 
@@ -117,14 +119,15 @@ let xlStringContains
     [<ExcelArgument(Description="If TRUE, 'subString' is a regular expression, if FALSE or omitted, 'subString' is a literal")>]
       useRegex: obj
   ) =
-  monad {
+  result {
     let! ic = ignoreCase |> XlObj.toBoolWithDefault true
     let! ur = useRegex |> XlObj.toBoolWithDefault false
     if ur then
       let! r = input |> regexFilter subString ic
-      r |> box
+      return r |> box
     else
-      input
-      |> stringFilter (fun s -> if ic then s.ToLowerInvariant().Contains(subString.ToLowerInvariant()) else s.Contains(subString))
-      |> box
+      let r =
+        input
+        |> stringFilter (fun s -> if ic then s.ToLowerInvariant().Contains(subString.ToLowerInvariant()) else s.Contains(subString))
+      return r |> box
   } |> XlObj.ofResult
