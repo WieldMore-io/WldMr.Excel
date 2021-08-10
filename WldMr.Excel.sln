@@ -19,9 +19,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "WldMr.Excel.Functions.Test", "test\WldMr.Excel.Functions.Test\WldMr.Excel.Functions.Test.fsproj", "{D28885E2-A3FB-4A8C-80EE-93B9D16F2C35}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "WldMr.Excel.Functions.Test", "tests\WldMr.Excel.Functions.Test\WldMr.Excel.Functions.Test.fsproj", "{D28885E2-A3FB-4A8C-80EE-93B9D16F2C35}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{7FE082AB-1313-4C33-8641-B0261751F354}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7FE082AB-1313-4C33-8641-B0261751F354}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "WldMr.Excel.Example", "examples\WldMr.Excel.Example\WldMr.Excel.Example.fsproj", "{B2806B31-3D1F-465E-80C9-BCBEA81A5D66}"
 EndProject

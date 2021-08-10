@@ -46,7 +46,7 @@ steps:
   inputs:
     projects: |
       src/**/*.fsproj
-      test/**/*.fsproj
+      tests/**/*.fsproj
     command: 'build'
     arguments: >-
         -p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion) 
@@ -57,7 +57,7 @@ steps:
   inputs:
     projects: |
       src/**/*.fsproj
-      test/**/*.fsproj
+      tests/**/*.fsproj
     command: 'test'
     arguments: >-
         -p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion) 

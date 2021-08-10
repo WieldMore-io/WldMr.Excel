@@ -25,7 +25,7 @@
             "type": "shell",
             "args": [
                 "test",
-                "./test/WldMr.Excel.Functions.Test/"
+                "./tests/WldMr.Excel.Functions.Test/"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -42,7 +42,7 @@
             "type": "shell",
             "args": [
                 "watch", "test",
-                "--project", "./test/WldMr.Excel.Functions.Test/"
+                "--project", "./tests/WldMr.Excel.Functions.Test/"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
