@@ -27,6 +27,10 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "WldMr.Excel.Example", "exam
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{1C22CB01-2564-4975-8FC4-0D5F473ACA8D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{263BA620-8B9D-4E98-96A0-B93C26F18128}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WldMr.Excel.Functions.Date", "src\WldMr.Excel.Functions.Date\WldMr.Excel.Functions.Date.fsproj", "{28A4D414-F046-420B-B465-CF13B8E932BB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +53,10 @@ Global
 		{B2806B31-3D1F-465E-80C9-BCBEA81A5D66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2806B31-3D1F-465E-80C9-BCBEA81A5D66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2806B31-3D1F-465E-80C9-BCBEA81A5D66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28A4D414-F046-420B-B465-CF13B8E932BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28A4D414-F046-420B-B465-CF13B8E932BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28A4D414-F046-420B-B465-CF13B8E932BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28A4D414-F046-420B-B465-CF13B8E932BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,6 +64,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{D28885E2-A3FB-4A8C-80EE-93B9D16F2C35} = {7FE082AB-1313-4C33-8641-B0261751F354}
 		{B2806B31-3D1F-465E-80C9-BCBEA81A5D66} = {1C22CB01-2564-4975-8FC4-0D5F473ACA8D}
+		{28A4D414-F046-420B-B465-CF13B8E932BB} = {263BA620-8B9D-4E98-96A0-B93C26F18128}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6AA08573-AB63-46ED-867C-51209C984FB3}
