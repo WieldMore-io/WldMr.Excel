@@ -129,10 +129,14 @@ module XlObj =
 
 
   /// Returns a column array from a sequence which elements get boxed
-  let inline columnOfSeq r =
+  let inline columnOfSeq ifEmpty r =
     let v = r |> Seq.map box |> Array.ofSeq
-    Array2D.init v.Length 1 (fun i j -> v.[i])
-    |> box
+    let a =
+      if v.Length = 0 then
+        Array2D.create 1 1 (ifEmpty |> box)
+      else
+        Array2D.init v.Length 1 (fun i j -> v.[i])
+    a |> box
 
 
 module Result =
