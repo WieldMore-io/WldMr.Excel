@@ -6,7 +6,7 @@ open FsToolkit.ErrorHandling
 open WldMr.Excel.Utilities
 open WldMr
 
-[<ExcelFunction(Category = "WldMr.String",
+[<ExcelFunction(Category = "WldMr Text",
                 Description = """Formats an interpolated string as in the .Net world"
 \teg xlFormat("dd-mmm-yy", A1, "d")
 See help link for more details about the syntax""",

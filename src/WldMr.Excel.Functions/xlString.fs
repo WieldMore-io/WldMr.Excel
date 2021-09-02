@@ -34,7 +34,7 @@ let regexFilter regex ignoreCase input: Result<obj[,], string> =
     return input |> Array2D.map (f >> box)
   }
 
-[<ExcelFunction(Category= "WldMr.String",
+[<ExcelFunction(Category= "WldMr Text",
   IsThreadSafe=true,
   Description=
     "Returns TRUE if the text string starts with the specified prefix\r\n" +
@@ -68,7 +68,7 @@ let xlStringStartsWith
 
 
 [<ExcelFunction(
-  Category= "WldMr.String",
+  Category= "WldMr Text",
   IsThreadSafe=true,
   Description=
     "Returns TRUE if the text string ends with the specified suffix\r\n" +
@@ -101,7 +101,7 @@ let xlStringEndsWith
   } |> XlObj.ofResult
 
 
-[<ExcelFunction(Category= "WldMr.String",
+[<ExcelFunction(Category= "WldMr Text",
   IsThreadSafe=true,
   Description=
     "Returns TRUE if the text string contains the specified substring\r\n" +
