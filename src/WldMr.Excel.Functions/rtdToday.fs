@@ -48,7 +48,7 @@ type RtdTodayServer() =
       topic.UpdateValue r
 
 module RtdTodayFunction =
-  [<ExcelFunction(Category = "WldMr.Date", Description = "Non-volatile version of Today()")>]
+  [<ExcelFunction(Category = "WldMr Date", Description = "Non-volatile version of Today()")>]
   let xlToday(): obj =
     // Call the Excel-DNA RTD wrapper, which does dynamic registration of the RTD server
     // Note that the topic information needs at least one string - it's not used in this sample
