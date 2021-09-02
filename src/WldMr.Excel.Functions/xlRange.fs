@@ -19,7 +19,7 @@ let internal_and rows cols (rs: (Result<bool option, string list>)[,] list) =
     (fun i j -> rs |> List.map (fun r -> r.[i, j] |> Result.value) |> boolOptionFold (&&) true)
 
 
-[<ExcelFunction(Category= "WldMr.Range", Description= "Element-wise boolean AND for arrays")>]
+[<ExcelFunction(Category= "WldMr Array", Description= "Element-wise boolean AND for arrays")>]
 let xlRangeAnd (range1:obj[,], range2: obj[,], range3: obj[,], range4: obj[,]) =
   let internalAnd rows cols (rs: (Result<bool option, string list>)[,] list) =
     Array2D.init rows cols
@@ -40,7 +40,7 @@ let xlRangeAnd (range1:obj[,], range2: obj[,], range3: obj[,], range4: obj[,]) =
   res |> XlObj.ofValidation
 
 
-[<ExcelFunction(Category= "WldMr.Range", Description= "Element-wise boolean OR for arrays")>]
+[<ExcelFunction(Category= "WldMr Array", Description= "Element-wise boolean OR for arrays")>]
 let xlRangeOr (range1:obj[,], range2: obj[,], range3: obj[,], range4: obj[,]) =
   let internalOr rows cols (rs: (Result<bool option, string list>)[,] list) =
     Array2D.init rows cols

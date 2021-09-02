@@ -16,7 +16,7 @@ let parseArg parseF t (errMap: string -> string) (o:obj)=
       |> Result.mapError (errMap >> fun x -> [x])
 
 
-[<ExcelFunction(Category= "WldMr.Range",
+[<ExcelFunction(Category= "WldMr Array",
   Description=
     "Selects a subrange of an array.\r\n" +
     "The arguments use the following convention:\r\n" +
