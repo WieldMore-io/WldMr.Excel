@@ -34,7 +34,7 @@ module NthWeekdayOfMonth =
     | i -> dt |> nextNthDayOfWeek nth wday |> ithNthDayOfWeek nth wday (i - 1)
 
 
-[<ExcelFunction(Category= "WldMr.Date", Description= "Returns the next quarterly nth given day of the week")>]
+[<ExcelFunction(Category= "WldMr Date", Description= "Returns the next quarterly nth given day of the week")>]
 let xlDateNthWeekdayOfMonth
   (
     [<ExcelArgument(Description="date to start from, today if missing")>]
@@ -59,11 +59,11 @@ let xlDateNthWeekdayOfMonth
   } |> XlObj.ofValidation
 
 
-[<ExcelFunction(Category= "WldMr.Date", Description= "Returns the next quarterly third Friday")>]
+[<ExcelFunction(Category= "WldMr Date", Description= "Returns the next quarterly third Friday")>]
 let xlDateThirdFriday(fromDate: obj, nthPeriod: obj) =
   xlDateNthWeekdayOfMonth(fromDate, 5.0, 3.0, nthPeriod)
 
 
-[<ExcelFunction(Category= "WldMr.Date", Description= "Returns the next quarterly third Wednesday")>]
+[<ExcelFunction(Category= "WldMr Date", Description= "Returns the next quarterly third Wednesday")>]
 let xlDateThirdWednesday(fromDate: obj, nthPeriod: obj) =
   xlDateNthWeekdayOfMonth(fromDate, 3.0, 3.0, nthPeriod)

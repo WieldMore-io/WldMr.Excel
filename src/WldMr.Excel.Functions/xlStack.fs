@@ -4,7 +4,7 @@ open ExcelDna.Integration
 open WldMr.Excel.Utilities
 
 
-[<ExcelFunction(Category= "WldMr.Range", Description= "Stack two arrays vertically")>]
+[<ExcelFunction(Category= "WldMr Array", Description= "Stack two arrays vertically")>]
 let xlStackH (x:obj[,], y:obj[,]) =
   let x0, x1 = x |> XlObj.getSize
   let y0, y1 = y |> XlObj.getSize
@@ -17,7 +17,7 @@ let xlStackH (x:obj[,], y:obj[,]) =
     )
 
 
-[<ExcelFunction(Category= "WldMr.Range", Description= "Stack two arrays vertically")>]
+[<ExcelFunction(Category= "WldMr Array", Description= "Stack two arrays vertically")>]
 let xlStackV (x:obj[,], y:obj[,]) =
   let x0, x1 = x |> XlObj.getSize
   let y0, y1 = y |> XlObj.getSize
@@ -48,11 +48,11 @@ let private trimPredicate pred (x:obj[,]) =
   x.[0..lastRow, 0..lastCol]
 
 
-[<ExcelFunction(Category= "WldMr.Range", Description= "Trim #NA cells from the end of array")>]
+[<ExcelFunction(Category= "WldMr Array", Description= "Trim #NA cells from the end of array")>]
 let xlTrimNA (x:obj[,]) =
   trimPredicate ((<>) objNA) x
 
 
-[<ExcelFunction(Category= "WldMr.Range", Description= "Trim empty cells from the end of array")>]
+[<ExcelFunction(Category= "WldMr Array", Description= "Trim empty cells from the end of array")>]
 let xlTrimEmpty (x:obj[,]) =
   trimPredicate (function | ExcelEmpty _ | ExcelString "" -> false | _ -> true) x
