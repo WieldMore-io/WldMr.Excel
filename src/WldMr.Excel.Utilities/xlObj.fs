@@ -38,6 +38,17 @@ module XlObj =
     | ExcelMissing _ | ExcelEmpty _ | ExcelString "" -> v |> box
     | o -> o
 
+  /// Returns a column array from a sequence which elements get boxed
+  let inline columnOfSeq ifEmpty r =
+    let v = r |> Seq.map box |> Array.ofSeq
+    let a =
+      if v.Length = 0 then
+        Array2D.create 1 1 (ifEmpty |> box)
+      else
+        Array2D.init v.Length 1 (fun i j -> v.[i])
+    a |> box
+
+
 [<AutoOpen>]
 module ToFunctions =
   [<RequireQualifiedAccess>]
@@ -190,18 +201,10 @@ module OfFunctions =
       | Error err -> $"#Error! {err}" :> obj
 
 
-  /// Returns a column array from a sequence which elements get boxed
-  let inline columnOfSeq ifEmpty r =
-    let v = r |> Seq.map box |> Array.ofSeq
-    let a =
-      if v.Length = 0 then
-        Array2D.create 1 1 (ifEmpty |> box)
-      else
-        Array2D.init v.Length 1 (fun i j -> v.[i])
-    a |> box
-
-  [<AutoOpen>]
-  module ArgToFunctions =
+[<AutoOpen>]
+module ArgToFunctions =
+  [<RequireQualifiedAccess>]
+  module XlObj =
     /// <summary>
     /// Tries to extract an int out of excel cell value
     /// Does not attempt any conversion or rounding (the original excel value must be a number)
@@ -243,7 +246,6 @@ module OfFunctions =
       match o with
       | :? string as s -> s |> Ok
       | _ -> $"Argument '{argName}': expected a string." |> Error
-
 
 
 module Result =
