@@ -55,6 +55,8 @@ module Error =
   module XlObj =
     let errorString errorMessage = $"#Error! {errorMessage}"
 
+    let ofErrorMessage errorMessage = $"#Error! {errorMessage}" |> box
+
 
 [<AutoOpen>]
 module ToFunctions =
@@ -202,7 +204,7 @@ module OfFunctions =
 
       match t with
       | Ok v -> v
-      | Error e -> e |> errorMessage |> XlObj.errorString |> box
+      | Error e -> e |> errorMessage |> XlObj.ofErrorMessage
 
     /// <summary>
     /// Converts a Result of obj into a suitable valid Excel output value
@@ -210,7 +212,7 @@ module OfFunctions =
     let ofResult<'E> (t: Result<obj, 'E>): obj =
       match t with
       | Ok v -> v
-      | Error err -> err |> XlObj.errorString |> box
+      | Error err -> err |> XlObj.ofErrorMessage
 
 
 [<AutoOpen>]
