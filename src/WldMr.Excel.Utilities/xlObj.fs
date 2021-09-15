@@ -50,6 +50,13 @@ module XlObj =
 
 
 [<AutoOpen>]
+module Error =
+  [<RequireQualifiedAccess>]
+  module XlObj =
+    let errorString errorMessage = $"#Error! {errorMessage}"
+
+
+[<AutoOpen>]
 module ToFunctions =
   [<RequireQualifiedAccess>]
   module XlObj =
@@ -182,23 +189,28 @@ module OfFunctions =
       else
         f |> box
 
-    /// Summarizes the number of errors and returns them prefixed by "#Error!""
+    /// <summary>
+    /// Summarizes the number of errors and then list them
+    /// </summary>
     let ofValidation (t: Result<obj, string list>): obj =
       let errorMessage errors =
         let sep = "; "
         match errors with
         | [] -> "Unexpected error"
-        | x::[] -> $"#Error! {x}"
-        | xs -> $"#Error! {xs.Length} errors: {String.Join(sep, xs)}"
+        | x::[] -> x
+        | xs -> $"{xs.Length} errors: {String.Join(sep, xs)}"
 
       match t with
       | Ok v -> v
-      | Error e -> e |> errorMessage |> box
+      | Error e -> e |> errorMessage |> XlObj.errorString |> box
 
+    /// <summary>
+    /// Converts a Result of obj into a suitable valid Excel output value
+    /// </summary>
     let ofResult<'E> (t: Result<obj, 'E>): obj =
       match t with
       | Ok v -> v
-      | Error err -> $"#Error! {err}" :> obj
+      | Error err -> err |> XlObj.errorString |> box
 
 
 [<AutoOpen>]
