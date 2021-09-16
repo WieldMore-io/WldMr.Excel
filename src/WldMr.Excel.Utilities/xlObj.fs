@@ -39,7 +39,9 @@ module XlObj =
     | o -> o
 
 
-  /// Returns a column array from a sequence which elements get boxed
+  /// <summary>
+  /// Returns a column array from a sequence
+  /// </summary>
   [<RequireQualifiedAccess>]
   module Column =
     let ofSeqWithEmpty (emptyVal: obj) (r: seq<obj>) =
@@ -47,7 +49,19 @@ module XlObj =
       if v.Length = 0 then
         emptyVal
       else
-        Array2D.init v.Length 1 (fun i j -> v.[i]) |> box
+        Array2D.init v.Length 1 (fun i _ -> v.[i]) |> box
+
+  /// <summary>
+  /// Returns a row array from a sequence
+  /// </summary>
+  [<RequireQualifiedAccess>]
+  module Row =
+    let ofSeqWithEmpty (emptyVal: obj) (r: seq<obj>) =
+      let v = r |> Array.ofSeq
+      if v.Length = 0 then
+        emptyVal
+      else
+        Array2D.init 1 v.Length (fun _ j -> v.[j]) |> box
 
 
 [<AutoOpen>]
