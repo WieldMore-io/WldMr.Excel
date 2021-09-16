@@ -38,15 +38,16 @@ module XlObj =
     | ExcelMissing _ | ExcelEmpty _ | ExcelString "" -> v |> box
     | o -> o
 
+
   /// Returns a column array from a sequence which elements get boxed
-  let inline columnOfSeq ifEmpty r =
-    let v = r |> Seq.map box |> Array.ofSeq
-    let a =
+  [<RequireQualifiedAccess>]
+  module Column =
+    let ofSeqWithEmpty (emptyVal: obj) (r: seq<obj>) =
+      let v = r |> Array.ofSeq
       if v.Length = 0 then
-        Array2D.create 1 1 (ifEmpty |> box)
+        emptyVal
       else
-        Array2D.init v.Length 1 (fun i j -> v.[i])
-    a |> box
+        Array2D.init v.Length 1 (fun i j -> v.[i]) |> box
 
 
 [<AutoOpen>]
@@ -176,8 +177,11 @@ module OfFunctions =
 
     /// <summary>
     /// </summary>
-    let ofArray2d (a: obj[,]) =
-      a |> box
+    let ofArray2dWithEmpty (emptyValue: obj) (a: obj[,]) =
+      if a.Length = 0 then
+        emptyValue
+      else
+        a |> box
 
 
     /// <summary>
