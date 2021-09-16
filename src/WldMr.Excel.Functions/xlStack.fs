@@ -11,9 +11,9 @@ let xlStackH (x:obj[,], y:obj[,]) =
   Array2D.init (max x0 y0) (x1 + y1)
     (fun i j ->
       if j < x1 then
-        if i < x0 then x.[i, j] else objNA
+        if i < x0 then x.[i, j] else XlObj.objNA
       else
-        if i < y0 then y.[i, j - x1] else objNA
+        if i < y0 then y.[i, j - x1] else XlObj.objNA
     )
 
 
@@ -24,9 +24,9 @@ let xlStackV (x:obj[,], y:obj[,]) =
   Array2D.init (x0 + y0) (max x1 y1)
     (fun i j ->
       if i < x0 then
-        if j < x1 then x.[i, j] else objNA
+        if j < x1 then x.[i, j] else XlObj.objNA
       else
-        if j < y1 then y.[i - x0, j] else objNA
+        if j < y1 then y.[i - x0, j] else XlObj.objNA
     )
 
 
@@ -50,7 +50,7 @@ let private trimPredicate pred (x:obj[,]) =
 
 [<ExcelFunction(Category= "WldMr Array", Description= "Trim #NA cells from the end of array")>]
 let xlTrimNA (x:obj[,]) =
-  trimPredicate ((<>) objNA) x
+  trimPredicate ((<>) XlObj.objNA) x
 
 
 [<ExcelFunction(Category= "WldMr Array", Description= "Trim empty cells from the end of array")>]

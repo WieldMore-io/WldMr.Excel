@@ -19,7 +19,7 @@ module XlObj =
   let getSize (a: obj[,]): int * int =
     match a.GetLength 0, a.GetLength 1 with
     | 0, _ | _, 0 -> 0, 0
-    | 1, 1 when a.[0, 0] = objMissing -> 0, 0
+    | 1, 1 when a.[0, 0] = XlObj.objMissing -> 0, 0
     | ls -> ls
 
   /// <summary>
@@ -205,7 +205,7 @@ module OfFunctions =
     /// </summary>
     let ofFloat f =
       if Double.IsNaN f then
-        objNA
+        XlObj.objNA
       else
         f |> box
 
