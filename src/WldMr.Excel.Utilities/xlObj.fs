@@ -184,7 +184,14 @@ module OfFunctions =
   [<RequireQualifiedAccess>]
   module XlObj =
     /// <summary>
-    /// boxes the 
+    /// boxes a boolean
+    /// </summary>
+    let ofBool (b: bool): obj =
+      b |> box
+
+
+    /// <summary>
+    /// boxes a string
     /// </summary>
     let ofString (s: string) =
       s |> box
