@@ -53,9 +53,9 @@ module XlObj =
 module Error =
   [<RequireQualifiedAccess>]
   module XlObj =
-    let errorString errorMessage = $"#Error! {errorMessage}"
+    let errorString (errorMessage: string) = $"#Error! {errorMessage}"
 
-    let ofErrorMessage errorMessage = $"#Error! {errorMessage}" |> box
+    let ofErrorMessage (errorMessage: string) = $"#Error! {errorMessage}" |> box
 
 
 [<AutoOpen>]
@@ -82,8 +82,8 @@ module ToFunctions =
           if error < 1e-8 then
             f |> int |> Ok
           else
-            $"Expected an integer." |> Error
-      | _ -> $"Expected an integer." |> Error
+            "Expected an integer." |> Error
+      | _ -> "Expected an integer." |> Error
 
 
     /// <summary>
@@ -209,7 +209,7 @@ module OfFunctions =
     /// <summary>
     /// Converts a Result of obj into a suitable valid Excel output value
     /// </summary>
-    let ofResult<'E> (t: Result<obj, 'E>): obj =
+    let ofResult (t: Result<obj, string>): obj =
       match t with
       | Ok v -> v
       | Error err -> err |> XlObj.ofErrorMessage
@@ -263,4 +263,4 @@ module ArgToFunctions =
 
 
 module Result =
-  let mapArgError errMsg = Result.mapError (fun e -> [$"Arg '{errMsg}': {e}"])
+  let mapArgError (errMsg: string) = Result.mapError (fun e -> [$"Arg '{errMsg}': {e}"])

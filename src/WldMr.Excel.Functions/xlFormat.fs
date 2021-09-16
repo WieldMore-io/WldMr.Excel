@@ -50,4 +50,4 @@ let xlFormatA
     return! (s, args)
       |> Result.protect (System.String.Format >> box)
       |> Result.mapError (fun err -> [ $"{err}" ])
-  } |> XlObj.ofResult
+  } |> XlObj.ofValidation
