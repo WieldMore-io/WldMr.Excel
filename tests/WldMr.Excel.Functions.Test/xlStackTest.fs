@@ -46,8 +46,8 @@ type ``xlStackV``() =
     )
     |> Range.xlStackV
     |> Array2D.shouldEqual (
-      [[3.0 |> box; objNA]
-       ["a" |> box; objNA]
+      [[3.0 |> box; XlObj.objNA]
+       ["a" |> box; XlObj.objNA]
        [1.0 |> box; 2.0 |> box]
       ]
       |> array2D
