@@ -22,6 +22,16 @@ module XlObj =
     | 1, 1 when a.[0, 0] = XlObj.objMissing -> 0, 0
     | ls -> ls
 
+
+  /// <summary>
+  /// True if the value is missing, False otherwise
+  /// </summary>
+  let isMissing (o: obj): bool =
+    match o with
+    | ExcelMissing _ -> true
+    | _ -> false
+
+
   /// <summary>
   /// Defaults the value if the input is Missing, Empty or ""
   /// </summary>
