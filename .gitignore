@@ -21,3 +21,4 @@ src/*/Scratch/
 *.xlsx
 
 .idea
+launchSettings.json

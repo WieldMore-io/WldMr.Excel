@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "WldMr.Excel.Example": {
-      "commandName": "Executable",
-      "executablePath": "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE",
-      "commandLineArgs": "/x C:\\git\\WldMr.Excel\\examples\\WldMr.Excel.Example\\bin\\Debug\\net461\\WldMr.Excel.Example64.xll"
-    }
-  }
-}
