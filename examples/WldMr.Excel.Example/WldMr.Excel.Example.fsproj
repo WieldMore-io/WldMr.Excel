@@ -35,6 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="scripts\GenerateLaunchSettings.fsx" />
+    <None Include="Properties\launchSettings.json" />
     <None Include="paket.references" />
     <None Include="DebugSettings.fsx" />
     <None Include="WldMr.Excel.Example.dna" />
