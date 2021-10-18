@@ -1,25 +1,23 @@
-
-#r "nuget: FSharpPlus"
-#r "nuget: System.Text.Json"  // can nuget be avoided without adding the reference to the project?
-
 open System.IO
-open FSharpPlus
-open System.Text.Json
+
+
+let excelKey = """SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\excel.exe"""
+let excelPath = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(excelKey).GetValue("").ToString()
 
 
 type Arch = X64 | X86
+
 module Arch =
-  let toSuffix = function X64 -> "64" | _ -> ""
+  let toSuffix = function X64 -> "64" | X86 -> ""
 
-// TODO: FIX me
-let findExcel () =
-  if File.Exists "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE" then
-    "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE" |> Some
-  else
-    None
+  let GetBinaryType (path:string) =
+    let at pos (reader:BinaryReader) = 
+      reader.BaseStream.Seek(pos, SeekOrigin.Begin) |> ignore |> reader.ReadInt32
+    use reader = new BinaryReader(File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+    let peOffset = reader |> at 60L
+    let optHeaderMagic = reader |> at (int64 (peOffset + 24)) |> int16
+    match optHeaderMagic with | 0x20Bs -> X64 | 0x10Bs -> X86 | _ -> failwith "Unknown arch"
 
-// TODO: improve me
-let findArch path = if path |> String.startsWith "C:\\Program Files" then X64 else X86
 
 let launchSettingsContent excelPath projectName args =
   sprintf """{
@@ -36,9 +34,8 @@ let launchSettingsContent excelPath projectName args =
 let getPaths () =
   let projectPath = __SOURCE_DIRECTORY__ |> Path.GetDirectoryName
   let projectName = projectPath |> Path.GetFileName
-  let excelPath = findExcel () |> Option.defaultValue "UNKNOWN_PATH_TO_EXCEL"
   let relativeXllPath = "\\bin\\Debug\\net461"
-  let xllName = projectName + (excelPath |> findArch  |> Arch.toSuffix) + ".xll"
+  let xllName = projectName + (excelPath |> Arch.GetBinaryType |> Arch.toSuffix) + ".xll"
   {|
     ProjectPath = projectPath
     ProjectName = projectName
@@ -48,7 +45,7 @@ let getPaths () =
 
 
 let fileContent () = 
-  let escapeString (s: string) = JsonEncodedText.Encode(s).ToString()
+  let escapeString (s: string) = System.Web.HttpUtility.JavaScriptStringEncode(s)
   let paths = getPaths()
   launchSettingsContent (escapeString paths.ExcelPath) (escapeString paths.ProjectName) (escapeString paths.XllPath)
 
