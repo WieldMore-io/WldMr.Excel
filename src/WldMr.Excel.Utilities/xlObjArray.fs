@@ -6,13 +6,17 @@ module XlObjArray =
 
   [<RequireQualifiedAccess>]
   module XlObj =
+
+    [<RequireQualifiedAccess>]
+    type TrimMode = MissingEmpty | MissingEmptyStringEmpty
+
     [<RequireQualifiedAccess>]
     module Array =
 
-      [<RequireQualifiedAccess>]
-      type TrimMode = MissingEmpty | MissingEmptyStringEmpty
 
       /// <summary>
+      /// Drops trailing elements that do meet the trimMode predicate
+      /// This might return an empty array
       /// </summary>
       let trim trimMode (x: obj[]) =
         let trim_ pred x =

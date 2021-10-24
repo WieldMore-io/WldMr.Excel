@@ -40,6 +40,7 @@
     <Compile Include="activePatterns.fs" />
     <Compile Include="xlObj.fs" />
     <Compile Include="xlObjArray.fs" />
+    <Compile Include="xlObjArray2D.fs" />
     <Compile Include="generic.fs" />
     <Compile Include="async.fs" />
   </ItemGroup>
