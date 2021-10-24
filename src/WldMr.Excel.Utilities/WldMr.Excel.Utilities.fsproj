@@ -39,6 +39,7 @@
     <Compile Include="singletonValues.fs" />
     <Compile Include="activePatterns.fs" />
     <Compile Include="xlObj.fs" />
+    <Compile Include="xlObjArray.fs" />
     <Compile Include="generic.fs" />
     <Compile Include="async.fs" />
   </ItemGroup>

@@ -4,8 +4,8 @@ storage: none
 framework: net461
 
 nuget FSharp.Core
-nuget ExcelDna.Integration ~> 1.5.0-rc1
-nuget ExcelDna.Addin ~> 1.5.0-rc1
+nuget ExcelDna.Integration
+nuget ExcelDna.Addin
 nuget ExcelDna.IntelliSense
 nuget FsToolkit.ErrorHandling
 nuget FsUnit

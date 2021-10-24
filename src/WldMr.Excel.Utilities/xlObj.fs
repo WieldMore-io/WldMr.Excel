@@ -1,6 +1,5 @@
 namespace WldMr.Excel.Utilities
 
-open ExcelDna.Integration
 open System
 
 
@@ -49,31 +48,6 @@ module XlObj =
     | o -> o
 
 
-  /// <summary>
-  /// Returns a column array from a sequence
-  /// </summary>
-  [<RequireQualifiedAccess>]
-  module Column =
-    let ofSeqWithEmpty (emptyVal: obj) (r: seq<obj>) =
-      let v = r |> Array.ofSeq
-      if v.Length = 0 then
-        emptyVal
-      else
-        Array2D.init v.Length 1 (fun i _ -> v.[i]) |> box
-
-  /// <summary>
-  /// Returns a row array from a sequence
-  /// </summary>
-  [<RequireQualifiedAccess>]
-  module Row =
-    let ofSeqWithEmpty (emptyVal: obj) (r: seq<obj>) =
-      let v = r |> Array.ofSeq
-      if v.Length = 0 then
-        emptyVal
-      else
-        Array2D.init 1 v.Length (fun _ j -> v.[j]) |> box
-
-
 [<AutoOpen>]
 module Error =
   [<RequireQualifiedAccess>]
@@ -97,7 +71,7 @@ module ToFunctions =
 
     /// <summary>
     /// Tries to extract an int out of excel cell value
-    /// Does not attempt any conversion, and rejects non-integer float 
+    /// Does not attempt any conversion, and rejects non-integer float
     /// (A very small rounding is accepted to address potential rounding issues)
     /// </summary>
     let toIntStrict (o: obj) =
