@@ -57,3 +57,11 @@ module ExcelAsync =
               disposable
         })
     ExcelAsyncUtil.Observe (functionName, parameters, obsSource)
+
+  let wrapAsyncResult functionName parameters asyncResult =
+    let asyncFun =
+      async {
+        let! result = asyncResult
+        return result |> XlObj.ofResult
+      }
+    wrapAsync functionName parameters asyncFun
