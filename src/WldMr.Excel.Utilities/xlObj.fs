@@ -143,7 +143,7 @@ module ToFunctions =
     let toBool (o:obj) =
       match o with
       | ExcelEmpty _ | ExcelMissing _ -> false |> Ok
-      | ExcelNum f -> f = 0.0 |> Ok
+      | ExcelNum f -> f <> 0.0 |> Ok
       | ExcelBool b -> b |> Ok
       | ExcelString s when s.ToLower() = "true" -> true |> Ok
       | ExcelString s when s.ToLower() = "false" -> false |> Ok
