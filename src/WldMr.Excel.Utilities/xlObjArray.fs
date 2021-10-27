@@ -48,6 +48,20 @@ module XlObjArray =
 
       /// <summary>
       /// </summary>
+      let toStringArray (o: obj[]) =
+        let strings = Array.zeroCreate o.Length
+        let mutable error = None
+        for i = 0 to o.Length - 1 do
+          match o.[i] with
+          | :? string as s ->
+              strings.[i] <- s
+          | _ -> error <- Some $"Could not parse {o.[i]} as a string."
+        match error with
+        | Some e -> Error e
+        | None -> Ok strings
+
+      /// <summary>
+      /// </summary>
       let toIntArray (o: obj[]) =
         o
         |> toFloatArray
