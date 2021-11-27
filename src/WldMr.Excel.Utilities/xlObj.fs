@@ -196,7 +196,7 @@ module OfFunctions =
     /// </summary>
     let ofFloat f =
       if Double.IsNaN f then
-        XlObj.objNA
+        XlObj.Error.objNA
       else
         f |> box
 
