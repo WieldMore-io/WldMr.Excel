@@ -7,12 +7,12 @@ open ExcelDna.Integration
 module SingletonValue =
   [<RequireQualifiedAccess>]
   module XlObj =
-    let objEmpty: obj = ExcelEmpty.Value |> box
-    let objMissing = ExcelMissing.Value |> box
+    let objEmpty: objCell = ExcelEmpty.Value |> box |> (~%)
+    let objMissing: objCell = ExcelMissing.Value |> box |> (~%)
 
     module Error =
-      let objNA = ExcelError.ExcelErrorNA |> box
-      let objValue = ExcelError.ExcelErrorValue |> box
-      let objName = ExcelError.ExcelErrorName |> box
-      let objNum = ExcelError.ExcelErrorNum |> box
-      let objGettingData = ExcelError.ExcelErrorGettingData |> box
+      let objNA: objCell = ExcelError.ExcelErrorNA |> box |> (~%)
+      let objValue: objCell = ExcelError.ExcelErrorValue |> box |> (~%)
+      let objName: objCell = ExcelError.ExcelErrorName |> box |> (~%)
+      let objNum: objCell = ExcelError.ExcelErrorNum |> box |> (~%)
+      let objGettingData: objCell = ExcelError.ExcelErrorGettingData |> box |> (~%)

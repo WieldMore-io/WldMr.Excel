@@ -20,7 +20,7 @@ let internal_and rows cols (rs: (Result<bool option, string list>)[,] list) =
 
 
 [<ExcelFunction(Category= "WldMr Array", Description= "Element-wise boolean AND for arrays")>]
-let xlRangeAnd (range1:obj[,], range2: obj[,], range3: obj[,], range4: obj[,]) =
+let xlRangeAnd (range1:objCell[,], range2: objCell[,], range3: objCell[,], range4: objCell[,]) =
   let internalAnd rows cols (rs: (Result<bool option, string list>)[,] list) =
     Array2D.init rows cols
       (fun i j -> rs |> List.map (fun r -> r.[i, j] |> Result.value) |> boolOptionFold (&&) true)
@@ -32,16 +32,15 @@ let xlRangeAnd (range1:obj[,], range2: obj[,], range3: obj[,], range4: obj[,]) =
     do! rngs |> List.forall (XlObj.getSize >> (=) size) |> Result.requireTrue ["All ranges must have the same size"]
     return
       rngs
-      |> List.map (Array2D.map XlObj.toBoolOption)
+      |> List.map (Array2D.map ( XlTypes.tag >> XlObj.toBoolOption))
       |> internalAnd (fst size) (snd size)
-      |> Array2D.map box    // box the bools
-      |> box                // box the array
+      |> Array2D.map XlObj.ofBool    // box the bools
   }
-  res |> XlObj.ofValidation
+  res |> XlObjRange.ofValidation
 
 
 [<ExcelFunction(Category= "WldMr Array", Description= "Element-wise boolean OR for arrays")>]
-let xlRangeOr (range1:obj[,], range2: obj[,], range3: obj[,], range4: obj[,]) =
+let xlRangeOr (range1:objCell[,], range2: objCell[,], range3: objCell[,], range4: objCell[,]) =
   let internalOr rows cols (rs: (Result<bool option, string list>)[,] list) =
     Array2D.init rows cols
       (fun i j -> rs |> List.map (fun r -> r.[i, j] |> Result.value) |> boolOptionFold (||) false)
@@ -53,9 +52,8 @@ let xlRangeOr (range1:obj[,], range2: obj[,], range3: obj[,], range4: obj[,]) =
     do! rngs |> List.forall (XlObj.getSize >> (=) size) |> Result.requireTrue ["All ranges must have the same size"]
     return
       rngs
-      |> List.map (Array2D.map XlObj.toBoolOption)
+      |> List.map (Array2D.map ( XlTypes.tag >> XlObj.toBoolOption))
       |> internalOr (fst size) (snd size)
-      |> Array2D.map box    // box the bools
-      |> box                // box the array
+      |> Array2D.map XlObj.ofBool    // box the bools
   }
-  res |> XlObj.ofValidation
+  res |> XlObjRange.ofValidation

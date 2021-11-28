@@ -18,7 +18,7 @@ module XlObjArray =
       /// Drops trailing elements that do meet the trimMode predicate
       /// This might return an empty array
       /// </summary>
-      let trim trimMode (x: obj[]) =
+      let trim trimMode (x: objCell[]) =
         let trim_ pred x =
           match x |> Array.tryFindIndexBack pred with
           | None -> [||]
@@ -31,13 +31,13 @@ module XlObjArray =
 
       /// <summary>
       /// </summary>
-      let toFloatArray (o: obj[]) =
+      let toFloatArray (o: objCell[]) =
         let floats = Array.zeroCreate o.Length
         let mutable error = None
         for i = 0 to o.Length - 1 do
           match o.[i] with
-          | :? float as f -> floats.[i] <- f
-          | :? string as s ->
+          | ExcelNum f -> floats.[i] <- f
+          | ExcelString s ->
               match System.Double.TryParse s with
               | false, _ -> error <- Some $"Could not parse {s} as a number."
               | true, f -> floats.[i] <- f
@@ -48,12 +48,12 @@ module XlObjArray =
 
       /// <summary>
       /// </summary>
-      let toStringArray (o: obj[]) =
+      let toStringArray (o: objCell[]) =
         let strings = Array.zeroCreate o.Length
         let mutable error = None
         for i = 0 to o.Length - 1 do
           match o.[i] with
-          | :? string as s ->
+          | ExcelString s ->
               strings.[i] <- s
           | _ -> error <- Some $"Could not parse {o.[i]} as a string."
         match error with
@@ -62,7 +62,7 @@ module XlObjArray =
 
       /// <summary>
       /// </summary>
-      let toIntArray (o: obj[]) =
+      let toIntArray (o: objCell[]) =
         o
         |> toFloatArray
         |> Result.map (Array.map int)
@@ -73,22 +73,22 @@ module XlObjArray =
     /// </summary>
     [<RequireQualifiedAccess>]
     module Column =
-      let ofSeqWithEmpty (emptyVal: obj) (r: seq<obj>) =
+      let ofSeqWithEmpty (emptyVal: objCell) (r: seq<objCell>) =
         let v = r |> Array.ofSeq
         if v.Length = 0 then
-          emptyVal
+          emptyVal |> Array2D.create 1 1
         else
-          Array2D.init v.Length 1 (fun i _ -> v.[i]) |> box
+          Array2D.init v.Length 1 (fun i _ -> v.[i])
 
     /// <summary>
     /// Returns a row array from a sequence
     /// </summary>
     [<RequireQualifiedAccess>]
     module Row =
-      let ofSeqWithEmpty (emptyVal: obj) (r: seq<obj>) =
+      let ofSeqWithEmpty (emptyVal: objCell) (r: seq<objCell>) =
         let v = r |> Array.ofSeq
         if v.Length = 0 then
-          emptyVal
+          emptyVal |> Array2D.create 1 1
         else
-          Array2D.init 1 v.Length (fun _ j -> v.[j]) |> box
+          Array2D.init 1 v.Length (fun _ j -> v.[j])
 

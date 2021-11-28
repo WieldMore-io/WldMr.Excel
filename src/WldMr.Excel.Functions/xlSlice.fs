@@ -5,13 +5,13 @@ open FsToolkit.ErrorHandling
 open ExcelDna.Integration
 
 
-let parseArg parseF t (errMap: string -> string) (o:obj)=
-  match o with
+let parseArg parseF t (errMap: string -> string) (xlObj: objCell) =
+  match xlObj with
   | ExcelMissing _
   | ExcelEmpty _
   | ExcelString "" -> t |> Ok
-  | o ->
-      o
+  | _ ->
+      xlObj
       |> parseF
       |> Result.mapError (errMap >> fun x -> [x])
 
@@ -28,16 +28,16 @@ let parseArg parseF t (errMap: string -> string) (o:obj)=
 let xlSlice
   (
     [<ExcelArgument(Description="input range")>]
-      range:obj[,],
+      range:objCell[,],
     [<ExcelArgument(Description="the first row to return, defaults to 1")>]
-      fromRow: obj,
+      fromRow: objCell,
     [<ExcelArgument(Description="the last row to return, defaults to -1")>]
-      toRow: obj,
+      toRow: objCell,
     [<ExcelArgument(Description="the first column to return, defaults to 1")>]
-      fromColumn: obj,
+      fromColumn: objCell,
     [<ExcelArgument(Description="the last column to return, defaults to -1")>]
-      toColumn: obj
-  ) =
+      toColumn: objCell
+  ): objCell[,] =
   let res = validation {
     let! base1_sr = fromRow |> parseArg XlObj.toInt 1 (fun e -> $"arg 'FromRow': {e}" )
     and! base1_er = toRow |> parseArg XlObj.toInt -1 (fun e -> $"arg 'ToRow': {e}" )
@@ -55,10 +55,10 @@ let xlSlice
     let endCol = if ec >= 0 then ec else nCols + ec + 1
     let slice = range.[startRow..endRow, startCol..endCol]
     if slice.LongLength = 0L then
-      return ExcelError.ExcelErrorNA |> box
+      return XlObj.Error.objNA |> Array2D.create 1 1
     else
-      return slice |> box
+      return slice
   }
-  res |> XlObj.ofValidation
+  res |> XlObjRange.ofValidation
 
 

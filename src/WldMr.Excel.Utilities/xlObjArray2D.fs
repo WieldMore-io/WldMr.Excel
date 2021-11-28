@@ -10,7 +10,7 @@ module XlObjArray2D =
     [<RequireQualifiedAccess>]
     module Array2D =
 
-      let private trimPrivate pred (x:obj[,]) =
+      let private trimPrivate pred (x:objCell[,]) =
         let x0, x1 = x |> XlObj.getSize
 
         let lastRow =
@@ -31,7 +31,7 @@ module XlObjArray2D =
       /// Drops trailing rows and columns that do meet the trimMode predicate
       /// This might return an empty array
       /// </summary>
-      let trim trimMode (x: obj[,]) =
+      let trim trimMode (x: objCell[,]) =
         let predicate =
           match trimMode with
           | XlObj.TrimMode.MissingEmpty -> (function | ExcelMissing _ | ExcelEmpty _ | _ -> true)

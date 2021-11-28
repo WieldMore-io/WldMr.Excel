@@ -14,16 +14,16 @@ See help link for more details about the syntax""",
 let xlFormatA
   (
     s: string,
-    o1: obj, t1: obj,
-    o2: obj, t2: obj,
-    o3: obj, t3: obj,
-    o4: obj, t4: obj,
-    o5: obj, t5: obj,
-    o6: obj, t6: obj,
-    o7: obj, t7: obj,
-    o8: obj, t8: obj
+    o1: objCell, t1: objCell,
+    o2: objCell, t2: objCell,
+    o3: objCell, t3: objCell,
+    o4: objCell, t4: objCell,
+    o5: objCell, t5: objCell,
+    o6: objCell, t6: objCell,
+    o7: objCell, t7: objCell,
+    o8: objCell, t8: objCell
   ) =
-  let convertXlObj (o: obj) (t: obj) =
+  let convertXlObj (o: objCell) (t: objCell) =
     match o, t with
     | ExcelMissing _, ExcelMissing _ -> "" :> obj |> Ok
     | _, _ ->
@@ -48,6 +48,6 @@ let xlFormatA
       |> Result.map List.toArray
 
     return! (s, args)
-      |> Result.protect (System.String.Format >> box)
+      |> Result.protect (System.String.Format >> box >> (~%))
       |> Result.mapError (fun err -> [ $"{err}" ])
   } |> XlObj.ofValidation

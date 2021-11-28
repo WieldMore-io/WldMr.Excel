@@ -18,26 +18,22 @@ type ``StringStartsWith``() =
   member __.``arguments are defaulted``() =
     (singleCell "efg", "Ef", missing, missing)
     |> Basic.xlStringStartsWith
-    |> Test.returnedAnArray
     |> Array2D.shouldEqual (singleCell true)
 
   [<Test>]
   member __.``handles French accents``() =
     (singleCell "É", "é", missing, missing)
     |> Basic.xlStringStartsWith
-    |> Test.returnedAnArray
     |> Array2D.shouldEqual (singleCell true)
 
   [<Test>]
   member __.``case sensitive if ignoreCase is set``() =
-    (singleCell "efg", "E", true |> box, missing)
+    (singleCell "efg", "E", true |> box |> (~%), missing)
     |> Basic.xlStringStartsWith
-    |> Test.returnedAnArray
     |> Array2D.shouldEqual (singleCell true)
 
-    (singleCell "efg", "E", false |> box, missing)
+    (singleCell "efg", "E", false |> box |> (~%), missing)
     |> Basic.xlStringStartsWith
-    |> Test.returnedAnArray
     |> Array2D.shouldEqual (singleCell false)
 
 
@@ -46,28 +42,24 @@ type ``StringStartsWith (Regex)``() =
 
   [<Test>]
   member __.``arguments are defaulted``() =
-    (singleCell "efg", "^..g", missing, true)
+    (singleCell "efg", "^..g", missing, trueCell)
     |> Basic.xlStringStartsWith
-    |> Test.returnedAnArray
     |> Array2D.shouldEqual (singleCell true)
 
   [<Test>]
   member __.``case sensitive if ignoreCase is set``() =
-    (singleCell "efg", "E.G", true |> box, true)
+    (singleCell "efg", "E.G", trueCell, trueCell)
     |> Basic.xlStringStartsWith
-    |> Test.returnedAnArray
     |> Array2D.shouldEqual (singleCell true)
 
-    (singleCell "efg", "E.G", false |> box, true)
+    (singleCell "efg", "E.G", falseCell, trueCell)
     |> Basic.xlStringStartsWith
-    |> Test.returnedAnArray
     |> Array2D.shouldEqual (singleCell false)
 
   [<Test>]
   member __.``only match at start``() =
-    (singleCell "eefg", "E.G", true |> box, true)
+    (singleCell "eefg", "E.G", trueCell, trueCell)
     |> Basic.xlStringStartsWith
-    |> Test.returnedAnArray
     |> Array2D.shouldEqual (singleCell false)
 
 [<TestFixture>]
@@ -77,26 +69,22 @@ type ``StringEndsWith``() =
   member __.``arguments are defaulted``() =
     (singleCell "efg", "fG", missing, missing)
     |> Basic.xlStringEndsWith
-    |> Test.returnedAnArray
     |> Array2D.shouldEqual (singleCell true)
 
   [<Test>]
   member __.``handles French accents``() =
     (singleCell "É", "é", missing, missing)
     |> Basic.xlStringEndsWith
-    |> Test.returnedAnArray
     |> Array2D.shouldEqual (singleCell true)
 
   [<Test>]
   member __.``case sensitive if ignoreCase is false``() =
-    (singleCell "efg", "G", true |> box, missing)
+    (singleCell "efg", "G", trueCell, missing)
     |> Basic.xlStringEndsWith
-    |> Test.returnedAnArray
     |> Array2D.shouldEqual (singleCell true)
 
-    (singleCell "efg", "G", false |> box, missing)
+    (singleCell "efg", "G", falseCell, missing)
     |> Basic.xlStringEndsWith
-    |> Test.returnedAnArray
     |> Array2D.shouldEqual (singleCell false)
 
 
@@ -105,26 +93,22 @@ type ``StringEndWith (Regex)``() =
 
   [<Test>]
   member __.``arguments are defaulted``() =
-    (singleCell "efg", "E..$", missing, true)
+    (singleCell "efg", "E..$", missing, trueCell)
     |> Basic.xlStringEndsWith
-    |> Test.returnedAnArray
     |> Array2D.shouldEqual (singleCell true)
 
   [<Test>]
   member __.``case sensitive if ignoreCase is false``() =
-    (singleCell "efg", "E.G", true, true)
+    (singleCell "efg", "E.G", trueCell, trueCell)
     |> Basic.xlStringEndsWith
-    |> Test.returnedAnArray
     |> Array2D.shouldEqual (singleCell true)
 
-    (singleCell "efg", "E.G", false |> box, true)
+    (singleCell "efg", "E.G", falseCell, trueCell)
     |> Basic.xlStringEndsWith
-    |> Test.returnedAnArray
     |> Array2D.shouldEqual (singleCell false)
 
   [<Test>]
   member __.``only match at end``() =
-    (singleCell "eefgg", "E.G", true |> box, true)
+    (singleCell "eefgg", "E.G", trueCell, trueCell)
     |> Basic.xlStringEndsWith
-    |> Test.returnedAnArray
     |> Array2D.shouldEqual (singleCell false)

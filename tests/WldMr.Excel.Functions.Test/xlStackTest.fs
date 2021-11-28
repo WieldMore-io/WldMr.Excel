@@ -22,7 +22,7 @@ type ``xlStackV``() =
       singleCell 2.0
     )
     |> Range.xlStackV
-    |> Array2D.shouldEqual ( [[1.0 |> box]; [2.0 |> box]] |> array2D )
+    |> Array2D.shouldEqual ( [[1.0 |> XlObj.ofFloat]; [2.0 |> XlObj.ofFloat]] |> array2D )
 
     (
       singleCell 1.0,
@@ -36,19 +36,19 @@ type ``xlStackV``() =
       singleCell "a"
     )
     |> Range.xlStackV
-    |> Array2D.shouldEqual ( [[1.0 |> box]; ["a" |> box]] |> array2D )
+    |> Array2D.shouldEqual ( [[1.0 |> XlObj.ofFloat]; ["a" |> XlObj.ofString]] |> array2D )
 
   [<Test>]
   member __.``can stack 1x2 with 2x1``() =
     (
-      [[3.0 |> box]; ["a" |> box]] |> array2D,
-      [[1.0 |> box; 2.0 |> box]] |> array2D
+      [[3.0 |> XlObj.ofFloat]; ["a" |> XlObj.ofString]] |> array2D,
+      [[1.0 |> XlObj.ofFloat; 2.0 |> XlObj.ofFloat]] |> array2D
     )
     |> Range.xlStackV
     |> Array2D.shouldEqual (
-      [[3.0 |> box; XlObj.Error.objNA]
-       ["a" |> box; XlObj.Error.objNA]
-       [1.0 |> box; 2.0 |> box]
+      [[3.0 |> XlObj.ofFloat; XlObj.Error.objNA]
+       ["a" |> XlObj.ofString; XlObj.Error.objNA]
+       [1.0 |> XlObj.ofFloat; 2.0 |> XlObj.ofFloat]
       ]
       |> array2D
     )
@@ -67,7 +67,7 @@ type ``xlStackH``() =
       singleCell 2.0
     )
     |> Range.xlStackH
-    |> Array2D.shouldEqual ( [[1.0 |> box; 2.0 |> box]] |> array2D )
+    |> Array2D.shouldEqual ( [[1.0 |> XlObj.ofFloat; 2.0 |> XlObj.ofFloat]] |> array2D )
 
     (
       singleCell 1.0,
@@ -81,7 +81,7 @@ type ``xlStackH``() =
       singleCell "a"
     )
     |> Range.xlStackH
-    |> Array2D.shouldEqual ( [[1.0 |> box; "a" |> box]] |> array2D )
+    |> Array2D.shouldEqual ( [[1.0 |> XlObj.ofFloat; "a" |> XlObj.ofString]] |> array2D )
 
 
 [<TestFixture>]

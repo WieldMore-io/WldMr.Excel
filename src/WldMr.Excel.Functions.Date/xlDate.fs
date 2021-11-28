@@ -38,32 +38,32 @@ module NthWeekdayOfMonth =
 let xlDateNthWeekdayOfMonth
   (
     [<ExcelArgument(Description="date to start from, today if missing")>]
-      refDate: obj,
+      refDate: objCell,
     [<ExcelArgument(Description="Monday: 1\r\nTuesday: 2\r\n...\r\nSunday: 7 (or 0)")>]
-      dayOfWeek: obj,
+      dayOfWeek: objCell,
     [<ExcelArgument(Description="1 to return the first given day\r\n...\r\n4 to return the fourth\r\n5 to return the last")>]
-      nthSuchDay: obj,
+      nthSuchDay: objCell,
     [<ExcelArgument(Description="1 to return the first quarterly such date following the reference date, 2 to return the second, ...")>]
-      nthPeriod: obj
+      nthPeriod: objCell
   ) =
   validation {
     let! dow = dayOfWeek |> XlObj.toInt |> Result.mapArgError "DayOfWeek"
-    and! refDate = refDate |> XlObj.defaultWith DateTime.Today.ToOADate |> XlObj.toDate |> Result.mapArgError "RefDate"
+    and! refDate = refDate |> XlObj.toDateDefault DateTime.Today |> Result.mapArgError "RefDate"
     and! nth = nthSuchDay |> XlObj.toInt |> Result.mapArgError "NthSuchDay"
-    and! period = nthPeriod |> XlObj.defaultValue 1.0 |> XlObj.toInt |> Result.mapArgError "NthPeriod"
+    and! period = nthPeriod |> XlObj.toIntDefault 1 |> Result.mapArgError "NthPeriod"
 
     do! (0 < nth && nth < 6) |> Result.requireTrue ["arg 'NthSuchDay' should be between 1 and 5"]
     do! (0 < period && period < 1001) |> Result.requireTrue ["arg 'NthPeriod' should be between 1 and 1000"]
 
-    return NthWeekdayOfMonth.ithNthDayOfWeek nth dow period refDate |> box
+    return NthWeekdayOfMonth.ithNthDayOfWeek nth dow period refDate |> XlObj.ofDate
   } |> XlObj.ofValidation
 
 
 [<ExcelFunction(Category= "WldMr Date", Description= "Returns the next quarterly third Friday")>]
-let xlDateThirdFriday(fromDate: obj, nthPeriod: obj) =
-  xlDateNthWeekdayOfMonth(fromDate, 5.0, 3.0, nthPeriod)
+let xlDateThirdFriday(fromDate: objCell, nthPeriod: objCell) =
+  xlDateNthWeekdayOfMonth(fromDate, 5.0 |> XlObj.ofFloat, 3.0 |> XlObj.ofFloat, nthPeriod)
 
 
 [<ExcelFunction(Category= "WldMr Date", Description= "Returns the next quarterly third Wednesday")>]
-let xlDateThirdWednesday(fromDate: obj, nthPeriod: obj) =
-  xlDateNthWeekdayOfMonth(fromDate, 3.0, 3.0, nthPeriod)
+let xlDateThirdWednesday(fromDate: objCell, nthPeriod: objCell) =
+  xlDateNthWeekdayOfMonth(fromDate, 3.0 |> XlObj.ofFloat, 3.0 |> XlObj.ofFloat, nthPeriod)
