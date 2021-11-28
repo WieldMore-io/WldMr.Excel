@@ -4,6 +4,7 @@ open ExcelDna.Integration
 open System
 open System.Threading
 
+#nowarn "42"
 
 module ExcelAsync =
   //
