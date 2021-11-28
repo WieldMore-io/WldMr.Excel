@@ -27,7 +27,10 @@ let xlRangeAnd (range1:objCell[,], range2: objCell[,], range3: objCell[,], range
   let optionRange = function ExcelMissingRange _ -> None | r -> r |> Some
   let rngs = [range1; range2; range3; range4] |> List.map optionRange |> List.choose id
   let res = validation {
-    let! headRng = rngs |> List.tryHead |> Option.toResult id |> Result.withError ["xlRangeOr needs at least one parameter"]
+    let! headRng =
+      rngs
+      |> List.tryHead
+      |> Option.fold (fun _-> Ok) (Error ["xlRangeAnd needs at least one parameter"])
     let size = XlObj.getSize headRng
     do! rngs |> List.forall (XlObj.getSize >> (=) size) |> Result.requireTrue ["All ranges must have the same size"]
     return
@@ -47,7 +50,10 @@ let xlRangeOr (range1:objCell[,], range2: objCell[,], range3: objCell[,], range4
   let optionRange = function ExcelMissingRange _ -> None | r -> r |> Some
   let rngs = [range1; range2; range3; range4] |> List.map optionRange |> List.choose id
   let res = validation {
-    let! headRng = rngs |> List.tryHead |> Option.toResult id |> Result.withError ["xlRangeOr needs at least one parameter"]
+    let! headRng =
+      rngs
+      |> List.tryHead
+      |> Option.fold (fun _-> Ok) (Error ["xlRangeOr needs at least one parameter"])
     let size = XlObj.getSize headRng
     do! rngs |> List.forall (XlObj.getSize >> (=) size) |> Result.requireTrue ["All ranges must have the same size"]
     return
