@@ -1,7 +1,7 @@
-module WldMr.Excel.String.Basic
+module WldMr.Excel.Functions.String
 
 open WldMr.Excel.Utilities
-open WldMr
+open WldMr.Excel.Functions
 open FsToolkit.ErrorHandling
 open ExcelDna.Integration
 
@@ -24,7 +24,7 @@ let regexFilter regex ignoreCase input: Result<objCell[,], string> =
       RegexOptions.Compiled ||| RegexOptions.CultureInvariant
   result {
     let! r =
-      Result.protect (fun () -> new System.Text.RegularExpressions.Regex(regex, regexOptions)) ()
+      Result.protect (fun () -> Regex(regex, regexOptions)) ()
       |> Result.mapError (fun ex -> ex.ToString())
 
     let f (o: objCell) =

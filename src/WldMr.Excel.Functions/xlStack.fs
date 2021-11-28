@@ -1,4 +1,4 @@
-module WldMr.Excel.Range
+module WldMr.Excel.Functions.Stack
 
 open ExcelDna.Integration
 open WldMr.Excel.Utilities

@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		paket.dependencies = paket.dependencies
 		paket.lock = paket.lock
 		README.md = README.md
+		global.json = global.json
 	EndProjectSection
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "WldMr.Excel.Functions.Test", "tests\WldMr.Excel.Functions.Test\WldMr.Excel.Functions.Test.fsproj", "{D28885E2-A3FB-4A8C-80EE-93B9D16F2C35}"

@@ -1,4 +1,4 @@
-module WldMr.Excel.Slice
+module WldMr.Excel.Functions.Slice
 
 open WldMr.Excel.Utilities
 open FsToolkit.ErrorHandling

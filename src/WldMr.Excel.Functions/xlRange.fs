@@ -1,10 +1,8 @@
-module WldMr.Excel.SubRange
+module WldMr.Excel.Functions.Range
 
-open WldMr
 open WldMr.Excel.Utilities
 open FsToolkit.ErrorHandling
 open ExcelDna.Integration
-open WldMr
 
 
 let boolOptionFold f zero bos =
@@ -14,52 +12,45 @@ let boolOptionFold f zero bos =
   | _ -> bs |> List.fold f zero
 
 
-let internal_and rows cols (rs: (Result<bool option, string list>)[,] list) =
-  Array2D.init rows cols
-    (fun i j -> rs |> List.map (fun r -> r.[i, j] |> Result.value) |> boolOptionFold (&&) true)
+let xlRangeCommon fnName booleanOp opZero ranges =
+
+  let internalOp rows cols (rs: Result<bool option, string>[,] list) =
+    Array2D.init rows cols
+      (fun i j ->
+        rs
+        |> List.traverseResultM (fun r -> r.[i, j])
+        |> Result.map ( boolOptionFold booleanOp opZero) )
+
+  let optionRange = function ExcelMissingRange _ -> None | r -> r |> Some
+  let ranges_ = ranges |> List.map optionRange |> List.choose id
+
+  result {
+    let! headRng =
+      ranges_
+      |> List.tryHead
+      |> Option.fold (fun _-> Ok) (Error $"{fnName} needs at least one parameter")
+    let size = XlObj.getSize headRng
+    do! ranges_ |> List.forall (XlObj.getSize >> (=) size) |> Result.requireTrue "All ranges must have the same size"
+    return
+      ranges_
+      |> List.map (Array2D.map XlObj.toBoolOption)
+      |> internalOp (fst size) (snd size)
+      |> Array2D.map ( Result.map XlObj.ofBool >> XlObj.ofResult)
+  } |> XlObjRange.ofResult
 
 
 [<ExcelFunction(Category= "WldMr Array", Description= "Element-wise boolean AND for arrays")>]
-let xlRangeAnd (range1:objCell[,], range2: objCell[,], range3: objCell[,], range4: objCell[,]) =
-  let internalAnd rows cols (rs: (Result<bool option, string list>)[,] list) =
-    Array2D.init rows cols
-      (fun i j -> rs |> List.map (fun r -> r.[i, j] |> Result.value) |> boolOptionFold (&&) true)
-  let optionRange = function ExcelMissingRange _ -> None | r -> r |> Some
-  let rngs = [range1; range2; range3; range4] |> List.map optionRange |> List.choose id
-  let res = validation {
-    let! headRng =
-      rngs
-      |> List.tryHead
-      |> Option.fold (fun _-> Ok) (Error ["xlRangeAnd needs at least one parameter"])
-    let size = XlObj.getSize headRng
-    do! rngs |> List.forall (XlObj.getSize >> (=) size) |> Result.requireTrue ["All ranges must have the same size"]
-    return
-      rngs
-      |> List.map (Array2D.map ( XlTypes.tag >> XlObj.toBoolOption))
-      |> internalAnd (fst size) (snd size)
-      |> Array2D.map XlObj.ofBool    // box the bools
-  }
-  res |> XlObjRange.ofValidation
+let xlRangeAnd (range1:objCell[,], range2: objCell[,], range3: objCell[,], range4: objCell[,])
+  : objCell[,]
+  =
+  let ranges = [range1; range2; range3; range4]
+  xlRangeCommon "xlRangeAnd" (&&) true ranges
 
 
 [<ExcelFunction(Category= "WldMr Array", Description= "Element-wise boolean OR for arrays")>]
-let xlRangeOr (range1:objCell[,], range2: objCell[,], range3: objCell[,], range4: objCell[,]) =
-  let internalOr rows cols (rs: (Result<bool option, string list>)[,] list) =
-    Array2D.init rows cols
-      (fun i j -> rs |> List.map (fun r -> r.[i, j] |> Result.value) |> boolOptionFold (||) false)
-  let optionRange = function ExcelMissingRange _ -> None | r -> r |> Some
-  let rngs = [range1; range2; range3; range4] |> List.map optionRange |> List.choose id
-  let res = validation {
-    let! headRng =
-      rngs
-      |> List.tryHead
-      |> Option.fold (fun _-> Ok) (Error ["xlRangeOr needs at least one parameter"])
-    let size = XlObj.getSize headRng
-    do! rngs |> List.forall (XlObj.getSize >> (=) size) |> Result.requireTrue ["All ranges must have the same size"]
-    return
-      rngs
-      |> List.map (Array2D.map ( XlTypes.tag >> XlObj.toBoolOption))
-      |> internalOr (fst size) (snd size)
-      |> Array2D.map XlObj.ofBool    // box the bools
-  }
-  res |> XlObjRange.ofValidation
+let xlRangeOr(range1:objCell[,], range2: objCell[,], range3: objCell[,], range4: objCell[,])
+  : objCell[,]
+  =
+  let ranges = [range1; range2; range3; range4]
+  xlRangeCommon "xlRangeOr" (||) false ranges
+

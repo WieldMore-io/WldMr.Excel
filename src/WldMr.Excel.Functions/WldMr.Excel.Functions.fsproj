@@ -34,6 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="paket.references" />
+    <Compile Include="FSharpCoreExtensions.fs" />
     <Compile Include="rtdToday.fs" />
     <Compile Include="xlFormat.fs" />
     <Compile Include="xlRange.fs" />

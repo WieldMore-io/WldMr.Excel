@@ -1,19 +1,17 @@
 namespace Stack
 
 open NUnit.Framework
-open FsUnit
-open FsUnitTyped
 
 open WldMr.Excel
-open ExcelDna.Integration
 open WldMr.Excel.Utilities
+open WldMr.Excel.Functions
 
 
 [<TestFixture>]
 type ``xlStackV``() =
   [<Test>]
   member __.``returns empty when inputs are empty``() =
-    Range.xlStackV(emptyArray, emptyArray) |> Array2D.shouldEqual emptyArray
+    Stack.xlStackV(emptyArray, emptyArray) |> Array2D.shouldEqual emptyArray
 
   [<Test>]
   member __.``works with cells``() =
@@ -21,21 +19,21 @@ type ``xlStackV``() =
       singleCell 1.0,
       singleCell 2.0
     )
-    |> Range.xlStackV
+    |> Stack.xlStackV
     |> Array2D.shouldEqual ( [[1.0 |> XlObj.ofFloat]; [2.0 |> XlObj.ofFloat]] |> array2D )
 
     (
       singleCell 1.0,
-      singleCell ExcelMissing.Value
+      singleCell XlObj.objMissing
     )
-    |> Range.xlStackV
+    |> Stack.xlStackV
     |> Array2D.shouldEqual (singleCell 1.0)
 
     (
       singleCell 1.0,
       singleCell "a"
     )
-    |> Range.xlStackV
+    |> Stack.xlStackV
     |> Array2D.shouldEqual ( [[1.0 |> XlObj.ofFloat]; ["a" |> XlObj.ofString]] |> array2D )
 
   [<Test>]
@@ -44,7 +42,7 @@ type ``xlStackV``() =
       [[3.0 |> XlObj.ofFloat]; ["a" |> XlObj.ofString]] |> array2D,
       [[1.0 |> XlObj.ofFloat; 2.0 |> XlObj.ofFloat]] |> array2D
     )
-    |> Range.xlStackV
+    |> Stack.xlStackV
     |> Array2D.shouldEqual (
       [[3.0 |> XlObj.ofFloat; XlObj.Error.objNA]
        ["a" |> XlObj.ofString; XlObj.Error.objNA]
@@ -58,7 +56,7 @@ type ``xlStackV``() =
 type ``xlStackH``() =
   [<Test>]
   member __.``returns NA when inputs are empty``() =
-    Range.xlStackV(emptyArray, emptyArray) |> Array2D.shouldEqual emptyArray
+    Stack.xlStackV(emptyArray, emptyArray) |> Array2D.shouldEqual emptyArray
 
   [<Test>]
   member __.``works with cells``() =
@@ -66,21 +64,21 @@ type ``xlStackH``() =
       singleCell 1.0,
       singleCell 2.0
     )
-    |> Range.xlStackH
+    |> Stack.xlStackH
     |> Array2D.shouldEqual ( [[1.0 |> XlObj.ofFloat; 2.0 |> XlObj.ofFloat]] |> array2D )
 
     (
       singleCell 1.0,
-      singleCell ExcelMissing.Value
+      singleCell XlObj.objMissing
     )
-    |> Range.xlStackH
+    |> Stack.xlStackH
     |> Array2D.shouldEqual (singleCell 1.0)
 
     (
       singleCell 1.0,
       singleCell "a"
     )
-    |> Range.xlStackH
+    |> Stack.xlStackH
     |> Array2D.shouldEqual ( [[1.0 |> XlObj.ofFloat; "a" |> XlObj.ofString]] |> array2D )
 
 
@@ -89,9 +87,9 @@ type ``xlTrimNA``() =
 
   [<Test>]
   member __.``returns empty array when input is NA``() =
-    Range.xlTrimNA(singleCell ExcelError.ExcelErrorNA) |> Array2D.shouldEqual emptyArray
+    Stack.xlTrimNA(singleCell XlObj.Error.objNA) |> Array2D.shouldEqual emptyArray
 
   [<Test>]
   member __.``returns empty array when input is empty``() =
-    Range.xlTrimNA(emptyArray) |> Array2D.shouldEqual emptyArray
+    Stack.xlTrimNA(emptyArray) |> Array2D.shouldEqual emptyArray
 

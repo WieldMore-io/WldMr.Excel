@@ -1,11 +1,10 @@
 namespace Range
 
 open NUnit.Framework
-open FsUnit
-open FsUnitTyped
 
 open WldMr.Excel
 open WldMr.Excel.Utilities
+open WldMr.Excel.Functions
 
 
 [<TestFixture>]

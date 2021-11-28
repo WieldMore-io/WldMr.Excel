@@ -33,8 +33,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="paket.references" />
-    <Compile Include="ResultExtensions.fs" />
-    <Compile Include="StringExtensions.fs" />
     <Compile Include="phantomTypes.fs" />
     <Compile Include="singletonValues.fs" />
     <Compile Include="activePatterns.fs" />

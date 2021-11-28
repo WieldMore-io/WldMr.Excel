@@ -16,7 +16,7 @@ module ExcelAsync =
         ExcelObservableSource(
             fun () ->
             { new IExcelObservable with
-                member __.Subscribe observer =
+                member _.Subscribe observer =
                     // Subscribe to the F# observable
                     Observable.subscribe (fun value -> observer.OnNext (value)) observable
             })
@@ -28,10 +28,10 @@ module ExcelAsync =
         ExcelObservableSource(
           fun () ->
           { new IExcelObservable with
-              member __.Subscribe observer =
+              member _.Subscribe observer =
                 // make something like CancellationDisposable
                 let cts = new CancellationTokenSource ()
-                let disposable = { new IDisposable with member __.Dispose () = cts.Cancel () }
+                let disposable = { new IDisposable with member _.Dispose () = cts.Cancel () }
                 // Start the async computation on this thread
                 Async.StartWithContinuations
                   ( computation= async,
@@ -60,10 +60,10 @@ module ExcelAsync =
         ExcelObservableSource(
           fun () ->
           { new IExcelObservable with
-              member __.Subscribe observer =
+              member _.Subscribe observer =
                 // make something like CancellationDisposable
                 let cts = new CancellationTokenSource ()
-                let disposable = { new IDisposable with member __.Dispose () = cts.Cancel () }
+                let disposable = { new IDisposable with member _.Dispose () = cts.Cancel () }
                 // Start the async computation on this thread
                 Async.StartWithContinuations
                   ( computation= async,

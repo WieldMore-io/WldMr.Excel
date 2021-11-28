@@ -149,6 +149,7 @@ module ToFunctions =
       | ExcelBool b -> Some b |> Ok
       | ExcelString s when s.ToLower() = "true" -> true |> Some |> Ok
       | ExcelString s when s.ToLower() = "false" -> false |> Some |> Ok
+      | ExcelString s -> $"Expected a boolean '{s}'" |> Error
       | _ -> Some false |> Ok
 
 
@@ -156,7 +157,7 @@ module ToFunctions =
     /// Force-converts an Excel obj input to a boolean
     /// Behaviour is as close to Excel as possible
     /// - missing, empty are false
-    /// - Exactxact 0 are treated as False (as expected)
+    /// - Exact 0 are treated as False (as expected)
     /// - Strings are treated as False (debatable)
     /// - non-zero numbers are treated as True
     /// </summary>
@@ -199,7 +200,7 @@ module OfFunctions =
         let sep = "; "
         match errors with
         | [] -> "Unexpected error"
-        | x::[] -> x
+        | [ x ] -> x
         | xs -> $"{xs.Length} errors: {String.Join(sep, xs)}"
 
       match t with
@@ -254,7 +255,7 @@ module OfFunctions =
         let sep = "; "
         match errors with
         | [] -> "Unexpected error"
-        | x::[] -> x
+        | [ x ] -> x
         | xs -> $"{xs.Length} errors: {String.Join(sep, xs)}"
 
       match t with

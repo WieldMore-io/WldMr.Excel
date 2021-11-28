@@ -1,10 +1,11 @@
-module WldMr.Excel.String.Format
+module WldMr.Excel.Functions.Format
 
 open ExcelDna.Integration
 open FsToolkit.ErrorHandling
 
+open WldMr.Excel.Functions
 open WldMr.Excel.Utilities
-open WldMr
+
 
 [<ExcelFunction(Category = "WldMr Text",
                 Description = """Formats an interpolated string as in the .Net world"
