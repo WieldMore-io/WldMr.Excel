@@ -21,9 +21,8 @@ namespace WldMr.Excel
 
   [<AutoOpen>]
   module Range =
-    open ExcelDna.Integration
     let singleCell (v:'a): objCell[,] = [[v |> box |> (~%)]] |> array2D
     let emptyArray: objCell[,] = [] |> array2D
     let trueCell: objCell = true |> XlObj.ofBool
     let falseCell: objCell = false |> XlObj.ofBool
-    let missing: objCell = ExcelMissing.Value |> box |> (~%)
+    let missing: objCell = XlObj.objMissing
