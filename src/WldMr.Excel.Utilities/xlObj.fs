@@ -318,5 +318,11 @@ module ArgToFunctions =
       | _ -> $"Argument '{argName}': expected a string." |> Error
 
 
+    let argDefault defaultValue (argParse: _ -> objCell -> _) name (o: objCell) =
+      match o with
+      | ExcelMissing _ | ExcelEmpty _ -> defaultValue |> Ok
+      | _ -> argParse name o
+
+
 module Result =
   let mapArgError (errMsg: string) = Result.mapError (fun e -> [$"Arg '{errMsg}': {e}"])
