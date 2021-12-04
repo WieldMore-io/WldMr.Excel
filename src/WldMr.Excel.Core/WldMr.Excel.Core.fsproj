@@ -3,12 +3,12 @@
   <PropertyGroup>
     <TargetFrameworks>net461</TargetFrameworks>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-    <PackageId>WldMr.Excel.Utilities</PackageId>
-    <Version>0.0.1</Version>
+    <PackageId>WldMr.Excel.Core</PackageId>
+    <Version>0.0.1</Version>  <!-- Version is maintained through azure-pipelines.yml -->
     <Company>Wieldmore IM Ltd</Company>
     <Authors>PY Rivaille</Authors>
     <Product>Wieldmore CommonDataLogic layer</Product>
-    <Description>FSharp utilities for ExcelDna Addins</Description>
+    <Description>F# types and functions to author safe and full-featured Excel functions with Excel-DNA</Description>
     <Copyright>Copyright © 2021 PY Rivaille</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/WieldMore-io/WldMr.Excel</PackageProjectUrl>

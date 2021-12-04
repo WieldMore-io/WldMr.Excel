@@ -3,7 +3,6 @@ namespace Stack
 open NUnit.Framework
 
 open WldMr.Excel
-open WldMr.Excel.Utilities
 open WldMr.Excel.Functions
 
 

@@ -1,4 +1,4 @@
-﻿namespace WldMr.Excel.Utilities
+﻿namespace WldMr.Excel
 
 open ExcelDna.Integration
 

@@ -1,7 +1,7 @@
 module WldMr.Excel.Functions.Stack
 
 open ExcelDna.Integration
-open WldMr.Excel.Utilities
+open WldMr.Excel
 
 
 [<ExcelFunction(Category= "WldMr Array", Description= "Stack two arrays vertically")>]

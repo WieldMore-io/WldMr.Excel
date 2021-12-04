@@ -1,6 +1,6 @@
 module WldMr.Excel.Functions.Slice
 
-open WldMr.Excel.Utilities
+open WldMr.Excel
 open FsToolkit.ErrorHandling
 open ExcelDna.Integration
 

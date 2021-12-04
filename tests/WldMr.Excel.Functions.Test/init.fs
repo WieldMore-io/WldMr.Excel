@@ -8,7 +8,7 @@ type InitMsgUtils() =
 
 namespace WldMr.Excel
   open FsUnitTyped
-  open WldMr.Excel.Utilities
+  open WldMr.Excel
 
 
   module Array2D =

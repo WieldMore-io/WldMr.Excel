@@ -3,8 +3,9 @@ module WldMr.Excel.Functions.Format
 open ExcelDna.Integration
 open FsToolkit.ErrorHandling
 
+open WldMr.Excel
 open WldMr.Excel.Functions
-open WldMr.Excel.Utilities
+
 
 
 // the usability of this function is not great

@@ -1,5 +1,6 @@
-﻿namespace WldMr.Excel.Utilities
+namespace WldMr.Excel.Core
 
+open WldMr.Excel
 
 module Generic =
   open TypeShape.Core

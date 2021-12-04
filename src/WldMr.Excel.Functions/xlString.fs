@@ -1,6 +1,6 @@
 module WldMr.Excel.Functions.String
 
-open WldMr.Excel.Utilities
+open WldMr.Excel
 open WldMr.Excel.Functions
 open FsToolkit.ErrorHandling
 open ExcelDna.Integration

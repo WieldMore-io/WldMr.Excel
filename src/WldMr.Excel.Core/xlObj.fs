@@ -1,8 +1,9 @@
-namespace WldMr.Excel.Utilities
+namespace WldMr.Excel
 
 open System
 
 
+[<RequireQualifiedAccess>]
 module Array2D =
   /// <summary>
   /// flattens the array as a list of rows, each row being a list

@@ -13,7 +13,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../../src/WldMr.Excel.Functions/WldMr.Excel.Functions.fsproj" />
-    <ProjectReference Include="../../src/WldMr.Excel.Utilities/WldMr.Excel.Utilities.fsproj" />
+    <ProjectReference Include="../../src/WldMr.Excel.Core/WldMr.Excel.Core.fsproj" />
     <ProjectReference Include="../../src/WldMr.Excel.Functions.Date/WldMr.Excel.Functions.Date.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
