@@ -75,14 +75,19 @@ module ExcelAsync =
                 // return the disposable
                 disposable
           })
-      let eaRes = ExcelAsyncUtil.Observe (functionName, parameters, obsSource)
+      try
+        let eaRes = ExcelAsyncUtil.Observe (functionName, parameters, obsSource)
 
-      match eaRes with
-      | :? (obj[,]) as a -> (# "" a : xlObj[,] #)
-      | oneObj ->
-          match (%oneObj: xlObj) with
-          | ExcelNA na -> "#retrieving..." |> XlObj.ofString |> XlObjRange.ofCell
-          | o -> o |> XlObjRange.ofCell
+        match eaRes with
+        | :? (obj[,]) as a -> (# "" a : xlObj[,] #)
+        | oneObj ->
+            match (%oneObj: xlObj) with
+            | ExcelNA na -> "Retrieving..." |> XlObj.ofString |> XlObjRange.ofCell
+            | o -> o |> XlObjRange.ofCell
+
+      with
+//        | :? ArgumentException as e -> $"Regex error: {e.Message}" |> XlObj.ofErrorMessage
+        | e -> $"{e.Message} ({e.GetType()})" |> XlObj.ofErrorMessage |> XlObjRange.ofCell
 
     let wrapAsyncResult functionName parameters asyncResult =
       let asyncFun =
