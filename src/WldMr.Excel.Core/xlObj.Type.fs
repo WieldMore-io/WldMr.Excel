@@ -11,7 +11,7 @@ module MeasureType =
 open MeasureType
 
 
-type objCell = obj<xlCellT>
+type xlObj = obj<xlCellT>
 //type objRange = obj<xlRangeT>
 
 

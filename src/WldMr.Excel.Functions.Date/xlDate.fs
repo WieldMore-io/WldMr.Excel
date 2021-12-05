@@ -38,13 +38,13 @@ module NthWeekdayOfMonth =
 let xlDateNthWeekdayOfMonth
   (
     [<ExcelArgument(Description="date to start from, today if missing")>]
-      refDate: objCell,
+      refDate: xlObj,
     [<ExcelArgument(Description="Monday: 1\r\nTuesday: 2\r\n...\r\nSunday: 7 (or 0)")>]
-      dayOfWeek: objCell,
+      dayOfWeek: xlObj,
     [<ExcelArgument(Description="1 to return the first given day\r\n...\r\n4 to return the fourth\r\n5 to return the last")>]
-      nthSuchDay: objCell,
+      nthSuchDay: xlObj,
     [<ExcelArgument(Description="1 to return the first quarterly such date following the reference date, 2 to return the second, ...")>]
-      nthPeriod: objCell
+      nthPeriod: xlObj
   ) =
   validation {
     let! dow = dayOfWeek |> XlObj.toInt |> Result.mapArgError "DayOfWeek"
@@ -60,10 +60,10 @@ let xlDateNthWeekdayOfMonth
 
 
 [<ExcelFunction(Category= "WldMr Date", Description= "Returns the next quarterly third Friday")>]
-let xlDateThirdFriday(fromDate: objCell, nthPeriod: objCell) =
+let xlDateThirdFriday(fromDate: xlObj, nthPeriod: xlObj) =
   xlDateNthWeekdayOfMonth(fromDate, 5.0 |> XlObj.ofFloat, 3.0 |> XlObj.ofFloat, nthPeriod)
 
 
 [<ExcelFunction(Category= "WldMr Date", Description= "Returns the next quarterly third Wednesday")>]
-let xlDateThirdWednesday(fromDate: objCell, nthPeriod: objCell) =
+let xlDateThirdWednesday(fromDate: xlObj, nthPeriod: xlObj) =
   xlDateNthWeekdayOfMonth(fromDate, 3.0 |> XlObj.ofFloat, 3.0 |> XlObj.ofFloat, nthPeriod)

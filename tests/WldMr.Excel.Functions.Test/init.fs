@@ -22,8 +22,8 @@ namespace WldMr.Excel
 
   [<AutoOpen>]
   module Range =
-    let singleCell (v:'a): objCell[,] = [[v |> box |> (~%)]] |> array2D
-    let emptyArray: objCell[,] = [] |> array2D
-    let trueCell: objCell = true |> XlObj.ofBool
-    let falseCell: objCell = false |> XlObj.ofBool
-    let missing: objCell = XlObj.xlMissing
+    let singleCell (v:'a): xlObj[,] = [[v |> box |> (~%)]] |> array2D
+    let emptyArray: xlObj[,] = [] |> array2D
+    let trueCell: xlObj = true |> XlObj.ofBool
+    let falseCell: xlObj = false |> XlObj.ofBool
+    let missing: xlObj = XlObj.xlMissing

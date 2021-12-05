@@ -40,16 +40,16 @@ let xlRangeCommon fnName booleanOp opZero ranges =
 
 
 [<ExcelFunction(Category= "WldMr Array", Description= "Element-wise boolean AND for arrays")>]
-let xlRangeAnd (range1:objCell[,], range2: objCell[,], range3: objCell[,], range4: objCell[,])
-  : objCell[,]
+let xlRangeAnd (range1:xlObj[,], range2: xlObj[,], range3: xlObj[,], range4: xlObj[,])
+  : xlObj[,]
   =
   let ranges = [range1; range2; range3; range4]
   xlRangeCommon "xlRangeAnd" (&&) true ranges
 
 
 [<ExcelFunction(Category= "WldMr Array", Description= "Element-wise boolean OR for arrays")>]
-let xlRangeOr(range1:objCell[,], range2: objCell[,], range3: objCell[,], range4: objCell[,])
-  : objCell[,]
+let xlRangeOr(range1:xlObj[,], range2: xlObj[,], range3: xlObj[,], range4: xlObj[,])
+  : xlObj[,]
   =
   let ranges = [range1; range2; range3; range4]
   xlRangeCommon "xlRangeOr" (||) false ranges

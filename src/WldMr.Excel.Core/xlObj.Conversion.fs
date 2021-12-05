@@ -9,7 +9,7 @@ module XlObj =
   /// <summary>
   /// True if the value is missing, False otherwise
   /// </summary>
-  let isMissing (o: objCell): bool =
+  let isMissing (o: xlObj): bool =
     match o with
     | ExcelMissing _ -> true
     | _ -> false
@@ -38,7 +38,7 @@ module Error =
   module XlObj =
     let errorString (errorMessage: string) = $"#Error! {errorMessage}"
 
-    let ofErrorMessage (errorMessage: string): objCell = $"#Error! {errorMessage}" |> box |> (~%)
+    let ofErrorMessage (errorMessage: string): xlObj = $"#Error! {errorMessage}" |> box |> (~%)
 
 
 [<AutoOpen>]
@@ -49,10 +49,10 @@ module ToFunctions =
     /// Tries to extract an int out of excel cell value
     /// Does not attempt any conversion (the original excel value must be a number)
     /// </summary>
-    let toInt (o: objCell) =
+    let toInt (o: xlObj) =
       match o with | ExcelNum f -> f |> int |> Ok | _ -> "Expected a number" |> Error
 
-    let toIntDefault defaultValue (o: objCell) =
+    let toIntDefault defaultValue (o: xlObj) =
       match o with
       | ExcelMissing _ | ExcelEmpty _ | ExcelString "" -> defaultValue |> Ok
       | ExcelNum f -> f |> int |> Ok
@@ -64,7 +64,7 @@ module ToFunctions =
     /// Does not attempt any conversion, and rejects non-integer float
     /// (A very small rounding is accepted to address potential rounding issues)
     /// </summary>
-    let toIntStrict (o: objCell) =
+    let toIntStrict (o: xlObj) =
       match o with
       | ExcelNum f ->
           let error = abs ( f - (f |> int |> float) )
@@ -79,11 +79,11 @@ module ToFunctions =
     /// Tries to extract a float out of excel cell value
     /// Does not attempt any conversion (the original excel value must be a number)
     /// </summary>
-    let toFloat (o: objCell) =
+    let toFloat (o: xlObj) =
       match o with | ExcelNum f -> f |> Ok | _ -> "Expected a number" |> Error
 
 
-    let toFloatDefault defaultValue (o: objCell) =
+    let toFloatDefault defaultValue (o: xlObj) =
       match o with
       | ExcelMissing _ | ExcelEmpty _ | ExcelString "" -> defaultValue
       | ExcelNum f -> f |> Ok
@@ -93,10 +93,10 @@ module ToFunctions =
     /// Tries to extract a datetime out of excel cell value
     /// Does not attempt any conversion (the original excel value must be a number)
     /// </summary>
-    let toDate (o: objCell) =
+    let toDate (o: xlObj) =
       match o with | ExcelNum f -> f |> DateTime.FromOADate |> Ok | _ -> "Expected a date" |> Error
 
-    let toDateDefault defaultValue (o: objCell) =
+    let toDateDefault defaultValue (o: xlObj) =
       match o with
       | ExcelMissing _ | ExcelEmpty _ | ExcelString "" -> defaultValue |> Ok
       | ExcelNum f -> f |> DateTime.FromOADate |> Ok
@@ -107,7 +107,7 @@ module ToFunctions =
     /// Tries to extract a date without time out of excel cell value
     /// Does not attempt any conversion (the original excel value must be a number)
     /// </summary>
-    let toDateNoTime (o: objCell) =
+    let toDateNoTime (o: xlObj) =
       match o with
       | ExcelNum f -> f |> int |> float |> DateTime.FromOADate |> Ok
       | _ -> "Expected a date" |> Error
@@ -116,7 +116,7 @@ module ToFunctions =
     /// try to extract a string without time out of excel cell value
     /// does not attempt any conversion (the original excel value must be a string)
     /// </summary>
-    let toString (o: objCell) =
+    let toString (o: xlObj) =
       match o with
       | ExcelString s -> s |> Ok
       | _ -> "Expected a string" |> Error
@@ -129,7 +129,7 @@ module ToFunctions =
     /// - non-zero numbers are treated as True
     /// behaves similarly to Excel functions that take a range (see =AND(...))
     /// </summary>
-    let toBoolOption (o:objCell) =
+    let toBoolOption (o:xlObj) =
       match o with
       | ExcelEmpty _ | ExcelMissing _ | ExcelString "" -> None |> Ok
       | ExcelError _ -> false |> Some |> Ok
@@ -149,7 +149,7 @@ module ToFunctions =
     /// - Strings are treated as False (debatable)
     /// - non-zero numbers are treated as True
     /// </summary>
-    let toBool (o:objCell) =
+    let toBool (o:xlObj) =
       match o with
       | ExcelEmpty _ | ExcelMissing _ -> false |> Ok
       | ExcelNum f -> f <> 0.0 |> Ok
@@ -166,7 +166,7 @@ module ToFunctions =
     /// - Strings are treated as False (debatable)
     /// - non-zero numbers are treated as True
     /// </summary>
-    let toBoolWithDefault d (o:objCell) =
+    let toBoolWithDefault d (o:xlObj) =
       match o with
       | ExcelMissing _ -> d |> Ok
       | _ -> o |> toBool
@@ -179,20 +179,20 @@ module OfFunctions =
     /// <summary>
     /// boxes a boolean
     /// </summary>
-    let ofBool (b: bool): objCell =
+    let ofBool (b: bool): xlObj =
       b |> box |> (~%)
 
     /// <summary>
     /// boxes a string
     /// </summary>
-    let ofString (s: string): objCell =
+    let ofString (s: string): xlObj =
       s |> box |> (~%)
 
     /// <summary>
     /// Boxes the float
     /// If its value is NaN, it is replaced by #N/A!.
     /// </summary>
-    let ofFloat f: objCell  =
+    let ofFloat f: xlObj  =
       if Double.IsNaN f then
         XlObj.Error.xlNA
       else
@@ -201,18 +201,18 @@ module OfFunctions =
     /// <summary>
     /// Boxes the int
     /// </summary>
-    let ofInt i: objCell  =
+    let ofInt i: xlObj  =
       i |> float |> box |> (~%)
 
 
-    let ofDate (d: DateTime): objCell  =
+    let ofDate (d: DateTime): xlObj  =
       d |> box |> (~%)
 
 
     /// <summary>
     /// Summarizes the number of errors and then list them
     /// </summary>
-    let ofValidation (t: Result<objCell, string list>): objCell =
+    let ofValidation (t: Result<xlObj, string list>): xlObj =
       let errorMessage errors =
         let sep = "; "
         match errors with
@@ -227,7 +227,7 @@ module OfFunctions =
     /// <summary>
     /// Converts a Result of obj into a suitable valid Excel output value
     /// </summary>
-    let ofResult (t: Result<objCell, string>): objCell =
+    let ofResult (t: Result<xlObj, string>): xlObj =
       match t with
       | Ok v -> v
       | Error err -> err |> XlObj.ofErrorMessage
@@ -244,7 +244,7 @@ module ArgToFunctions =
     /// Does not attempt any conversion or rounding (the original excel value must be a number)
     /// (A very small rounding is attempted)
     /// </summary>
-    let argToIntStrict (argName: string) (o: objCell) =
+    let argToIntStrict (argName: string) (o: xlObj) =
       match o with
       | ExcelNum f ->
           let error = abs ( f - (f |> int |> float) )
@@ -258,7 +258,7 @@ module ArgToFunctions =
     /// Tries to extract an int out of excel cell value
     /// Does not attempt any conversion (the original excel value must be a number)
     /// </summary>
-    let argToInt (argName: string) (o: objCell) =
+    let argToInt (argName: string) (o: xlObj) =
       match o with
       | ExcelNum f -> f |> int |> Ok
       | _ -> $"Argument '{argName}': expected a number." |> Error
@@ -267,7 +267,7 @@ module ArgToFunctions =
     /// Tries to extract a float out of excel cell value
     /// Does not attempt any conversion (the original excel value must be a number)
     /// </summary>
-    let argToFloat (argName: string) (o: objCell) =
+    let argToFloat (argName: string) (o: xlObj) =
       match o with
       | ExcelNum f -> f |> Ok
       | _ -> $"Argument '{argName}': expected a number." |> Error
@@ -276,13 +276,13 @@ module ArgToFunctions =
     /// try to extract a string without time out of excel cell value
     /// does not attempt any conversion (the original excel value must be a string)
     /// </summary>
-    let argToString (argName: string) (o: objCell) =
+    let argToString (argName: string) (o: xlObj) =
       match o with
       | ExcelString s -> s |> Ok
       | _ -> $"Argument '{argName}': expected a string." |> Error
 
 
-    let argDefault defaultValue (argParse: _ -> objCell -> _) name (o: objCell) =
+    let argDefault defaultValue (argParse: _ -> xlObj -> _) name (o: xlObj) =
       match o with
       | ExcelMissing _ | ExcelEmpty _ -> defaultValue |> Ok
       | _ -> argParse name o

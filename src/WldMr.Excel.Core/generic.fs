@@ -5,16 +5,16 @@ open WldMr.Excel
 module Generic =
   open TypeShape.Core
 
-  let tupleToArray<'T> () : 'T -> objCell[] =
+  let tupleToArray<'T> () : 'T -> xlObj[] =
     match shapeof<'T> with
     | Shape.Tuple (:? ShapeTuple<'T> as shape) ->
         let mkElemToObj (shape : IShapeMember<'T>) =
-           shape.Accept { new IMemberVisitor<'T, 'T -> objCell> with
+           shape.Accept { new IMemberVisitor<'T, 'T -> xlObj> with
                member _.Visit (shape : ShapeMember<'T, 'Field>) =
-                  shape.Get >> unbox<'Field -> objCell>(fun (o:'Field) -> o |> box |> (~%))
+                  shape.Get >> unbox<'Field -> xlObj>(fun (o:'Field) -> o |> box |> (~%))
                }
 
-        let elemToObjs : ('T -> objCell) [] = shape.Elements |> Array.map mkElemToObj
+        let elemToObjs : ('T -> xlObj) [] = shape.Elements |> Array.map mkElemToObj
 
         fun (r:'T) -> elemToObjs |> Array.map (fun ep -> ep r)
 

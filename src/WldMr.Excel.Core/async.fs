@@ -23,7 +23,7 @@ module ExcelAsync =
     ExcelAsyncUtil.Observe (functionName, parameters, obsSource)
 
   module Cell =
-    let wrapAsync functionName parameters (async: Async<objCell>): objCell =
+    let wrapAsync functionName parameters (async: Async<xlObj>): xlObj =
       let obsSource =
         ExcelObservableSource(
           fun () ->
@@ -55,7 +55,7 @@ module ExcelAsync =
 
 
   module Range =
-    let wrapAsync functionName parameters (async: Async<objCell[,]>): objCell[,] =
+    let wrapAsync functionName parameters (async: Async<xlObj[,]>): xlObj[,] =
       let obsSource =
         ExcelObservableSource(
           fun () ->
@@ -78,9 +78,9 @@ module ExcelAsync =
       let eaRes = ExcelAsyncUtil.Observe (functionName, parameters, obsSource)
 
       match eaRes with
-      | :? (obj[,]) as a -> (# "" a : objCell[,] #)
+      | :? (obj[,]) as a -> (# "" a : xlObj[,] #)
       | oneObj ->
-          match (%oneObj: objCell) with
+          match (%oneObj: xlObj) with
           | ExcelNA na -> "#retrieving..." |> XlObj.ofString |> XlObjRange.ofCell
           | o -> o |> XlObjRange.ofCell
 

@@ -21,7 +21,7 @@ module XlObjRangeTrimOps =
     /// Drops trailing elements that do meet the trimMode predicate
     /// This might return an empty array
     /// </summary>
-    let trimArray trimMode (x: objCell[]) =
+    let trimArray trimMode (x: xlObj[]) =
       let trim_ pred x =
         match x |> Array.tryFindIndexBack pred with
         | None -> [||]
@@ -31,7 +31,7 @@ module XlObjRangeTrimOps =
     [<RequireQualifiedAccess>]
     module Array2DInternal =
 
-      let trimPrivate pred (x:objCell[,]) =
+      let trimPrivate pred (x:xlObj[,]) =
         let x0, x1 = x |> XlObjRange.getSize
 
         let lastRow =
@@ -52,6 +52,6 @@ module XlObjRangeTrimOps =
     /// Drops trailing rows and columns that do meet the trimMode predicate
     /// This might return an empty array
     /// </summary>
-    let trimRange trimMode (x: objCell[,]) =
+    let trimRange trimMode (x: xlObj[,]) =
       Array2DInternal.trimPrivate (trimMode |> TrimMode.predicate) x
 

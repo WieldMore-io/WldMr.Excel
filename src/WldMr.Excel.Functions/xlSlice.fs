@@ -18,16 +18,16 @@ open WldMr.Excel
 let xlSlice
   (
     [<ExcelArgument(Description="input range")>]
-      range:objCell[,],
+      range:xlObj[,],
     [<ExcelArgument(Description="the first row to return, defaults to 1")>]
-      fromRow: objCell,
+      fromRow: xlObj,
     [<ExcelArgument(Description="the last row to return, defaults to -1")>]
-      toRow: objCell,
+      toRow: xlObj,
     [<ExcelArgument(Description="the first column to return, defaults to 1")>]
-      fromColumn: objCell,
+      fromColumn: xlObj,
     [<ExcelArgument(Description="the last column to return, defaults to -1")>]
-      toColumn: objCell
-  ): objCell[,]
+      toColumn: xlObj
+  ): xlObj[,]
   =
   result {
     let nRows = range.GetLength 0

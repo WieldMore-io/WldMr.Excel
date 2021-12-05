@@ -5,8 +5,8 @@ open FsToolkit.ErrorHandling
 open WldMr.Excel
 
 
-let stringFilter (predicate: string -> bool) (input: objCell[,]): objCell[,] =
-  let f (o: objCell) =
+let stringFilter (predicate: string -> bool) (input: xlObj[,]): xlObj[,] =
+  let f (o: xlObj) =
     match o with
     | ExcelString s -> s |> predicate
     | _ -> false
@@ -15,7 +15,7 @@ let stringFilter (predicate: string -> bool) (input: objCell[,]): objCell[,] =
 
 open System.Text.RegularExpressions
 
-let regexFilter regex ignoreCase input: Result<objCell[,], string> =
+let regexFilter regex ignoreCase input: Result<xlObj[,], string> =
   let regexOptions =
     if ignoreCase then
       RegexOptions.Compiled ||| RegexOptions.CultureInvariant ||| RegexOptions.IgnoreCase
@@ -26,7 +26,7 @@ let regexFilter regex ignoreCase input: Result<objCell[,], string> =
       Result.protect (fun () -> Regex(regex, regexOptions)) ()
       |> Result.mapError (fun ex -> ex.ToString())
 
-    let f (o: objCell) =
+    let f (o: xlObj) =
       match o with
       | ExcelString s -> s |> r.IsMatch
       | _ -> false
@@ -43,13 +43,13 @@ let regexFilter regex ignoreCase input: Result<objCell[,], string> =
 let xlStringStartsWith
   (
     [<ExcelArgument(Description="The text string value (or range of values) which start is being queried")>]
-      input: objCell[,],
+      input: xlObj[,],
     [<ExcelArgument(Description="The text string value to be searched for at the start of the input")>]
       prefix: string,
     [<ExcelArgument(Description="If TRUE or omitted, a and A are considered equal, if FALSE, a and A are different")>]
-      ignoreCase: objCell,
+      ignoreCase: xlObj,
     [<ExcelArgument(Description="If TRUE, 'prefix' is a regular expression, if FALSE or omitted, 'prefix' is a literal")>]
-      useRegex: objCell
+      useRegex: xlObj
   ) =
   result {
     let! ic = ignoreCase |> XlObj.toBoolWithDefault true
@@ -75,13 +75,13 @@ let xlStringStartsWith
 let xlStringEndsWith
   (
     [<ExcelArgument(Description="The text string value (or range of values) which end is being queried")>]
-      input: objCell[,],
+      input: xlObj[,],
     [<ExcelArgument(Description="The text string value to be searched for at the end of the input")>]
       suffix: string,
     [<ExcelArgument(Description="If TRUE or omitted, a and A are considered equal, if FALSE, a and A are different")>]
-      ignoreCase: objCell,
+      ignoreCase: xlObj,
     [<ExcelArgument(Description="If TRUE, 'suffix' is a regular expression, if FALSE or omitted, 'suffix' is a literal")>]
-      useRegex: objCell
+      useRegex: xlObj
   ) =
   result {
     let! ic = ignoreCase |> XlObj.toBoolWithDefault true
@@ -106,14 +106,14 @@ let xlStringEndsWith
 let xlStringContains
   (
     [<ExcelArgument(Description="The text string value (or range of values) which is being queried")>]
-      input: objCell[,],
+      input: xlObj[,],
     [<ExcelArgument(Description="The text string value to be searched within the input")>]
       subString: string,
     [<ExcelArgument(Description="If TRUE or omitted, a and A are considered equal, if FALSE, a and A are different")>]
-      ignoreCase: objCell,
+      ignoreCase: xlObj,
     [<ExcelArgument(Description="If TRUE, 'subString' is a regular expression, if FALSE or omitted, 'subString' is a literal")>]
-      useRegex: objCell
-  ): objCell[,] =
+      useRegex: xlObj
+  ): xlObj[,] =
   result {
     let! ic = ignoreCase |> XlObj.toBoolWithDefault true
     let! ur = useRegex |> XlObj.toBoolWithDefault false

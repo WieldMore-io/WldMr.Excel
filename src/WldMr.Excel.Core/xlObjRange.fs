@@ -6,7 +6,7 @@ open System
 [<RequireQualifiedAccess>]
 module XlObjRange =
 
-  let getSize (a: objCell[,]): int * int =
+  let getSize (a: xlObj[,]): int * int =
     match a.GetLength 0, a.GetLength 1 with
     | 0, _ | _, 0 -> 0, 0
     | 1, 1 when a.[0, 0] = XlObj.xlMissing -> 0, 0
@@ -18,14 +18,14 @@ module OfConversions =
   [<RequireQualifiedAccess>]
   module XlObjRange =
 
-    let ofCell (o: objCell) = Array2D.create 1 1 o
+    let ofCell (o: xlObj) = Array2D.create 1 1 o
 
-    let ofResult (t: Result<objCell[,], string>): objCell[,] =
+    let ofResult (t: Result<xlObj[,], string>): xlObj[,] =
       match t with
       | Ok v -> v
       | Error err -> err |> XlObj.ofErrorMessage |> ofCell
 
-    let ofValidation (t: Result<objCell[,], string list>): objCell[,] =
+    let ofValidation (t: Result<xlObj[,], string list>): xlObj[,] =
       let errorMessage errors =
         let sep = "; "
         match errors with
@@ -39,7 +39,7 @@ module OfConversions =
 
     /// <summary>
     /// </summary>
-    let ofArray2d(a: objCell[,]): objCell[,] =
+    let ofArray2d(a: xlObj[,]): xlObj[,] =
       if a.Length = 0 then
         XlObj.ofErrorMessage "empty range." |> ofCell
       else
@@ -47,7 +47,7 @@ module OfConversions =
 
     /// <summary>
     /// </summary>
-    let ofArray2dWithEmpty (emptyValue: objCell) (a: objCell[,]): objCell[,] =
+    let ofArray2dWithEmpty (emptyValue: xlObj) (a: xlObj[,]): xlObj[,] =
       if a.Length = 0 then
         emptyValue |> ofCell
       else
@@ -61,7 +61,7 @@ module ToConversions =
 
     /// <summary>
     /// </summary>
-    let toFloatArray (o: objCell[]) =
+    let toFloatArray (o: xlObj[]) =
       let floats = Array.zeroCreate o.Length
       let mutable error = None
       for i = 0 to o.Length - 1 do
@@ -78,7 +78,7 @@ module ToConversions =
 
     /// <summary>
     /// </summary>
-    let toStringArray (o: objCell[]) =
+    let toStringArray (o: xlObj[]) =
       let strings = Array.zeroCreate o.Length
       let mutable error = None
       for i = 0 to o.Length - 1 do
@@ -92,7 +92,7 @@ module ToConversions =
 
     /// <summary>
     /// </summary>
-    let toIntArray (o: objCell[]) =
+    let toIntArray (o: xlObj[]) =
       o
       |> toFloatArray
       |> Result.map (Array.map int)
@@ -106,7 +106,7 @@ module RowColumn =
     /// </summary>
     [<RequireQualifiedAccess>]
     module Column =
-      let ofSeqWithEmpty (emptyVal: objCell) (r: seq<objCell>) =
+      let ofSeqWithEmpty (emptyVal: xlObj) (r: seq<xlObj>) =
         let v = r |> Array.ofSeq
         if v.Length = 0 then
           emptyVal |> XlObjRange.ofCell
@@ -118,7 +118,7 @@ module RowColumn =
     /// </summary>
     [<RequireQualifiedAccess>]
     module Row =
-      let ofSeqWithEmpty (emptyVal: objCell) (r: seq<objCell>) =
+      let ofSeqWithEmpty (emptyVal: xlObj) (r: seq<xlObj>) =
         let v = r |> Array.ofSeq
         if v.Length = 0 then
           emptyVal |> XlObjRange.ofCell

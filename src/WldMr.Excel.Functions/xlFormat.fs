@@ -19,16 +19,16 @@ let xlFormatA
   (
     [<ExcelArgument(Description="Format string")>]
     s: string,
-    o1: objCell, t1: objCell,
-    o2: objCell, t2: objCell,
-    o3: objCell, t3: objCell,
-    o4: objCell, t4: objCell,
-    o5: objCell, t5: objCell,
-    o6: objCell, t6: objCell,
-    o7: objCell, t7: objCell,
-    o8: objCell, t8: objCell
-  ): objCell =
-  let convertXlObj (o: objCell) (t: objCell) =
+    o1: xlObj, t1: xlObj,
+    o2: xlObj, t2: xlObj,
+    o3: xlObj, t3: xlObj,
+    o4: xlObj, t4: xlObj,
+    o5: xlObj, t5: xlObj,
+    o6: xlObj, t6: xlObj,
+    o7: xlObj, t7: xlObj,
+    o8: xlObj, t8: xlObj
+  ): xlObj =
+  let convertXlObj (o: xlObj) (t: xlObj) =
     match o, t with
     | ExcelMissing _, ExcelMissing _ -> "" :> obj |> Ok
     | _, _ ->
