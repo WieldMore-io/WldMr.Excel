@@ -32,7 +32,7 @@ module XlObjRangeTrimOps =
     module Array2DInternal =
 
       let trimPrivate pred (x:objCell[,]) =
-        let x0, x1 = x |> XlObj.getSize
+        let x0, x1 = x |> XlObjRange.getSize
 
         let lastRow =
           seq { for i in x0-1 .. -1 .. 0 do yield x.[i, *] }

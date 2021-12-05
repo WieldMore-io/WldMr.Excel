@@ -9,6 +9,7 @@ type InitMsgUtils() =
 namespace WldMr.Excel
   open FsUnitTyped
   open WldMr.Excel
+  open WldMr.Excel.Core.Extensions
 
 
   module Array2D =
@@ -25,4 +26,4 @@ namespace WldMr.Excel
     let emptyArray: objCell[,] = [] |> array2D
     let trueCell: objCell = true |> XlObj.ofBool
     let falseCell: objCell = false |> XlObj.ofBool
-    let missing: objCell = XlObj.objMissing
+    let missing: objCell = XlObj.xlMissing

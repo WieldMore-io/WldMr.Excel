@@ -8,5 +8,5 @@ open WldMr.Excel
 let dnatestRangeSize (range:objCell[,]): objCell[,] =
   [| range.GetLength 0; range.GetLength 1 |]
   |> Array.map XlObj.ofInt
-  |> XlObjRange.Column.ofSeqWithEmpty XlObj.Error.objNA
+  |> XlObjRange.Column.ofSeqWithEmpty XlObj.Error.xlNA
 

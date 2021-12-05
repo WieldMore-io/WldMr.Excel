@@ -23,7 +23,7 @@ type ``xlStackV``() =
 
     (
       singleCell 1.0,
-      singleCell XlObj.objMissing
+      singleCell XlObj.xlMissing
     )
     |> Stack.xlStackV
     |> Array2D.shouldEqual (singleCell 1.0)
@@ -43,8 +43,8 @@ type ``xlStackV``() =
     )
     |> Stack.xlStackV
     |> Array2D.shouldEqual (
-      [[3.0 |> XlObj.ofFloat; XlObj.Error.objNA]
-       ["a" |> XlObj.ofString; XlObj.Error.objNA]
+      [[3.0 |> XlObj.ofFloat; XlObj.Error.xlNA]
+       ["a" |> XlObj.ofString; XlObj.Error.xlNA]
        [1.0 |> XlObj.ofFloat; 2.0 |> XlObj.ofFloat]
       ]
       |> array2D
@@ -68,7 +68,7 @@ type ``xlStackH``() =
 
     (
       singleCell 1.0,
-      singleCell XlObj.objMissing
+      singleCell XlObj.xlMissing
     )
     |> Stack.xlStackH
     |> Array2D.shouldEqual (singleCell 1.0)
@@ -86,7 +86,7 @@ type ``xlTrimNA``() =
 
   [<Test>]
   member __.``returns empty array when input is NA``() =
-    Stack.xlTrimNA(singleCell XlObj.Error.objNA) |> Array2D.shouldEqual emptyArray
+    Stack.xlTrimNA(singleCell XlObj.Error.xlNA) |> Array2D.shouldEqual emptyArray
 
   [<Test>]
   member __.``returns empty array when input is empty``() =

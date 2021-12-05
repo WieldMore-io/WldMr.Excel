@@ -1,9 +1,61 @@
 namespace WldMr.Excel
 
+open System
+
+
+[<RequireQualifiedAccess>]
+module XlObjRange =
+
+  let getSize (a: objCell[,]): int * int =
+    match a.GetLength 0, a.GetLength 1 with
+    | 0, _ | _, 0 -> 0, 0
+    | 1, 1 when a.[0, 0] = XlObj.xlMissing -> 0, 0
+    | ls -> ls
+
 
 [<AutoOpen>]
-module XlObjRangeOps =
+module OfConversions =
+  [<RequireQualifiedAccess>]
+  module XlObjRange =
 
+    let ofCell (o: objCell) = Array2D.create 1 1 o
+
+    let ofResult (t: Result<objCell[,], string>): objCell[,] =
+      match t with
+      | Ok v -> v
+      | Error err -> err |> XlObj.ofErrorMessage |> ofCell
+
+    let ofValidation (t: Result<objCell[,], string list>): objCell[,] =
+      let errorMessage errors =
+        let sep = "; "
+        match errors with
+        | [] -> "Unexpected error"
+        | [ x ] -> x
+        | xs -> $"{xs.Length} errors: {String.Join(sep, xs)}"
+
+      match t with
+      | Ok v -> v
+      | Error e -> e |> errorMessage |> XlObj.ofErrorMessage |> ofCell
+
+    /// <summary>
+    /// </summary>
+    let ofArray2d(a: objCell[,]): objCell[,] =
+      if a.Length = 0 then
+        XlObj.ofErrorMessage "empty range." |> ofCell
+      else
+        a
+
+    /// <summary>
+    /// </summary>
+    let ofArray2dWithEmpty (emptyValue: objCell) (a: objCell[,]): objCell[,] =
+      if a.Length = 0 then
+        emptyValue |> ofCell
+      else
+        a
+
+
+[<AutoOpen>]
+module ToConversions =
   [<RequireQualifiedAccess>]
   module XlObjRange =
 
@@ -16,7 +68,7 @@ module XlObjRangeOps =
         match o.[i] with
         | ExcelNum f -> floats.[i] <- f
         | ExcelString s ->
-            match System.Double.TryParse s with
+            match Double.TryParse s with
             | false, _ -> error <- Some $"Could not parse {s} as a number."
             | true, f -> floats.[i] <- f
         | _ -> error <- Some $"Could not parse {o.[i]} as a number."
@@ -45,7 +97,10 @@ module XlObjRangeOps =
       |> toFloatArray
       |> Result.map (Array.map int)
 
-
+[<AutoOpen>]
+module RowColumn =
+  [<RequireQualifiedAccess>]
+  module XlObjRange =
     /// <summary>
     /// Returns a column array from a sequence
     /// </summary>

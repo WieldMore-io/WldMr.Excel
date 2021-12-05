@@ -44,7 +44,7 @@ module ActivePattern =
     | _ -> None
 
   let (|ExcelNA|_|) (input: objCell) =
-    if input = XlObj.Error.objNA then
-      Some XlObj.Error.objNA
+    if input = XlObj.Error.xlNA then
+      Some XlObj.Error.xlNA
     else
       None

@@ -29,8 +29,8 @@ let xlRangeCommon fnName booleanOp opZero ranges =
       ranges_
       |> List.tryHead
       |> Option.fold (fun _-> Ok) (Error $"{fnName} needs at least one parameter")
-    let size = XlObj.getSize headRng
-    do! ranges_ |> List.forall (XlObj.getSize >> (=) size) |> Result.requireTrue "All ranges must have the same size"
+    let size = XlObjRange.getSize headRng
+    do! ranges_ |> List.forall (XlObjRange.getSize >> (=) size) |> Result.requireTrue "All ranges must have the same size"
     return
       ranges_
       |> List.map (Array2D.map XlObj.toBoolOption)
