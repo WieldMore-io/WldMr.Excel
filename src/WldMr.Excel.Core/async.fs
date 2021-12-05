@@ -76,9 +76,13 @@ module ExcelAsync =
                 disposable
           })
       let eaRes = ExcelAsyncUtil.Observe (functionName, parameters, obsSource)
+
       match eaRes with
       | :? (obj[,]) as a -> (# "" a : objCell[,] #)
-      | oneObj -> (%oneObj: objCell) |> Array2D.create 1 1
+      | oneObj ->
+          match (%oneObj: objCell) with
+          | ExcelNA na -> "#retrieving..." |> XlObj.ofString |> XlObjRange.ofCell
+          | o -> o |> XlObjRange.ofCell
 
     let wrapAsyncResult functionName parameters asyncResult =
       let asyncFun =

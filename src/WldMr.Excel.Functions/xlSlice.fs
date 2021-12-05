@@ -42,7 +42,7 @@ let xlSlice
     let endCol = ec + if ec >= 0 then -1 else nCols
     let slice = range.[startRow..endRow, startCol..endCol]
     if slice.LongLength = 0L then
-      return XlObj.Error.objNA |> Array2D.create 1 1
+      return XlObj.Error.objNA |> XlObjRange.ofCell
     else
       return slice
   }

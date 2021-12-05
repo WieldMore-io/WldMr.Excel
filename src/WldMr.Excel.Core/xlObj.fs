@@ -125,14 +125,18 @@ module ToFunctions =
     /// Does not attempt any conversion (the original excel value must be a number)
     /// </summary>
     let toDateNoTime (o: objCell) =
-      match o with | ExcelNum f -> f |> int |> float |> DateTime.FromOADate |> Ok | _ -> "Expected a date" |> Error
+      match o with
+      | ExcelNum f -> f |> int |> float |> DateTime.FromOADate |> Ok
+      | _ -> "Expected a date" |> Error
 
     /// <summary>
     /// try to extract a string without time out of excel cell value
     /// does not attempt any conversion (the original excel value must be a string)
     /// </summary>
     let toString (o: objCell) =
-      match o with | ExcelString s -> s |> Ok | _ -> "Expected a string" |> Error
+      match o with
+      | ExcelString s -> s |> Ok
+      | _ -> "Expected a string" |> Error
 
     /// <summary>
     /// force converts an Excel obj input to a boolean option
@@ -188,28 +192,6 @@ module ToFunctions =
 [<AutoOpen>]
 module OfFunctions =
   [<RequireQualifiedAccess>]
-  module XlObjRange =
-    let ofCell (o: objCell) = Array2D.create 1 1 o
-
-    let ofResult (t: Result<objCell[,], string>): objCell[,] =
-      match t with
-      | Ok v -> v
-      | Error err -> err |> XlObj.errorString |> box |> (~%) |> Array2D.create 1 1
-
-    let ofValidation (t: Result<objCell[,], string list>): objCell[,] =
-      let errorMessage errors =
-        let sep = "; "
-        match errors with
-        | [] -> "Unexpected error"
-        | [ x ] -> x
-        | xs -> $"{xs.Length} errors: {String.Join(sep, xs)}"
-
-      match t with
-      | Ok v -> v
-      | Error e -> e |> errorMessage |> XlObj.errorString |> box |> (~%) |> Array2D.create 1 1
-
-
-  [<RequireQualifiedAccess>]
   module XlObj =
     /// <summary>
     /// boxes a boolean
@@ -217,21 +199,11 @@ module OfFunctions =
     let ofBool (b: bool): objCell =
       b |> box |> (~%)
 
-
     /// <summary>
     /// boxes a string
     /// </summary>
     let ofString (s: string): objCell =
       s |> box |> (~%)
-
-    /// <summary>
-    /// </summary>
-    let ofArray2dWithEmpty (emptyValue: objCell) (a: objCell[,]): objCell[,] =
-      if a.Length = 0 then
-        emptyValue |> Array2D.create 1 1
-      else
-        a
-
 
     /// <summary>
     /// Boxes the float
@@ -276,6 +248,36 @@ module OfFunctions =
       match t with
       | Ok v -> v
       | Error err -> err |> XlObj.ofErrorMessage
+
+  [<RequireQualifiedAccess>]
+  module XlObjRange =
+    let ofCell (o: objCell) = Array2D.create 1 1 o
+
+    let ofResult (t: Result<objCell[,], string>): objCell[,] =
+      match t with
+      | Ok v -> v
+      | Error err -> err |> XlObj.ofErrorMessage |> ofCell
+
+    let ofValidation (t: Result<objCell[,], string list>): objCell[,] =
+      let errorMessage errors =
+        let sep = "; "
+        match errors with
+        | [] -> "Unexpected error"
+        | [ x ] -> x
+        | xs -> $"{xs.Length} errors: {String.Join(sep, xs)}"
+
+      match t with
+      | Ok v -> v
+      | Error e -> e |> errorMessage |> XlObj.ofErrorMessage |> ofCell
+
+    /// <summary>
+    /// </summary>
+    let ofArray2dWithEmpty (emptyValue: objCell) (a: objCell[,]): objCell[,] =
+      if a.Length = 0 then
+        emptyValue |> ofCell
+      else
+        a
+
 
 
 [<AutoOpen>]

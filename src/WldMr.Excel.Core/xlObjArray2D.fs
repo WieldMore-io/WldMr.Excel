@@ -2,15 +2,36 @@
 
 
 [<AutoOpen>]
-module XlObjArray2D =
+module XlObjRangeTrimOps =
 
   [<RequireQualifiedAccess>]
-  module XlObj =
+  module XlObjRange =
 
     [<RequireQualifiedAccess>]
-    module Array2D =
+    type TrimMode = MissingEmpty | MissingEmptyStringEmpty
 
-      let private trimPrivate pred (x:objCell[,]) =
+    module TrimMode =
+      let predicate trimMode =
+        match trimMode with
+        | TrimMode.MissingEmpty -> (function | ExcelMissing _ | ExcelEmpty _ | _ -> true)
+        | TrimMode.MissingEmptyStringEmpty -> (function | ExcelMissing _ | ExcelEmpty _ | ExcelString "" -> false | _ -> true)
+
+
+    /// <summary>
+    /// Drops trailing elements that do meet the trimMode predicate
+    /// This might return an empty array
+    /// </summary>
+    let trimArray trimMode (x: objCell[]) =
+      let trim_ pred x =
+        match x |> Array.tryFindIndexBack pred with
+        | None -> [||]
+        | Some n -> x.[..n]
+      trim_ (trimMode |> TrimMode.predicate) x
+
+    [<RequireQualifiedAccess>]
+    module Array2DInternal =
+
+      let trimPrivate pred (x:objCell[,]) =
         let x0, x1 = x |> XlObj.getSize
 
         let lastRow =
@@ -27,14 +48,10 @@ module XlObjArray2D =
 
         x.[0..lastRow, 0..lastCol]
 
-      /// <summary>
-      /// Drops trailing rows and columns that do meet the trimMode predicate
-      /// This might return an empty array
-      /// </summary>
-      let trim trimMode (x: objCell[,]) =
-        let predicate =
-          match trimMode with
-          | XlObj.TrimMode.MissingEmpty -> (function | ExcelMissing _ | ExcelEmpty _ | _ -> true)
-          | XlObj.TrimMode.MissingEmptyStringEmpty -> (function | ExcelMissing _ | ExcelEmpty _ | ExcelString "" -> false | _ -> true)
-        trimPrivate predicate x
+    /// <summary>
+    /// Drops trailing rows and columns that do meet the trimMode predicate
+    /// This might return an empty array
+    /// </summary>
+    let trimRange trimMode (x: objCell[,]) =
+      Array2DInternal.trimPrivate (trimMode |> TrimMode.predicate) x
 

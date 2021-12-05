@@ -2,10 +2,18 @@ namespace WldMr.Excel
 
 
 
-[<Measure>] type xlCellT
-//[<Measure>] type xlRangeT
+module MeasureType =
+  [<Measure>] type xlCellT
+  //[<Measure>] type xlRangeT
 
-[<MeasureAnnotatedAbbreviation>] type obj<[<Measure>] 'm> = obj
+  [<MeasureAnnotatedAbbreviation>] type obj<[<Measure>] 'm> = obj
+
+open MeasureType
+
+
+type objCell = obj<xlCellT>
+//type objRange = obj<xlRangeT>
+
 
 #nowarn "42"
 module private Unsafe =
@@ -20,8 +28,6 @@ type XlTypes =
 
 //  static member inline castToRange (x : obj<xlCellT>) : obj<xlRangeT> = Unsafe.cast x
 
-type objCell = obj<xlCellT>
-//type objRange = obj<xlRangeT>
 
 [<AutoOpen>]
 module Operators =
