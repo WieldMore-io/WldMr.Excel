@@ -28,11 +28,6 @@ module ActivePattern =
     | :? string as s -> Some s
     | _ -> None
 
-  let (|ExcelError|_|) (input: objCell) =
-    match (%input: obj) with
-    | :? ExcelError as e -> Some e
-    | _ -> None
-
   let (|ExcelBool|_|) (input: objCell) =
     match (%input: obj) with
     | :? bool as s -> Some s
@@ -42,3 +37,14 @@ module ActivePattern =
     match (%input: obj) with
     | :? float as s -> Some s
     | _ -> None
+
+  let (|ExcelError|_|) (input: objCell) =
+    match (%input: obj) with
+    | :? ExcelError as e -> Some e
+    | _ -> None
+
+  let (|ExcelNA|_|) (input: objCell) =
+    if input = XlObj.Error.objNA then
+      Some XlObj.Error.objNA
+    else
+      None

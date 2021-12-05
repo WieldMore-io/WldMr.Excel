@@ -16,3 +16,6 @@ module SingletonValue =
       let objName: objCell = ExcelError.ExcelErrorName |> box |> (~%)
       let objNum: objCell = ExcelError.ExcelErrorNum |> box |> (~%)
       let objGettingData: objCell = ExcelError.ExcelErrorGettingData |> box |> (~%)
+      let objDiv0: objCell = ExcelError.ExcelErrorDiv0 |> box |> (~%)
+      let objNull: objCell = ExcelError.ExcelErrorNull |> box |> (~%)
+      let objRef: objCell = ExcelError.ExcelErrorRef |> box |> (~%)
