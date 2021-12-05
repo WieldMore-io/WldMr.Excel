@@ -1,9 +1,12 @@
 module WldMr.Excel.Example.TestFunction
 
 open ExcelDna.Integration
+open WldMr.Excel
+
 
 [<ExcelFunction>]
-let dnatestRangeSize (range:obj[,]): obj[,] =
-  Array2D.init 1 2 (
-    fun x y -> (if y = 0 then range.GetLength 0 else range.GetLength 1) |> box
-  )
+let dnatestRangeSize (range:objCell[,]): objCell[,] =
+  [| range.GetLength 0; range.GetLength 1 |]
+  |> Array.map XlObj.ofInt
+  |> XlObj.Column.ofSeqWithEmpty XlObj.Error.objNA
+

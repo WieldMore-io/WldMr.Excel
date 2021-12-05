@@ -2,16 +2,13 @@ module WldMr.Excel.Functions.Format
 
 open ExcelDna.Integration
 open FsToolkit.ErrorHandling
-
 open WldMr.Excel
-open WldMr.Excel.Functions
-
 
 
 // the usability of this function is not great
 // - error reporting is not up to par
 // - it would natural to pass an array of values and an array of types
-// - or maybe to arrayfy the function on inputs
+// - or maybe to arrayify the function on inputs
 [<ExcelFunction(Category = "WldMr Text",
                 Description = """Formats an interpolated string as in the .Net world"
 eg xlFormat("{0:dd-mmm-yy}", A1, "d")

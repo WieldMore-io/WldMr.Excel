@@ -1,8 +1,8 @@
 module WldMr.Excel.Functions.Range
 
-open WldMr.Excel
-open FsToolkit.ErrorHandling
 open ExcelDna.Integration
+open FsToolkit.ErrorHandling
+open WldMr.Excel
 
 
 let boolOptionFold f zero bos =

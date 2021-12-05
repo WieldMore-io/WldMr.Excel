@@ -1,9 +1,8 @@
 module WldMr.Excel.Functions.String
 
-open WldMr.Excel
-open WldMr.Excel.Functions
-open FsToolkit.ErrorHandling
 open ExcelDna.Integration
+open FsToolkit.ErrorHandling
+open WldMr.Excel
 
 
 let stringFilter (predicate: string -> bool) (input: objCell[,]): objCell[,] =

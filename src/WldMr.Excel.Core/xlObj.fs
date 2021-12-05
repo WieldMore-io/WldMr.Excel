@@ -236,13 +236,19 @@ module OfFunctions =
     /// <summary>
     /// Boxes the float
     /// If its value is NaN, it is replaced by #N/A!.
-    /// does not attempt any conversion (the original excel value must be a string)
     /// </summary>
     let ofFloat f: objCell  =
       if Double.IsNaN f then
         XlObj.Error.objNA
       else
         f |> box |> (~%)
+
+    /// <summary>
+    /// Boxes the int
+    /// </summary>
+    let ofInt i: objCell  =
+      i |> float |> box |> (~%)
+
 
     let ofDate (d: DateTime): objCell  =
       d |> box |> (~%)

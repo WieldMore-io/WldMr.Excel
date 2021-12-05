@@ -1,8 +1,8 @@
 module WldMr.Excel.Functions.Slice
 
-open WldMr.Excel
-open FsToolkit.ErrorHandling
 open ExcelDna.Integration
+open FsToolkit.ErrorHandling
+open WldMr.Excel
 
 
 [<ExcelFunction(Category= "WldMr Array",
