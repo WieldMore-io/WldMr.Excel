@@ -2,8 +2,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
-    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-    <!--<EmbedUntrackedSources>true</EmbedUntrackedSources>-->
     <!--<EmbedUntrackedSources>true</EmbedUntrackedSources>-->
     <!--<DebugType>embedded</DebugType>-->
     <!--<GenerateDocumentationFile>true</GenerateDocumentationFile>-->

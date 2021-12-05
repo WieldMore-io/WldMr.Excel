@@ -23,10 +23,16 @@ EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "WldMr.Excel.Functions.Test", "tests\WldMr.Excel.Functions.Test\WldMr.Excel.Functions.Test.fsproj", "{D28885E2-A3FB-4A8C-80EE-93B9D16F2C35}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7FE082AB-1313-4C33-8641-B0261751F354}"
+ProjectSection(SolutionItems) = preProject
+	tests\Directory.Build.props = tests\Directory.Build.props
+EndProjectSection
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "WldMr.Excel.Example", "examples\WldMr.Excel.Example\WldMr.Excel.Example.fsproj", "{B2806B31-3D1F-465E-80C9-BCBEA81A5D66}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{1C22CB01-2564-4975-8FC4-0D5F473ACA8D}"
+ProjectSection(SolutionItems) = preProject
+	examples\Directory.Build.props = examples\Directory.Build.props
+EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{263BA620-8B9D-4E98-96A0-B93C26F18128}"
 EndProject

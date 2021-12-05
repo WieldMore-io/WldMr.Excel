@@ -1,0 +1,10 @@
+<Project>
+  <PropertyGroup>
+    <Configurations>Debug;Release</Configurations>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+</Project>

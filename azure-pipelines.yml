@@ -65,7 +65,6 @@ steps:
   inputs:
     command: 'custom'
     custom: pack
-    projects: src/**/*.fsproj
     arguments: >-
         -p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion) 
         --configuration $(buildConfiguration)
