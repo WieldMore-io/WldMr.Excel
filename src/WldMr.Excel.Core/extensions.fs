@@ -12,5 +12,10 @@ module Array2D =
       [ for y in [ 0 .. (Array2D.length2 array2d) - 1 ] do
         yield array2d.[x, y] ] ]
 
-
-
+[<RequireQualifiedAccess>]
+module Async =
+  let map f (a: Async<_>) =
+    async {
+      let! v = a
+      return f v
+    }
