@@ -12,11 +12,11 @@ module AsyncFunctionCall =
   let retrievingString = "#Retrieving"
 
 
-  let private excelObservableFromEvent (event: Event<_>) =
+  let private excelObservableFromObservable (event: IObservable<_>) =
     ExcelObservableSource(fun () ->
       { new IExcelObservable with
           member _.Subscribe observer =
-            Observable.subscribe observer.OnNext event.Publish
+            Observable.subscribe observer.OnNext event
       })
 
 
@@ -56,8 +56,8 @@ module AsyncFunctionCall =
       |> wrapCommon functionName parameters
 
 
-    let wrapEvent functionName parameters (event: Event<xlObj>): xlObj =
-      excelObservableFromEvent event
+    let wrapObservable functionName parameters (observable: IObservable<xlObj>): xlObj =
+      excelObservableFromObservable observable
       |> wrapCommon functionName parameters
 
 
@@ -78,8 +78,8 @@ module AsyncFunctionCall =
       |> wrapCommon functionName parameters
 
 
-    let wrapEvent functionName parameters (event: Event<xlObj[,]>): xlObj[,] =
-      excelObservableFromEvent event
+    let wrapObservable functionName parameters (observable: IObservable<xlObj[,]>): xlObj[,] =
+      excelObservableFromObservable observable
       |> wrapCommon functionName parameters
 
 
@@ -91,7 +91,7 @@ module AsyncFunctionCall =
         |> RangeInternal.wrapAsync name hash
 
     let fromEvent name hash a =
-      fun () -> RangeInternal.wrapEvent name hash a
+      fun () -> RangeInternal.wrapObservable name hash a
 
 
   module Range =
@@ -102,4 +102,4 @@ module AsyncFunctionCall =
         |> CellInternal.wrapAsync name hash
 
     let fromEvent name hash a =
-      fun () -> CellInternal.wrapEvent name hash a
+      fun () -> CellInternal.wrapObservable name hash a
