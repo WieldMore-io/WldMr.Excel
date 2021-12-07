@@ -5,22 +5,8 @@ open FsToolkit.ErrorHandling
 
 open WldMr.Excel
 
-
 module FunctionCall =
-  let retrievingString = "#Retrieving"
   let eval f = f ()
-
-  let runAsExcelAsyncRange name hash a =
-    fun () ->
-      a
-      |> Async.map XlObjRange.ofResult
-      |> AsyncFunctionCall.Range.wrapAsync name hash
-
-  let runAsExcelAsyncCell name hash a =
-    fun () ->
-      a
-      |> Async.map XlObj.ofResult
-      |> AsyncFunctionCall.Cell.wrapAsync name hash
 
 
 type FunctionCall() =

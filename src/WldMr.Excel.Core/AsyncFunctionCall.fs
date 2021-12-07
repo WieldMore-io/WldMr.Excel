@@ -40,8 +40,8 @@ module AsyncFunctionCall =
       })
 
 
-  module internal Cell =
-    let wrapCommon functionName parameters excelObservable: xlObj =
+  module internal CellInternal =
+    let private wrapCommon functionName parameters excelObservable: xlObj =
       try
         match ExcelAsyncUtil.Observe (functionName, parameters, excelObservable) with
         | oneObj ->
@@ -61,8 +61,8 @@ module AsyncFunctionCall =
       |> wrapCommon functionName parameters
 
 
-  module internal Range =
-    let wrapCommon functionName parameters excelObservable: xlObj[,] =
+  module internal RangeInternal =
+    let private wrapCommon functionName parameters excelObservable: xlObj[,] =
       try
         match ExcelAsyncUtil.Observe (functionName, parameters, excelObservable) with
         | :? (obj[,]) as a -> (# "" a : xlObj[,] #)
@@ -81,3 +81,25 @@ module AsyncFunctionCall =
     let wrapEvent functionName parameters (event: Event<xlObj[,]>): xlObj[,] =
       excelObservableFromEvent event
       |> wrapCommon functionName parameters
+
+
+  module Cell =
+    let fromAsync name hash a =
+      fun () ->
+        a
+        |> Async.map XlObjRange.ofResult
+        |> RangeInternal.wrapAsync name hash
+
+    let fromEvent name hash a =
+      fun () -> RangeInternal.wrapEvent name hash a
+
+
+  module Range =
+    let fromAsync name hash a =
+      fun () ->
+        a
+        |> Async.map XlObj.ofResult
+        |> CellInternal.wrapAsync name hash
+
+    let fromEvent name hash a =
+      fun () -> CellInternal.wrapEvent name hash a
