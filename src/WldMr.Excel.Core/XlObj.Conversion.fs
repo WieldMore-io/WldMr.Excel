@@ -15,23 +15,6 @@ module XlObj =
     | _ -> false
 
 
-//  /// <summary>
-//  /// Defaults the value if the input is Missing, Empty or ""
-//  /// </summary>
-//  let defaultWith defaultFun (o: obj) =
-//    match o with
-//    | ExcelMissing _ | ExcelEmpty _ | ExcelString "" -> defaultFun () |> box
-//    | o -> o
-//
-//  /// <summary>
-//  /// Defaults the value if the input is Missing, Empty or ""
-//  /// </summary>
-//  let defaultValue v (o: obj) =
-//    match o with
-//    | ExcelMissing _ | ExcelEmpty _ | ExcelString "" -> v |> box
-//    | o -> o
-//
-
 [<AutoOpen>]
 module Error =
   [<RequireQualifiedAccess>]
@@ -281,12 +264,13 @@ module ArgToFunctions =
       | ExcelString s -> s |> Ok
       | _ -> $"Argument '{argName}': expected a string." |> Error
 
+    let argToDate (argName: string) (o: xlObj) =
+      match o with
+      | ExcelNum f -> f |> DateTime.FromOADate |> Ok
+      | _ -> $"Argument '{argName}': expected a date." |> Error
+
 
     let argDefault defaultValue (argParse: _ -> xlObj -> _) name (o: xlObj) =
       match o with
       | ExcelMissing _ | ExcelEmpty _ -> defaultValue |> Ok
       | _ -> argParse name o
-
-
-module Result =
-  let mapArgError (errMsg: string) = Result.mapError (fun e -> [$"Arg '{errMsg}': {e}"])

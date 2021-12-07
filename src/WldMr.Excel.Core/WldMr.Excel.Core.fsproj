@@ -33,14 +33,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="paket.references" />
-    <Compile Include="extensions.fs" />
-    <Compile Include="xlObj.Type.fs" />
-    <Compile Include="xlObj.SpecialValues.fs" />
-    <Compile Include="xlObj.ActivePatterns.fs" />
-    <Compile Include="xlObj.Conversion.fs" />
-    <Compile Include="xlObjRange.fs" />
-    <Compile Include="xlObjRange.Trim.fs" />
-    <Compile Include="generic.fs" />
+    <Compile Include="FSharpCoreExtensions.fs" />
+    <Compile Include="XlObj.Type.fs" />
+    <Compile Include="XlObj.SpecialValues.fs" />
+    <Compile Include="XlObj.ActivePatterns.fs" />
+    <Compile Include="XlObj.Conversion.fs" />
+    <Compile Include="XlObjRange.fs" />
+    <Compile Include="XlObjRange.Trim.fs" />
+    <Compile Include="Generic.fs" />
     <Compile Include="ArrayFunction.fs" />
     <Compile Include="AsyncFunctionCall.fs" />
     <Compile Include="FunctionCall.fs" />

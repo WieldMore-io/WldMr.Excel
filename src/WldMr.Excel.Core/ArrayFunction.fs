@@ -1,4 +1,4 @@
-namespace WldMr.Analytics.Excel
+namespace WldMr.Excel
 
 open FsToolkit.ErrorHandling
 open WldMr.Excel

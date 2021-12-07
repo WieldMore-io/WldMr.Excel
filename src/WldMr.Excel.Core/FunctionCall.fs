@@ -1,4 +1,4 @@
-﻿namespace WldMr.Analytics.Excel
+﻿namespace WldMr.Excel
 
 open ExcelDna.Integration
 open FsToolkit.ErrorHandling

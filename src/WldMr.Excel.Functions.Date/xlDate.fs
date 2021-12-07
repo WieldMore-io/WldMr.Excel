@@ -38,32 +38,38 @@ module NthWeekdayOfMonth =
 let xlDateNthWeekdayOfMonth
   (
     [<ExcelArgument(Description="date to start from, today if missing")>]
-      refDate: xlObj,
+      refDate: xlObj[,],
     [<ExcelArgument(Description="Monday: 1\r\nTuesday: 2\r\n...\r\nSunday: 7 (or 0)")>]
       dayOfWeek: xlObj,
     [<ExcelArgument(Description="1 to return the first given day\r\n...\r\n4 to return the fourth\r\n5 to return the last")>]
       nthSuchDay: xlObj,
     [<ExcelArgument(Description="1 to return the first quarterly such date following the reference date, 2 to return the second, ...")>]
-      nthPeriod: xlObj
-  ) =
-  validation {
-    let! dow = dayOfWeek |> XlObj.toInt |> Result.mapArgError "DayOfWeek"
-    and! refDate = refDate |> XlObj.toDateDefault DateTime.Today |> Result.mapArgError "RefDate"
-    and! nth = nthSuchDay |> XlObj.toInt |> Result.mapArgError "NthSuchDay"
-    and! period = nthPeriod |> XlObj.toIntDefault 1 |> Result.mapArgError "NthPeriod"
+      nthPeriod: xlObj[,]
+  ): xlObj[,] =
+  let dateNthWeekdayOfMonth refDate nthPeriod =
+    result {
+      let! dow = dayOfWeek |> XlObj.argToInt "DayOfWeek"
+      let! nth = nthSuchDay |> XlObj.argToInt "NthSuchDay"
 
-    do! (0 < nth && nth < 6) |> Result.requireTrue ["arg 'NthSuchDay' should be between 1 and 5"]
-    do! (0 < period && period < 1001) |> Result.requireTrue ["arg 'NthPeriod' should be between 1 and 1000"]
+      do! (0 < nth && nth < 6) |> Result.requireTrue "arg 'NthSuchDay' should be between 1 and 5."
+      do! (0 < nthPeriod && nthPeriod < 1001) |> Result.requireTrue "arg 'NthPeriod' should be between 1 and 1000."
 
-    return NthWeekdayOfMonth.ithNthDayOfWeek nth dow period refDate |> XlObj.ofDate
-  } |> XlObj.ofValidation
+      return NthWeekdayOfMonth.ithNthDayOfWeek nth (dow-1) nthPeriod refDate |> XlObj.ofDate
+    }
+
+  ArrayFunctionBuilder
+    .Add("RefDate", XlObj.argToDate |> XlObj.argDefault DateTime.Today, refDate)
+    .Add("NthPeriod", XlObj.argToInt |> XlObj.argDefault 1 , nthPeriod)
+    .EvalFunction dateNthWeekdayOfMonth
+  |> FunctionCall.catchExceptions
+  |> FunctionCall.eval
 
 
 [<ExcelFunction(Category= "WldMr Date", Description= "Returns the next quarterly third Friday")>]
-let xlDateThirdFriday(fromDate: xlObj, nthPeriod: xlObj) =
+let xlDateThirdFriday(fromDate: xlObj[,], nthPeriod: xlObj[,]): xlObj[,] =
   xlDateNthWeekdayOfMonth(fromDate, 5.0 |> XlObj.ofFloat, 3.0 |> XlObj.ofFloat, nthPeriod)
 
 
 [<ExcelFunction(Category= "WldMr Date", Description= "Returns the next quarterly third Wednesday")>]
-let xlDateThirdWednesday(fromDate: xlObj, nthPeriod: xlObj) =
+let xlDateThirdWednesday(fromDate: xlObj[,], nthPeriod: xlObj[,]): xlObj[,] =
   xlDateNthWeekdayOfMonth(fromDate, 3.0 |> XlObj.ofFloat, 3.0 |> XlObj.ofFloat, nthPeriod)
