@@ -11,21 +11,16 @@ open WldMr.Excel.Core.Extensions
 module AsyncFunctionCall =
   let retrievingString = "#Retrieving"
 
-  // from ExcelDNA's Distribution/Samples/Async/FsAsync.dna
-  [<Obsolete>]
-  let excelObserve functionName parameters observable =
-    let obsSource =
-      ExcelObservableSource(
-        fun () ->
-        { new IExcelObservable with
+
+  let private excelObservableFromEvent (event: Event<_>) =
+    ExcelObservableSource(fun () ->
+      { new IExcelObservable with
           member _.Subscribe observer =
-            // Subscribe to the F# observable
-            Observable.subscribe (fun value -> observer.OnNext (value)) observable
-        })
-    ExcelAsyncUtil.Observe (functionName, parameters, obsSource)
+            Observable.subscribe observer.OnNext event.Publish
+      })
 
 
-  let private excelObservableSource async =
+  let private excelObservableFromAsync async =
     ExcelObservableSource(fun () ->
       { new IExcelObservable with
           member _.Subscribe observer =
@@ -46,9 +41,9 @@ module AsyncFunctionCall =
 
 
   module internal Cell =
-    let wrapAsync functionName parameters (async: Async<xlObj>): xlObj =
+    let wrapCommon functionName parameters excelObservable: xlObj =
       try
-        match ExcelAsyncUtil.Observe (functionName, parameters, excelObservableSource async) with
+        match ExcelAsyncUtil.Observe (functionName, parameters, excelObservable) with
         | oneObj ->
             match (%oneObj: xlObj) with
             | ExcelNA _ -> retrievingString |> XlObj.ofString
@@ -56,11 +51,20 @@ module AsyncFunctionCall =
       with
         | e -> $"{e.Message} ({e.GetType()})" |> XlObj.ofErrorMessage
 
+    let wrapAsync functionName parameters (async: Async<xlObj>): xlObj =
+      excelObservableFromAsync async
+      |> wrapCommon functionName parameters
+
+
+    let wrapEvent functionName parameters (event: Event<xlObj>): xlObj =
+      excelObservableFromEvent event
+      |> wrapCommon functionName parameters
+
 
   module internal Range =
-    let wrapAsync functionName parameters (async: Async<xlObj[,]>): xlObj[,] =
+    let wrapCommon functionName parameters excelObservable: xlObj[,] =
       try
-        match ExcelAsyncUtil.Observe (functionName, parameters, excelObservableSource async) with
+        match ExcelAsyncUtil.Observe (functionName, parameters, excelObservable) with
         | :? (obj[,]) as a -> (# "" a : xlObj[,] #)
         | oneObj ->
             match (%oneObj: xlObj) with
@@ -68,3 +72,12 @@ module AsyncFunctionCall =
             | o -> o |> XlObjRange.ofCell
       with
         | e -> $"{e.Message} ({e.GetType()})" |> XlObj.ofErrorMessage |> XlObjRange.ofCell
+
+    let wrapAsync functionName parameters (async: Async<xlObj[,]>): xlObj[,] =
+      excelObservableFromAsync async
+      |> wrapCommon functionName parameters
+
+
+    let wrapEvent functionName parameters (event: Event<xlObj[,]>): xlObj[,] =
+      excelObservableFromEvent event
+      |> wrapCommon functionName parameters
