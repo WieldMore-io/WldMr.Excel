@@ -87,19 +87,19 @@ module AsyncFunctionCall =
     let fromAsync name hash a =
       fun () ->
         a
-        |> Async.map XlObjRange.ofResult
-        |> RangeInternal.wrapAsync name hash
+        |> Async.map XlObj.ofResult
+        |> CellInternal.wrapAsync name hash
 
-    let fromEvent name hash a =
-      fun () -> RangeInternal.wrapObservable name hash a
+    let fromObservable name hash a =
+      fun () -> CellInternal.wrapObservable name hash a
 
 
   module Range =
     let fromAsync name hash a =
       fun () ->
         a
-        |> Async.map XlObj.ofResult
-        |> CellInternal.wrapAsync name hash
+        |> Async.map XlObjRange.ofResult
+        |> RangeInternal.wrapAsync name hash
 
-    let fromEvent name hash a =
-      fun () -> CellInternal.wrapObservable name hash a
+    let fromObservable name hash a =
+      fun () -> RangeInternal.wrapObservable name hash a
