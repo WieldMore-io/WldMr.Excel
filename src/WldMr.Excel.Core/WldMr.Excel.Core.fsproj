@@ -41,7 +41,9 @@
     <Compile Include="xlObjRange.fs" />
     <Compile Include="xlObjRange.Trim.fs" />
     <Compile Include="generic.fs" />
-    <Compile Include="async.fs" />
+    <Compile Include="ArrayFunction.fs" />
+    <Compile Include="AsyncFunctionCall.fs" />
+    <Compile Include="FunctionCall.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

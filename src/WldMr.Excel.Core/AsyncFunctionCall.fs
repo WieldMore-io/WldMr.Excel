@@ -7,6 +7,7 @@ open WldMr.Excel.Core.Extensions
 
 #nowarn "42"
 
+
 module AsyncFunctionCall =
   let retrievingString = "#Retrieving"
 
@@ -44,7 +45,7 @@ module AsyncFunctionCall =
       })
 
 
-  module Cell =
+  module internal Cell =
     let wrapAsync functionName parameters (async: Async<xlObj>): xlObj =
       try
         match ExcelAsyncUtil.Observe (functionName, parameters, excelObservableSource async) with
@@ -56,7 +57,7 @@ module AsyncFunctionCall =
         | e -> $"{e.Message} ({e.GetType()})" |> XlObj.ofErrorMessage
 
 
-  module Range =
+  module internal Range =
     let wrapAsync functionName parameters (async: Async<xlObj[,]>): xlObj[,] =
       try
         match ExcelAsyncUtil.Observe (functionName, parameters, excelObservableSource async) with
