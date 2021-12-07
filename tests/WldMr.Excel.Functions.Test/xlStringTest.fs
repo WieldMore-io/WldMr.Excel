@@ -23,11 +23,11 @@ type ``StringStartsWith``() =
 
   [<Test>]
   member __.``case sensitive if ignoreCase is set``() =
-    (singleCell "efg", "E", true |> box |> (~%), missing)
+    (singleCell "efg", "E", true |> XlObj.ofBool, missing)
     |> String.xlStringStartsWith
     |> Array2D.shouldEqual (singleCell true)
 
-    (singleCell "efg", "E", false |> box |> (~%), missing)
+    (singleCell "efg", "E", false |> XlObj.ofBool, missing)
     |> String.xlStringStartsWith
     |> Array2D.shouldEqual (singleCell false)
 

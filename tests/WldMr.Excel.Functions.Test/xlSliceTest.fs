@@ -9,7 +9,7 @@ open WldMr.Excel.Functions
 [<TestFixture>]
 type ``xlSlice``() =
 
-  let toArrayObj a: xlObj[,] = a |> List.map (List.map (box >> (~%))) |> array2D
+  let toArrayObj a: xlObj[,] = a |> List.map (List.map XlObj.ofInt) |> array2D
 
   [<Test>]
   member __.``arguments are defaulted``() =

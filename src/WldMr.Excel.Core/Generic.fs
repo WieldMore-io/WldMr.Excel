@@ -11,7 +11,7 @@ module Generic =
         let mkElemToObj (shape : IShapeMember<'T>) =
            shape.Accept { new IMemberVisitor<'T, 'T -> xlObj> with
                member _.Visit (shape : ShapeMember<'T, 'Field>) =
-                  shape.Get >> unbox<'Field -> xlObj>(fun (o:'Field) -> o |> box |> (~%))
+                  shape.Get >> unbox<'Field -> xlObj>(fun (o:'Field) -> o |> XlObj.Unsafe.ofObj)
                }
 
         let elemToObjs : ('T -> xlObj) [] = shape.Elements |> Array.map mkElemToObj

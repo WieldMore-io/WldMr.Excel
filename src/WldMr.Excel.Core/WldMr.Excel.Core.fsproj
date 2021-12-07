@@ -35,7 +35,7 @@
     <None Include="paket.references" />
     <Compile Include="FSharpCoreExtensions.fs" />
     <Compile Include="XlObj.Type.fs" />
-    <Compile Include="XlObj.SpecialValues.fs" />
+    <Compile Include="XlObj.Primitives.fs" />
     <Compile Include="XlObj.ActivePatterns.fs" />
     <Compile Include="XlObj.Conversion.fs" />
     <Compile Include="XlObjRange.fs" />

@@ -5,12 +5,13 @@ open FsToolkit.ErrorHandling
 open WldMr.Excel
 
 
+// TODO: rename this function
 let stringFilter (predicate: string -> bool) (input: xlObj[,]): xlObj[,] =
   let f (o: xlObj) =
     match o with
     | ExcelString s -> s |> predicate
     | _ -> false
-  input |> Array2D.map (f >> box >> (~%))
+  input |> Array2D.map (f >> XlObj.ofBool)
 
 
 open System.Text.RegularExpressions
@@ -30,7 +31,7 @@ let regexFilter regex ignoreCase input: Result<xlObj[,], string> =
       match o with
       | ExcelString s -> s |> r.IsMatch
       | _ -> false
-    return input |> Array2D.map (f >> box >> (~%))
+    return input |> Array2D.map (f >> XlObj.ofBool)
   }
 
 [<ExcelFunction(Category= "WldMr Text",

@@ -5,8 +5,6 @@ open System
 open System.Threading
 open WldMr.Excel.Core.Extensions
 
-#nowarn "42"
-
 
 module AsyncFunctionCall =
   let retrievingString = "#Retrieving"
@@ -45,7 +43,7 @@ module AsyncFunctionCall =
       try
         match ExcelAsyncUtil.Observe (functionName, parameters, excelObservable) with
         | oneObj ->
-            match (%oneObj: xlObj) with
+            match XlObj.Unsafe.ofObj oneObj  with
             | ExcelNA _ -> retrievingString |> XlObj.ofString
             | o -> o
       with
@@ -65,9 +63,9 @@ module AsyncFunctionCall =
     let private wrapCommon functionName parameters excelObservable: xlObj[,] =
       try
         match ExcelAsyncUtil.Observe (functionName, parameters, excelObservable) with
-        | :? (obj[,]) as a -> (# "" a : xlObj[,] #)
+        | :? (obj[,]) as a -> a |> XlObjRange.Unsafe.ofObj2d
         | oneObj ->
-            match (%oneObj: xlObj) with
+            match XlObj.Unsafe.ofObj oneObj with
             | ExcelNA _ -> retrievingString |> XlObj.ofString |> XlObjRange.ofCell
             | o -> o |> XlObjRange.ofCell
       with

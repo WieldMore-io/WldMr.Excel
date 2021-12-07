@@ -3,25 +3,13 @@ namespace WldMr.Excel
 open System
 
 
-[<RequireQualifiedAccess>]
-module XlObj =
-
-  /// <summary>
-  /// True if the value is missing, False otherwise
-  /// </summary>
-  let isMissing (o: xlObj): bool =
-    match o with
-    | ExcelMissing _ -> true
-    | _ -> false
-
-
 [<AutoOpen>]
 module Error =
   [<RequireQualifiedAccess>]
   module XlObj =
     let errorString (errorMessage: string) = $"#Error! {errorMessage}"
 
-    let ofErrorMessage (errorMessage: string): xlObj = $"#Error! {errorMessage}" |> box |> (~%)
+    let ofErrorMessage (errorMessage: string): xlObj = $"#Error! {errorMessage}" |> XlObj.ofString
 
 
 [<AutoOpen>]
@@ -159,37 +147,19 @@ module ToFunctions =
 module OfFunctions =
   [<RequireQualifiedAccess>]
   module XlObj =
-    /// <summary>
-    /// boxes a boolean
-    /// </summary>
-    let ofBool (b: bool): xlObj =
-      b |> box |> (~%)
 
     /// <summary>
-    /// boxes a string
-    /// </summary>
-    let ofString (s: string): xlObj =
-      s |> box |> (~%)
-
-    /// <summary>
-    /// Boxes the float
-    /// If its value is NaN, it is replaced by #N/A!.
-    /// </summary>
-    let ofFloat f: xlObj  =
-      if Double.IsNaN f then
-        XlObj.Error.xlNA
-      else
-        f |> box |> (~%)
-
-    /// <summary>
-    /// Boxes the int
+    /// Boxes the int into an xlObj phantom type
     /// </summary>
     let ofInt i: xlObj  =
-      i |> float |> box |> (~%)
+      i |> float |> XlObj.ofFloat
 
 
+    /// <summary>
+    /// Converts the datetime into an xlObj phantom type
+    /// </summary>
     let ofDate (d: DateTime): xlObj  =
-      d |> box |> (~%)
+      d.ToOADate() |> XlObj.ofFloat
 
 
     /// <summary>
@@ -222,10 +192,21 @@ module OfFunctions =
 module ArgToFunctions =
   [<RequireQualifiedAccess>]
   module XlObj =
+    let argDefault
+      (defaultValue: 'a)
+      (argParse: string -> xlObj -> Result<'a, string>)
+      (name: string)
+      (o: xlObj)
+      : Result<'a, string>
+      =
+      match o with
+      | ExcelMissing _ | ExcelEmpty _ -> defaultValue |> Ok
+      | _ -> argParse name o
+
     /// <summary>
     /// Tries to extract an int out of excel cell value
-    /// Does not attempt any conversion or rounding (the original excel value must be a number)
-    /// (A very small rounding is attempted)
+    /// Does not attempt any conversion from string
+    /// Only allows rounding by up to 1e-8
     /// </summary>
     let argToIntStrict (argName: string) (o: xlObj) =
       match o with
@@ -268,9 +249,3 @@ module ArgToFunctions =
       match o with
       | ExcelNum f -> f |> DateTime.FromOADate |> Ok
       | _ -> $"Argument '{argName}': expected a date." |> Error
-
-
-    let argDefault defaultValue (argParse: _ -> xlObj -> _) name (o: xlObj) =
-      match o with
-      | ExcelMissing _ | ExcelEmpty _ -> defaultValue |> Ok
-      | _ -> argParse name o
