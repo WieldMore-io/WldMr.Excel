@@ -48,8 +48,8 @@ let xlDateNthWeekdayOfMonth
   ): xlObj[,] =
   let dateNthWeekdayOfMonth refDate nthPeriod =
     result {
-      let! dow = dayOfWeek |> XlObj.argToInt "DayOfWeek"
-      let! nth = nthSuchDay |> XlObj.argToInt "NthSuchDay"
+      let! dow = dayOfWeek |> (XlObj.toInt |> XlObj.withArgName "DayOfWeek")
+      let! nth = nthSuchDay |> (XlObj.toInt |> XlObj.withArgName "NthSuchDay")
 
       do! (0 < nth && nth < 6) |> Result.requireTrue "arg 'NthSuchDay' should be between 1 and 5."
       do! (0 < nthPeriod && nthPeriod < 1001) |> Result.requireTrue "arg 'NthPeriod' should be between 1 and 1000."
@@ -58,8 +58,8 @@ let xlDateNthWeekdayOfMonth
     }
 
   ArrayFunctionBuilder
-    .Add("RefDate", XlObj.argToDate |> XlObj.argDefault DateTime.Today, refDate)
-    .Add("NthPeriod", XlObj.argToInt |> XlObj.argDefault 1 , nthPeriod)
+    .Add("RefDate", XlObj.toDate |> XlObj.withDefault DateTime.Today, refDate)
+    .Add("NthPeriod", XlObj.toInt |> XlObj.withDefault 1, nthPeriod)
     .EvalFunction dateNthWeekdayOfMonth
   |> FunctionCall.catchExceptions
   |> FunctionCall.eval

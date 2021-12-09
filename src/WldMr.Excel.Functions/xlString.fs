@@ -17,11 +17,8 @@ let stringFilter (predicate: string -> bool) (input: xlObj[,]): xlObj[,] =
 open System.Text.RegularExpressions
 
 let regexFilter regex ignoreCase input: Result<xlObj[,], string> =
-  let regexOptions =
-    if ignoreCase then
-      RegexOptions.Compiled ||| RegexOptions.CultureInvariant ||| RegexOptions.IgnoreCase
-    else
-      RegexOptions.Compiled ||| RegexOptions.CultureInvariant
+  let regexOptions = (if ignoreCase then RegexOptions.IgnoreCase else RegexOptions.None)
+                     ||| RegexOptions.Compiled ||| RegexOptions.CultureInvariant
   result {
     let! r =
       Result.protect (fun () -> Regex(regex, regexOptions)) ()
@@ -53,8 +50,8 @@ let xlStringStartsWith
       useRegex: xlObj
   ) =
   result {
-    let! ic = ignoreCase |> XlObj.toBoolWithDefault true
-    let! ur = useRegex |> XlObj.toBoolWithDefault false
+    let! ic = ignoreCase |> (XlObj.toBool |> XlObj.withDefault true)
+    let! ur = useRegex |> (XlObj.toBool |> XlObj.withDefault false)
     if ur then
       let adjPrefix = if prefix.StartsWith "^" then prefix else "^" + prefix
       return! input |> regexFilter adjPrefix ic
@@ -85,8 +82,8 @@ let xlStringEndsWith
       useRegex: xlObj
   ) =
   result {
-    let! ic = ignoreCase |> XlObj.toBoolWithDefault true
-    let! ur = useRegex |> XlObj.toBoolWithDefault false
+    let! ic = ignoreCase |> (XlObj.toBool |> XlObj.withDefault true)
+    let! ur = useRegex |> (XlObj.toBool |> XlObj.withDefault false)
     if ur then
       let adjPrefix = if suffix.EndsWith "$" then suffix else suffix + "$"
       return! input |> regexFilter adjPrefix ic
@@ -116,8 +113,8 @@ let xlStringContains
       useRegex: xlObj
   ): xlObj[,] =
   result {
-    let! ic = ignoreCase |> XlObj.toBoolWithDefault true
-    let! ur = useRegex |> XlObj.toBoolWithDefault false
+    let! ic = ignoreCase |> (XlObj.toBool |> XlObj.withDefault true)
+    let! ur = useRegex |> (XlObj.toBool |> XlObj.withDefault false)
     if ur then
       let! r = input |> regexFilter subString ic
       return r

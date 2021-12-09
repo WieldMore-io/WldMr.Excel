@@ -39,6 +39,7 @@
     <None Include="WldMr.Excel.Example.dna" />
     <Compile Include="Addin.fs" />
     <Compile Include="TestFunction.fs" />
+    <Compile Include="Tutorial.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../../src/WldMr.Excel.Functions/WldMr.Excel.Functions.fsproj" />

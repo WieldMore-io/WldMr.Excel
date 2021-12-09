@@ -23,13 +23,6 @@ module ToFunctions =
     let toInt (o: xlObj) =
       match o with | ExcelNum f -> f |> int |> Ok | _ -> "Expected a number" |> Error
 
-    let toIntDefault defaultValue (o: xlObj) =
-      match o with
-      | ExcelMissing _ | ExcelEmpty _ | ExcelString "" -> defaultValue |> Ok
-      | ExcelNum f -> f |> int |> Ok
-      | _ -> "Expected a number" |> Error
-
-
     /// <summary>
     /// Tries to extract an int out of excel cell value
     /// Does not attempt any conversion, and rejects non-integer float
@@ -37,14 +30,9 @@ module ToFunctions =
     /// </summary>
     let toIntStrict (o: xlObj) =
       match o with
-      | ExcelNum f ->
-          let error = abs ( f - (f |> int |> float) )
-          if error < 1e-8 then
-            f |> int |> Ok
-          else
-            "Expected an integer." |> Error
+      | ExcelNum f when abs ( f - (f |> int |> float) ) < 1e-8 ->
+          f |> int |> Ok
       | _ -> "Expected an integer." |> Error
-
 
     /// <summary>
     /// Tries to extract a float out of excel cell value
@@ -53,26 +41,12 @@ module ToFunctions =
     let toFloat (o: xlObj) =
       match o with | ExcelNum f -> f |> Ok | _ -> "Expected a number" |> Error
 
-
-    let toFloatDefault defaultValue (o: xlObj) =
-      match o with
-      | ExcelMissing _ | ExcelEmpty _ | ExcelString "" -> defaultValue
-      | ExcelNum f -> f |> Ok
-      | _ -> "Expected a number" |> Error
-
     /// <summary>
     /// Tries to extract a datetime out of excel cell value
     /// Does not attempt any conversion (the original excel value must be a number)
     /// </summary>
     let toDate (o: xlObj) =
       match o with | ExcelNum f -> f |> DateTime.FromOADate |> Ok | _ -> "Expected a date" |> Error
-
-    let toDateDefault defaultValue (o: xlObj) =
-      match o with
-      | ExcelMissing _ | ExcelEmpty _ | ExcelString "" -> defaultValue |> Ok
-      | ExcelNum f -> f |> DateTime.FromOADate |> Ok
-      | _ -> "Expected a date" |> Error
-
 
     /// <summary>
     /// Tries to extract a date without time out of excel cell value
@@ -111,7 +85,6 @@ module ToFunctions =
       | ExcelString s -> $"Expected a boolean '{s}'" |> Error
       | _ -> Some false |> Ok
 
-
     /// <summary>
     /// Force-converts an Excel obj input to a boolean
     /// Behaviour is as close to Excel as possible
@@ -130,19 +103,6 @@ module ToFunctions =
       | _ -> "Expected a boolean" |> Error
 
 
-    /// <summary>
-    /// Force-converts an Excel obj input to a boolean, using a default value if missing or empty
-    /// Behaviour is as close to Excel as possible
-    /// - Exact 0 are treated as False (as expected)
-    /// - Strings are treated as False (debatable)
-    /// - non-zero numbers are treated as True
-    /// </summary>
-    let toBoolWithDefault d (o:xlObj) =
-      match o with
-      | ExcelMissing _ -> d |> Ok
-      | _ -> o |> toBool
-
-
 [<AutoOpen>]
 module OfFunctions =
   [<RequireQualifiedAccess>]
@@ -154,13 +114,11 @@ module OfFunctions =
     let ofInt i: xlObj  =
       i |> float |> XlObj.ofFloat
 
-
     /// <summary>
     /// Converts the datetime into an xlObj phantom type
     /// </summary>
     let ofDate (d: DateTime): xlObj  =
       d.ToOADate() |> XlObj.ofFloat
-
 
     /// <summary>
     /// Summarizes the number of errors and then list them
@@ -186,66 +144,20 @@ module OfFunctions =
       | Error err -> err |> XlObj.ofErrorMessage
 
 
-
-
 [<AutoOpen>]
-module ArgToFunctions =
+module OfToFunctionsOps =
+  module private String =
+    let witLowerFirstChar (s: string) =
+      s.[0..0].ToLower() + s.[1..]
+
   [<RequireQualifiedAccess>]
   module XlObj =
-    let argDefault
-      (defaultValue: 'a)
-      (argParse: string -> xlObj -> Result<'a, string>)
-      (name: string)
-      (o: xlObj)
-      : Result<'a, string>
-      =
+    let withDefault defaultValue f o =
       match o with
       | ExcelMissing _ | ExcelEmpty _ -> defaultValue |> Ok
-      | _ -> argParse name o
+      | _ -> f o
 
-    /// <summary>
-    /// Tries to extract an int out of excel cell value
-    /// Does not attempt any conversion from string
-    /// Only allows rounding by up to 1e-8
-    /// </summary>
-    let argToIntStrict (argName: string) (o: xlObj) =
-      match o with
-      | ExcelNum f ->
-          let error = abs ( f - (f |> int |> float) )
-          if error < 1e-8 then
-            f |> int |> Ok
-          else
-            $"Argument '{argName}': expected an integer." |> Error
-      | _ -> $"Argument '{argName}': expected an integer." |> Error
+    let withArgName (argName: string) (xlObjToFunction: xlObj -> Result<_ , string>) (o: xlObj) =
+      xlObjToFunction o
+      |> Result.mapError (fun s -> $"Argument '{argName}': {s |> String.witLowerFirstChar}")
 
-    /// <summary>
-    /// Tries to extract an int out of excel cell value
-    /// Does not attempt any conversion (the original excel value must be a number)
-    /// </summary>
-    let argToInt (argName: string) (o: xlObj) =
-      match o with
-      | ExcelNum f -> f |> int |> Ok
-      | _ -> $"Argument '{argName}': expected a number." |> Error
-
-    /// <summary>
-    /// Tries to extract a float out of excel cell value
-    /// Does not attempt any conversion (the original excel value must be a number)
-    /// </summary>
-    let argToFloat (argName: string) (o: xlObj) =
-      match o with
-      | ExcelNum f -> f |> Ok
-      | _ -> $"Argument '{argName}': expected a number." |> Error
-
-    /// <summary>
-    /// try to extract a string without time out of excel cell value
-    /// does not attempt any conversion (the original excel value must be a string)
-    /// </summary>
-    let argToString (argName: string) (o: xlObj) =
-      match o with
-      | ExcelString s -> s |> Ok
-      | _ -> $"Argument '{argName}': expected a string." |> Error
-
-    let argToDate (argName: string) (o: xlObj) =
-      match o with
-      | ExcelNum f -> f |> DateTime.FromOADate |> Ok
-      | _ -> $"Argument '{argName}': expected a date." |> Error
