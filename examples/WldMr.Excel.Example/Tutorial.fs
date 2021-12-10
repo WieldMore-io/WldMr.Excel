@@ -7,8 +7,8 @@ open WldMr.Excel
 [<ExcelFunction>]
 let myStringContains1 (text:xlObj, substring: xlObj): xlObj =
   result {
-    let! text_ = text |> (XlObj.toString |> XlObj.withArgName "Text")
-    let! substring_ = substring |> (XlObj.toString |> XlObj.withArgName "Substring")
+    let! text_ = text |> (XlObj.toString |> XlObjParser.withArgName "Text")
+    let! substring_ = substring |> (XlObj.toString |> XlObjParser.withArgName "Substring")
     return
       text_.Contains(substring_)
       |> XlObj.ofBool
@@ -38,6 +38,6 @@ let myStringContainsWithCase (text:xlObj[,], subString: xlObj[,], ignoreCase: xl
   ArrayFunctionBuilder
     .Add("Text", XlObj.toString, text)
     .Add("SubString", XlObj.toString, subString)
-    .Add("IgnoreCase", XlObj.toBool |> XlObj.withDefault true, ignoreCase)
+    .Add("IgnoreCase", XlObj.toBool |> XlObjParser.withDefault true, ignoreCase)
     .EvalFunction stringContains
   |> FunctionCall.eval

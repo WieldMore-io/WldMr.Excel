@@ -144,20 +144,25 @@ module OfFunctions =
       | Error err -> err |> XlObj.ofErrorMessage
 
 
-[<AutoOpen>]
-module OfToFunctionsOps =
-  module private String =
-    let witLowerFirstChar (s: string) =
+  [<RequireQualifiedAccess>]
+  module XlObjParser =
+    let private witLowerFirstChar (s: string) =
       s.[0..0].ToLower() + s.[1..]
 
-  [<RequireQualifiedAccess>]
-  module XlObj =
-    let withDefault defaultValue f o =
+    let map f parseFun (o: xlObj) =
+      parseFun o |> Result.map f
+
+    let asOption f (o: xlObj) =
+      match o with
+      | ExcelMissing _ | ExcelEmpty _ -> None |> Ok
+      | _ -> f o |> Result.map Some
+
+    let withDefault defaultValue f (o: xlObj) =
       match o with
       | ExcelMissing _ | ExcelEmpty _ -> defaultValue |> Ok
       | _ -> f o
 
     let withArgName (argName: string) (xlObjToFunction: xlObj -> Result<_ , string>) (o: xlObj) =
       xlObjToFunction o
-      |> Result.mapError (fun s -> $"Argument '{argName}': {s |> String.witLowerFirstChar}")
+      |> Result.mapError (fun s -> $"Argument '{argName}': {witLowerFirstChar s}")
 

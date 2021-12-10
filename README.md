@@ -17,7 +17,34 @@ dotnet paket restore
 dotnet build
 ```
 
+
+## Excel Functions
+### Range manipulation
+`xlTrimNA`, `xlTrimEmpty`, `xlStackH`, `xlStackV`, `xlSlice`
+
+### String operations
+`xlStringStartsWith`, `xlStringEndsWith`, `xlStringContains` (with regex support and case-sensitivity options)
+
+`xlFormatA`
+
+`xlRegexMatch`
+
+### Boolean range operations
+`xlRangeAnd`, `xlRangeOr`
+
+### Date operations
+`xlDateThirdWednesday`, `xlDateThirdFriday`
+
+`xlToday()`: non-volatile RTD-based variant of `TODAY()` 
+
+
+## Library
+
+### Description
+
+
 ### Usage
+
 #### basic
 ```f#
 open ExcelDna.Integration
@@ -27,8 +54,8 @@ open WldMr.Excel
 [<ExcelFunction>]
 let StringContains (text:xlObj, subString: xlObj): xlObj =
   result {
-    let! text_ = text |> XlObj.toString |> XlObj.withArgName "Text" 
-    let! subString_ = text |> XlObj.toString
+    let! text_ = text |> (XlObj.toString |> XlObjParser.withArgName "Text") 
+    let! subString_ = text |> (XlObj.toString |> XlObjParser.withName "Substring")
     return text_.Contains(subString_) |> XlObj.ofBoolean
   } |> XlObj.ofResult
 ```
@@ -61,7 +88,7 @@ let myStringContainsWithCase (text:xlObj[,], substring: xlObj[,], ignoreCase: xl
   ArrayFunctionBuilder
     .Add("Text", XlObj.toString, text)
     .Add("Substring", XlObj.toString, substring)
-    .Add("IgnoreCase", XlObj.toBool |> XlObj.withDefault true, ignoreCase)
+    .Add("IgnoreCase", XlObj.toBool |> XlObjParser.withDefault true, ignoreCase)
     .EvalFunction stringContains
   |> FunctionCall.eval
 ```

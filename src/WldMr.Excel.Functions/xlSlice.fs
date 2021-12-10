@@ -32,10 +32,10 @@ let xlSlice
   result {
     let nRows = range.GetLength 0
     let nCols = range.GetLength 1
-    let! sr = fromRow |> (XlObj.toInt |> XlObj.withDefault 1 |> XlObj.withArgName "FromRow")
-    and! sc = fromColumn |> (XlObj.toInt |> XlObj.withDefault 1 |> XlObj.withArgName "FromColumn")
-    and! er = toRow |> (XlObj.toInt |> XlObj.withDefault -1 |> XlObj.withArgName "ToRow")
-    and! ec = toColumn |> (XlObj.toInt |> XlObj.withDefault -1 |> XlObj.withArgName "ToColumn")
+    let! sr = fromRow |> (XlObj.toInt |> XlObjParser.withDefault 1 |> XlObjParser.withArgName "FromRow")
+    and! sc = fromColumn |> (XlObj.toInt |> XlObjParser.withDefault 1 |> XlObjParser.withArgName "FromColumn")
+    and! er = toRow |> (XlObj.toInt |> XlObjParser.withDefault -1 |> XlObjParser.withArgName "ToRow")
+    and! ec = toColumn |> (XlObj.toInt |> XlObjParser.withDefault -1 |> XlObjParser.withArgName "ToColumn")
     let startRow = sr + if sr >= 0 then -1 else nRows
     let startCol = sc + if sc >= 0 then -1 else nCols
     let endRow = er + if er >= 0 then -1 else nRows

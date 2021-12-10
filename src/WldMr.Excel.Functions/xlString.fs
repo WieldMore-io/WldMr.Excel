@@ -50,8 +50,8 @@ let xlStringStartsWith
       useRegex: xlObj
   ) =
   result {
-    let! ic = ignoreCase |> (XlObj.toBool |> XlObj.withDefault true)
-    let! ur = useRegex |> (XlObj.toBool |> XlObj.withDefault false)
+    let! ic = ignoreCase |> (XlObj.toBool |> XlObjParser.withDefault true)
+    let! ur = useRegex |> (XlObj.toBool |> XlObjParser.withDefault false)
     if ur then
       let adjPrefix = if prefix.StartsWith "^" then prefix else "^" + prefix
       return! input |> regexFilter adjPrefix ic
@@ -82,8 +82,8 @@ let xlStringEndsWith
       useRegex: xlObj
   ) =
   result {
-    let! ic = ignoreCase |> (XlObj.toBool |> XlObj.withDefault true)
-    let! ur = useRegex |> (XlObj.toBool |> XlObj.withDefault false)
+    let! ic = ignoreCase |> (XlObj.toBool |> XlObjParser.withDefault true)
+    let! ur = useRegex |> (XlObj.toBool |> XlObjParser.withDefault false)
     if ur then
       let adjPrefix = if suffix.EndsWith "$" then suffix else suffix + "$"
       return! input |> regexFilter adjPrefix ic
@@ -113,8 +113,8 @@ let xlStringContains
       useRegex: xlObj
   ): xlObj[,] =
   result {
-    let! ic = ignoreCase |> (XlObj.toBool |> XlObj.withDefault true)
-    let! ur = useRegex |> (XlObj.toBool |> XlObj.withDefault false)
+    let! ic = ignoreCase |> (XlObj.toBool |> XlObjParser.withDefault true)
+    let! ur = useRegex |> (XlObj.toBool |> XlObjParser.withDefault false)
     if ur then
       let! r = input |> regexFilter subString ic
       return r

@@ -59,7 +59,7 @@ module ArrayFunction =
     member internal uaa.eval f subEval conversion i j =
       result {
         let! fp = subEval f i j
-        let! v = uaa.Value |> getPseudoElt i j |> (XlObj.withArgName uaa.Name conversion)
+        let! v = uaa.Value |> getPseudoElt i j |> (XlObjParser.withArgName uaa.Name conversion)
         return fp v
       }
 

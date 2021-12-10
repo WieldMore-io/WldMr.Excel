@@ -41,6 +41,7 @@
     <Compile Include="xlSlice.fs" />
     <Compile Include="xlStack.fs" />
     <Compile Include="xlString.fs" />
+    <Compile Include="xlRegex.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../WldMr.Excel.Core/WldMr.Excel.Core.fsproj" />
