@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net461</TargetFrameworks>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-    <PackageId>WldMr.Excel.Functions</PackageId>
+    <PackageId>WldMr.Excel.Functions.Date</PackageId>
     <Version>0.0.1</Version> <!-- Version is maintained through azure-pipelines.yml -->
     <Company>Wieldmore IM Ltd</Company>
     <Authors>PY Rivaille</Authors>
