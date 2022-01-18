@@ -3,7 +3,7 @@ trigger:
 
 pool:
   name: Azure Pipelines
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 variables:
   major: 0
@@ -30,6 +30,31 @@ name: '$(buildPrefix)$(major).$(minor).$(revision).$(patch) - '
 
 steps:
 - task: DotNetCoreCLI@2
+  displayName: 'dotnet --info'
+  inputs:
+    command: custom
+    custom: '--info'
+
+- task: UseDotNet@2
+  displayName: 'Install .NET Core 6 sdk'
+  inputs:
+    packageType: sdk
+    version: 6.0.x
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet --info'
+  inputs:
+    command: custom
+    custom: '--info'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet --info'
+  inputs:
+    command: custom
+    custom: '--info'
+
+- task: DotNetCoreCLI@2
   displayName: 'dotnet tool restore'
   inputs:
     command: custom
@@ -47,7 +72,6 @@ steps:
   displayName: 'dotnet build'
   inputs:
     command: 'build'
-    projects: tests/**/*.fsproj
     arguments: >-
         -p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion) 
         --configuration $(buildConfiguration)
@@ -56,8 +80,8 @@ steps:
   displayName: 'dotnet test'
   inputs:
     command: 'test'
+    projects: tests/**/*.fsproj
     arguments: >-
-        -p:Version=$(packageVersion) -p:InformationalVersion=$(packageVersion)-$(Build.SourceVersion) 
         --configuration $(buildConfiguration)
 
 - task: DotNetCoreCLI@2
