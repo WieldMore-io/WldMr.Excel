@@ -17,7 +17,7 @@ let myStringContains1 (text:xlObj, substring: xlObj): xlObj =
 
 [<ExcelFunction(Name="myStringContain2")>]
 let myStringContainsWithRange (text:xlObj[,], subString: xlObj[,]): xlObj[,] =
-  let stringContains (text: string) subString =
+  let stringContains (text: string) (subString: string) =
     text.Contains(subString) |> XlObj.ofBool
 
   ArrayFunctionBuilder

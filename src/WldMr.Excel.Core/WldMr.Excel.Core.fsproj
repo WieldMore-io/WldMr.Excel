@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFrameworks>net461;net6.0-windows</TargetFrameworks>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <PackageId>WldMr.Excel.Core</PackageId>
     <Version>0.0.1</Version>  <!-- Version is maintained through azure-pipelines.yml -->
@@ -9,7 +9,7 @@
     <Authors>PY Rivaille</Authors>
     <Product>Wieldmore CommonDataLogic layer</Product>
     <Description>F# types and functions to author safe and full-featured Excel functions with Excel-DNA</Description>
-    <Copyright>Copyright © 2021 PY Rivaille</Copyright>
+    <Copyright>Copyright © 2021-2022 PY Rivaille</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/WieldMore-io/WldMr.Excel</PackageProjectUrl>
   </PropertyGroup>

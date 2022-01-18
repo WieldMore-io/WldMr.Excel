@@ -1,11 +1,11 @@
 <Project>
   <PropertyGroup>
-    <GenerateProgramFile>false</GenerateProgramFile>
     <Configurations>Debug;Release</Configurations>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
 
   <PropertyGroup>
+    <OutputType>Library</OutputType>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 </Project>
