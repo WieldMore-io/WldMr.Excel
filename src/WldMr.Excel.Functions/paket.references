@@ -1,3 +1,9 @@
-FSharp.Core
-ExcelDna.Integration
-FsToolkit.ErrorHandling
+group Net461
+    FSharp.Core
+    ExcelDna.Integration
+    FsToolkit.ErrorHandling
+
+group Net6
+    FSharp.Core
+    ExcelDna.Integration
+    FsToolkit.ErrorHandling

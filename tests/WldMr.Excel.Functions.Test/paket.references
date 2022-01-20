@@ -1,6 +1,15 @@
-FSharp.Core
+group Net461
+    FSharp.Core
 
-FsUnit
-Microsoft.NET.Test.Sdk
-NUnit
-NUnit3TestAdapter
+    FsUnit
+    Microsoft.NET.Test.Sdk
+    NUnit
+    NUnit3TestAdapter
+
+group Net6
+    FSharp.Core
+
+    FsUnit
+    Microsoft.NET.Test.Sdk
+    NUnit
+    NUnit3TestAdapter
