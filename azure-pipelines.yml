@@ -111,7 +111,7 @@ steps:
     addChangeLog: false
     isPreRelease: true
     tag: $(packageVersion)
-    assets: $(Build.ArtifactStagingDirectory)
+    assets: $(Build.ArtifactStagingDirectory)/*.nupkg
 
 - script: ls '$(Build.ArtifactStagingDirectory)'
 
