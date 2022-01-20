@@ -9,7 +9,7 @@
     <Authors>PY Rivaille</Authors>
     <Product>Wieldmore Excel Date functions</Product>
     <Description>Generic Excel functions written with ExcelDna and F#</Description>
-    <Copyright>Copyright © 2021 PY Rivaille</Copyright>
+    <Copyright>Copyright © 2021-2022 PY Rivaille</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/WieldMore-io/WldMr.Excel</PackageProjectUrl>
   </PropertyGroup>

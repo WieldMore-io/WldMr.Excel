@@ -10,7 +10,7 @@
     <Product>Wieldmore Ex</Product>
     <Description>Generic Excel functions written with ExcelDna and F#. Mostly Array and String related-operations.
     </Description>
-    <Copyright>Copyright © 2021 PY Rivaille</Copyright>
+    <Copyright>Copyright © 2021-2022 PY Rivaille</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/WieldMore-io/WldMr.Excel</PackageProjectUrl>
   </PropertyGroup>
