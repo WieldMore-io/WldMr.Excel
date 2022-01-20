@@ -94,8 +94,12 @@ steps:
         --configuration $(buildConfiguration)
         -o $(Build.ArtifactStagingDirectory)
 
+- script: ls '$(Build.ArtifactStagingDirectory)'
+      
 - publish: $(Build.ArtifactStagingDirectory)
   artifact: nupkgs
+
+- script: ls '$(Build.ArtifactStagingDirectory)'
 
 - task: GithubRelease@0 
   displayName: Create GitHub Release
@@ -107,8 +111,9 @@ steps:
     addChangeLog: false
     isPreRelease: true
     tag: $(packageVersion)
-    assets: |
-      $(Build.ArtifactStagingDirectory)
+    assets: $(Build.ArtifactStagingDirectory)
+
+- script: ls '$(Build.ArtifactStagingDirectory)'
 
 - task: DotNetCoreCLI@2
   displayName: Push to nuget.org
