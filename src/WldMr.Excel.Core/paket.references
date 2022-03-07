@@ -1,11 +1,5 @@
-group Net461
-    FSharp.Core
-    ExcelDna.Integration
-    TypeShape
-    FsToolkit.ErrorHandling
+FSharp.Core
+ExcelDna.Integration
+TypeShape
+FsToolkit.ErrorHandling
 
-group Net6
-    FSharp.Core
-    ExcelDna.Integration
-    TypeShape
-    FsToolkit.ErrorHandling

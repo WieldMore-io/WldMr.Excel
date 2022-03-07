@@ -1,11 +1,4 @@
-group Net461
-    ExcelDna.Addin copy_local: true
-    ExcelDna.Integration
-    ExcelDna.IntelliSense
-    FSharp.Core
-
-group Net6
-    ExcelDna.Addin copy_local: true
-    ExcelDna.Integration
-
-    FSharp.Core
+ExcelDna.Addin copy_local: true
+ExcelDna.Integration
+ExcelDna.IntelliSense
+FSharp.Core

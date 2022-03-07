@@ -1,37 +1,16 @@
+source https://api.nuget.org/v3/index.json
+storage: none
+framework: net461, net6.0-windows
 
-group Net461
-    source https://api.nuget.org/v3/index.json
-    storage: none
-    framework: net461
-    condition: net461
-
-    nuget FSharp.Core
-    nuget ExcelDna.Integration
-    nuget ExcelDna.Addin
-    nuget ExcelDna.IntelliSense
-    nuget FsToolkit.ErrorHandling
-    nuget FsUnit
-    nuget TypeShape
+nuget FSharp.Core
+nuget ExcelDna.Integration ~> 1.6.0-preview3
+nuget ExcelDna.Addin ~> 1.6.0-preview3
+nuget ExcelDna.IntelliSense ~> 1.6.0-preview3
+nuget FsToolkit.ErrorHandling
+nuget FsUnit
+nuget TypeShape
 
 
-    nuget Microsoft.NET.Test.Sdk
-    nuget NUnit
-    nuget NUnit3TestAdapter
-
-group Net6
-    source https://api.nuget.org/v3/index.json
-    storage: none
-    framework: net6.0-windows
-    condition: net6_0
-
-    nuget FSharp.Core
-    nuget ExcelDna.Integration ~> 1.6.0-preview1
-    nuget ExcelDna.Addin ~> 1.6.0-preview1
-    nuget FsToolkit.ErrorHandling
-    nuget FsUnit
-    nuget TypeShape
-
-
-    nuget Microsoft.NET.Test.Sdk
-    nuget NUnit
-    nuget NUnit3TestAdapter
+nuget Microsoft.NET.Test.Sdk
+nuget NUnit
+nuget NUnit3TestAdapter
