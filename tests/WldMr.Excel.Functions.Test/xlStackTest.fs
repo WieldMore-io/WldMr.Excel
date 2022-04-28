@@ -9,28 +9,32 @@ open WldMr.Excel.Functions
 [<TestFixture>]
 type ``xlStackV``() =
   [<Test>]
-  member __.``returns empty when inputs are empty``() =
-    Stack.xlStackV(emptyArray, emptyArray) |> Array2D.shouldEqual emptyArray
+  member __.``returns NA when inputs are empty``() =
+    Stack.xlStackV(emptyArray, emptyArray, missingArray, missingArray, missingArray, missingArray, missingArray)
+    |> Array2D.shouldEqual (singleCell XlObj.Error.xlNA)
 
   [<Test>]
   member __.``works with cells``() =
     (
       singleCell 1.0,
-      singleCell 2.0
+      singleCell 2.0,
+      missingArray, missingArray, missingArray, missingArray, missingArray
     )
     |> Stack.xlStackV
     |> Array2D.shouldEqual ( [[1.0 |> XlObj.ofFloat]; [2.0 |> XlObj.ofFloat]] |> array2D )
 
     (
       singleCell 1.0,
-      singleCell XlObj.xlMissing
+      singleCell XlObj.xlMissing,
+      missingArray, missingArray, missingArray, missingArray, missingArray
     )
     |> Stack.xlStackV
     |> Array2D.shouldEqual (singleCell 1.0)
 
     (
       singleCell 1.0,
-      singleCell "a"
+      singleCell "a",
+      missingArray, missingArray, missingArray, missingArray, missingArray
     )
     |> Stack.xlStackV
     |> Array2D.shouldEqual ( [[1.0 |> XlObj.ofFloat]; ["a" |> XlObj.ofString]] |> array2D )
@@ -39,7 +43,8 @@ type ``xlStackV``() =
   member __.``can stack 1x2 with 2x1``() =
     (
       [[3.0 |> XlObj.ofFloat]; ["a" |> XlObj.ofString]] |> array2D,
-      [[1.0 |> XlObj.ofFloat; 2.0 |> XlObj.ofFloat]] |> array2D
+      [[1.0 |> XlObj.ofFloat; 2.0 |> XlObj.ofFloat]] |> array2D,
+      missingArray, missingArray, missingArray, missingArray, missingArray
     )
     |> Stack.xlStackV
     |> Array2D.shouldEqual (
@@ -55,7 +60,8 @@ type ``xlStackV``() =
 type ``xlStackH``() =
   [<Test>]
   member __.``returns NA when inputs are empty``() =
-    Stack.xlStackV(emptyArray, emptyArray) |> Array2D.shouldEqual emptyArray
+    Stack.xlStackV(emptyArray, emptyArray, missingArray, missingArray, missingArray, missingArray, missingArray)
+    |> Array2D.shouldEqual (singleCell XlObj.Error.xlNA)
 
   [<Test>]
   member __.``works with cells``() =

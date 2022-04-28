@@ -12,6 +12,8 @@ module XlObjRange =
     | 1, 1 when a.[0, 0] = XlObj.xlMissing -> 0, 0
     | ls -> ls
 
+  let isMissing (a: xlObj[,]): bool =
+    (getSize a) = (0, 0)
 
 [<AutoOpen>]
 module OfConversions =

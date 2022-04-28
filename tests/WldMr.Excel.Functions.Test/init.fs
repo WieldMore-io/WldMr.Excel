@@ -27,3 +27,4 @@ namespace WldMr.Excel
     let trueCell: xlObj = true |> XlObj.ofBool
     let falseCell: xlObj = false |> XlObj.ofBool
     let missing: xlObj = XlObj.xlMissing
+    let missingArray: xlObj[,] = XlObj.xlMissing |> singleCell
