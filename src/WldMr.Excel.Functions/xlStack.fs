@@ -112,9 +112,24 @@ let xlStackV (
   rng4: xlObj[,],
   rng5: xlObj[,],
   rng6: xlObj[,],
-  rng7: xlObj[,]
+  rng7: xlObj[,],
+  rng8: xlObj[,],
+  rng9: xlObj[,],
+  rng10: xlObj[,],
+  rng11: xlObj[,],
+  rng12: xlObj[,],
+  rng13: xlObj[,],
+  rng14: xlObj[,],
+  rng15: xlObj[,],
+  rng16: xlObj[,],
+  rng17: xlObj[,],
+  rng18: xlObj[,],
+  rng19: xlObj[,]
   ) =
-  let ranges = [rng1; rng2; rng3; rng4; rng5; rng6; rng7]
+  let ranges = [
+    rng1; rng2; rng3; rng4; rng5; rng6; rng7; rng8; rng9;
+    rng10; rng11; rng12; rng13; rng14; rng15; rng16; rng17; rng18; rng19;
+  ]
   let revRanges = ranges |> List.rev |> List.skipWhile (fun rng -> rng |> XlObjRange.isMissing)
 
   match revRanges with
