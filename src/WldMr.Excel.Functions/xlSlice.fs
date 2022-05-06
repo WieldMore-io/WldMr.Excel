@@ -26,7 +26,11 @@ let xlSlice
     [<ExcelArgument(Description="the first column to return, defaults to 1")>]
       fromColumn: xlObj,
     [<ExcelArgument(Description="the last column to return, defaults to -1")>]
-      toColumn: xlObj
+      toColumn: xlObj,
+    [<ExcelArgument(Description="row step, defaults to 1")>]
+      rowStep: xlObj,
+    [<ExcelArgument(Description="column step, defaults to 1")>]
+      colStep: xlObj
   ): xlObj[,]
   =
   result {
@@ -40,10 +44,21 @@ let xlSlice
     let startCol = sc + if sc >= 0 then -1 else nCols
     let endRow = er + if er >= 0 then -1 else nRows
     let endCol = ec + if ec >= 0 then -1 else nCols
-    let slice = range.[startRow..endRow, startCol..endCol]
-    if slice.LongLength = 0L then
+
+    let! rowStep_ = rowStep |> (XlObj.toInt |> XlObjParser.withDefault 1 |> XlObjParser.withArgName "RowStep")
+    and! colStep_ = colStep |> (XlObj.toInt |> XlObjParser.withDefault 1 |> XlObjParser.withArgName "ColStep")
+
+    let totalRows = (endRow - startRow) / rowStep_ + 1
+    let totalCols = (endCol - startCol) / colStep_ + 1
+
+    let res =
+      Array2D.init totalRows totalCols (fun i j ->
+        range.[startRow + i * rowStep_, startCol + j * colStep_]
+      )
+
+    if res.LongLength = 0L then
       return XlObj.Error.xlNA |> XlObjRange.ofCell
     else
-      return slice
+      return res
   }
   |> XlObjRange.ofResult
