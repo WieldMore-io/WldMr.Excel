@@ -171,6 +171,17 @@ module ArrayFunction =
     member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval f)
     member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f)
 
+    member uaa.Add(name: string, c: xlObj -> _, value: xlObj[,]) =
+      ArrayFunctionDefinition<_, _, _, _, _, _, _, _>(name, value, uaa, c)
+
+  and ArrayFunctionDefinition<'T1, 'T2, 'T3, 'T4, 'T5, 'T6, 'T7, 'T8>(name: string, value: xlObj[,], rest: ArrayFunctionDefinition<'T2, 'T3, 'T4, 'T5, 'T6, 'T7, 'T8>, conversion: xlObj -> Result<'T1, string> ) =
+    inherit UdfArrayArgBase(name, value, rest :> UdfArrayArgBase |> Some)
+
+    member private uaa.Conversion = conversion
+    member internal uaa.Eval f i j = uaa.eval f rest.Eval uaa.Conversion i j
+    member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval f)
+    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f)
+
 type ArrayFunctionBuilder() =
   static member Add(name: string, c: xlObj -> _, value: xlObj[,]) =
     ArrayFunction.ArrayFunctionDefinition<_>(name, value, None, c)
