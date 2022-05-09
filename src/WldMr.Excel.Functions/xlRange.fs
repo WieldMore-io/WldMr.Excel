@@ -54,3 +54,74 @@ let xlRangeOr(range1:xlObj[,], range2: xlObj[,], range3: xlObj[,], range4: xlObj
   let ranges = [range1; range2; range3; range4]
   xlRangeCommon "xlRangeOr" (||) false ranges
 
+
+[<ExcelFunction(Category= "WldMr Array", Description= "Element-wise Max for arrays")>]
+let xlRangeMax(
+  number1: xlObj[,],
+  number2: xlObj[,],
+  number3: xlObj[,],
+  number4: xlObj[,],
+  number5: xlObj[,],
+  number6: xlObj[,],
+  number7: xlObj[,],
+  number8: xlObj[,]
+  )
+  : xlObj[,]
+  =
+
+  let scalarF f1 f2 f3 f4 f5 f6 f7 f8 =
+    let fs =
+      [f1; f2; f3; f4; f5; f6; f7; f8]
+      |> List.collect Option.toList
+    match fs with
+    | [] -> Error "no numbers"
+    | _ -> fs |> List.reduce max |> XlObj.ofFloat |> Ok
+
+
+  ArrayFunctionBuilder
+    .Add("Number1", XlObj.toFloat |> XlObjParser.asOption, number1)
+    .Add("Number2", XlObj.toFloat |> XlObjParser.asOption, number2)
+    .Add("Number3", XlObj.toFloat |> XlObjParser.asOption, number3)
+    .Add("Number4", XlObj.toFloat |> XlObjParser.asOption, number4)
+    .Add("Number5", XlObj.toFloat |> XlObjParser.asOption, number5)
+    .Add("Number6", XlObj.toFloat |> XlObjParser.asOption, number6)
+    .Add("Number7", XlObj.toFloat |> XlObjParser.asOption, number7)
+    .Add("Number8", XlObj.toFloat |> XlObjParser.asOption, number8)
+    .EvalFunction scalarF
+  |> FunctionCall.eval
+
+
+[<ExcelFunction(Category= "WldMr Array", Description= "Element-wise Min for arrays")>]
+let xlRangeMin(
+  number1: xlObj[,],
+  number2: xlObj[,],
+  number3: xlObj[,],
+  number4: xlObj[,],
+  number5: xlObj[,],
+  number6: xlObj[,],
+  number7: xlObj[,],
+  number8: xlObj[,]
+  )
+  : xlObj[,]
+  =
+
+  let scalarF f1 f2 f3 f4 f5 f6 f7 f8 =
+    let fs =
+      [f1; f2; f3; f4; f5; f6; f7; f8]
+      |> List.collect Option.toList
+    match fs with
+    | [] -> Error "no numbers"
+    | _ -> fs |> List.reduce min |> XlObj.ofFloat |> Ok
+
+
+  ArrayFunctionBuilder
+    .Add("Number1", XlObj.toFloat |> XlObjParser.asOption, number1)
+    .Add("Number2", XlObj.toFloat |> XlObjParser.asOption, number2)
+    .Add("Number3", XlObj.toFloat |> XlObjParser.asOption, number3)
+    .Add("Number4", XlObj.toFloat |> XlObjParser.asOption, number4)
+    .Add("Number5", XlObj.toFloat |> XlObjParser.asOption, number5)
+    .Add("Number6", XlObj.toFloat |> XlObjParser.asOption, number6)
+    .Add("Number7", XlObj.toFloat |> XlObjParser.asOption, number7)
+    .Add("Number8", XlObj.toFloat |> XlObjParser.asOption, number8)
+    .EvalFunction scalarF
+  |> FunctionCall.eval
