@@ -13,7 +13,7 @@ module XlObjRangeTrimOps =
     module TrimMode =
       let predicate trimMode =
         match trimMode with
-        | TrimMode.MissingEmpty -> (function | ExcelMissing _ | ExcelEmpty _ | _ -> true)
+        | TrimMode.MissingEmpty -> (function | ExcelMissing _ | ExcelEmpty _ -> false | _ -> true)
         | TrimMode.MissingEmptyStringEmpty -> (function | ExcelMissing _ | ExcelEmpty _ | ExcelString "" -> false | _ -> true)
 
 
