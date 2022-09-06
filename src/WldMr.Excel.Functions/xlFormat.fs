@@ -18,16 +18,12 @@ See help link for more details about the syntax""",
 let xlFormatA
   (
     [<ExcelArgument(Description="Format string")>]
-    s: string,
-    o1: xlObj, t1: xlObj,
-    o2: xlObj, t2: xlObj,
-    o3: xlObj, t3: xlObj,
-    o4: xlObj, t4: xlObj,
-    o5: xlObj, t5: xlObj,
-    o6: xlObj, t6: xlObj,
-    o7: xlObj, t7: xlObj,
-    o8: xlObj, t8: xlObj
-  ): xlObj =
+    s: xlObj[,],
+    o1: xlObj[,], t1: xlObj[,],
+    o2: xlObj[,], t2: xlObj[,],
+    o3: xlObj[,], t3: xlObj[,],
+    o4: xlObj[,], t4: xlObj[,]
+  ): xlObj[,] =
   let convertXlObj (o: xlObj) (t: xlObj) =
     match o, t with
     | ExcelMissing _, ExcelMissing _ -> "" :> obj |> Ok
@@ -49,12 +45,28 @@ let xlFormatA
       | :? System.FormatException as e -> "Incorrect format string." |> Error
       | e -> $"{e.Message} ({e.GetType()})" |> Error
 
-  result {
-    let! args =
-      ([ o1; o2; o3; o4; o5; o6; o7; o8 ],
-       [ t1; t2; t3; t4; t5; t6; t7; t8 ])
-      ||> List.map2 convertXlObj
-      |> List.sequenceResultM
+  let scalarF
+    (s: string)
+    (o1: xlObj) (t1: xlObj)
+    (o2: xlObj) (t2: xlObj)
+    (o3: xlObj) (t3: xlObj)
+    (o4: xlObj) (t4: xlObj)
+    =
+    result {
+      let! args =
+        ([ o1; o2; o3; o4],
+         [ t1; t2; t3; t4])
+        ||> List.map2 convertXlObj
+        |> List.sequenceResultM
 
-    return! formatString s args
-  } |> XlObj.ofResult
+      return! formatString s args
+    }
+
+  ArrayFunctionBuilder
+    .Add("formatString", XlObj.toString, s)
+    .Add("o1", Ok, o1).Add("t1", Ok, t1)
+    .Add("o2", Ok, o1).Add("t2", Ok, t1)
+    .Add("o3", Ok, o1).Add("t3", Ok, t1)
+    .Add("o4", Ok, o1).Add("t4", Ok, t1)
+    .EvalFunction scalarF
+  |> FunctionCall.eval
