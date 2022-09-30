@@ -54,17 +54,79 @@ let stackParameter (rng: xlObj[,]) =
   }
 
 
-[<ExcelFunction(Category= "WldMr Array", Description= "Stack two arrays vertically")>]
-let xlStackH (x:xlObj[,], y:xlObj[,]) =
-  let x0, x1 = x |> XlObjRange.getSize
-  let y0, y1 = y |> XlObjRange.getSize
-  Array2D.init (max x0 y0) (x1 + y1)
-    (fun i j ->
-      if j < x1 then
-        if i < x0 then x.[i, j] else XlObj.Error.xlNA
-      else
-        if i < y0 then y.[i, j - x1] else XlObj.Error.xlNA
+let xlStackH_internal (parameter: StackParameter) (ranges: xlObj[,] list): xlObj[,] =
+  let trimFunction =
+    option {
+      let (StackParameter.Trim trimStr) = parameter
+      return
+        match trimStr.ToLower() with
+        | "none" -> id
+        | "empty" -> xlTrimEmpty
+        | "na" -> trimPredicate (function | ExcelEmpty _ | ExcelString "" -> false | x -> x <> XlObj.Error.xlNA)
+        | _ -> id
+    } |> Option.defaultValue id
+  let processedRanges =
+    ranges |> List.map trimFunction
+
+  let nRanges = processedRanges |> List.length
+  let sizes = processedRanges |> List.map XlObjRange.getSize
+  let cols = sizes |> List.sumBy snd
+  let colStarts =
+    sizes
+    |> List.truncate (nRanges-1)
+    |> List.map snd
+    |> List.scan (+) 0
+  let rows = sizes |> List.map fst |> List.max
+
+  let r = Array2D.create rows cols XlObj.Error.xlNA
+
+  (colStarts, processedRanges)
+  ||> List.iter2 (fun colStart rng ->
+      let x, y = rng |> XlObjRange.getSize
+      for i = 0 to x-1 do
+        for j = 0 to y-1 do
+          r.[i, colStart+j] <- rng.[i, j]
     )
+  r
+
+
+[<ExcelFunction(Category= "WldMr Array", Description= "Stack ranges horizontally")>]
+let xlStackH (
+  rng1: xlObj[,],
+  rng2: xlObj[,],
+  rng3: xlObj[,],
+  rng4: xlObj[,],
+  rng5: xlObj[,],
+  rng6: xlObj[,],
+  rng7: xlObj[,],
+  rng8: xlObj[,],
+  rng9: xlObj[,],
+  rng10: xlObj[,],
+  rng11: xlObj[,],
+  rng12: xlObj[,],
+  rng13: xlObj[,],
+  rng14: xlObj[,],
+  rng15: xlObj[,],
+  rng16: xlObj[,],
+  rng17: xlObj[,],
+  rng18: xlObj[,],
+  rng19: xlObj[,]
+  ) =
+  let ranges = [
+    rng1; rng2; rng3; rng4; rng5; rng6; rng7; rng8; rng9;
+    rng10; rng11; rng12; rng13; rng14; rng15; rng16; rng17; rng18; rng19;
+  ]
+  let revRanges = ranges |> List.rev |> List.skipWhile (fun rng -> rng |> XlObjRange.isMissing)
+
+  match revRanges with
+  | [] ->
+      XlObj.Error.xlNA |> XlObjRange.ofCell
+  | lastRange::rest ->
+      match lastRange |> stackParameter with
+      | None ->
+          xlStackH_internal (StackParameter.Trim "empty" ) (List.rev revRanges)
+      | Some parameter ->
+          xlStackH_internal parameter (List.rev rest)
 
 
 let xlStackV_internal (parameter: StackParameter) (ranges: xlObj[,] list): xlObj[,] =
@@ -104,7 +166,7 @@ let xlStackV_internal (parameter: StackParameter) (ranges: xlObj[,] list): xlObj
   r
 
 
-[<ExcelFunction(Category= "WldMr Array", Description= "Stack two arrays vertically")>]
+[<ExcelFunction(Category= "WldMr Array", Description= "Stack ranges vertically")>]
 let xlStackV (
   rng1: xlObj[,],
   rng2: xlObj[,],
