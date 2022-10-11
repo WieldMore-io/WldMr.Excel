@@ -7,12 +7,14 @@ open System.Runtime.InteropServices
 open System.Threading
 open ExcelDna.Integration.Rtd
 
+
 module RtdTodayServer =
   [<Literal>]
   let progId = "WldMr.Today"
 
-[<ComVisible(true)>]  // Required since the default template puts [assembly:ComVisible(false)] in the AssemblyInfo.cs
-[<ProgId(RtdTodayServer.progId)>]     //  If ProgId is not specified, change the XlCall.RTD call in the wrapper to use namespace + type name (the default ProgId)
+
+[<ComVisible(true)>]
+[<ProgId(RtdTodayServer.progId)>]
 type RtdTodayServer() =
   inherit ExcelRtdServer()
 
@@ -25,22 +27,23 @@ type RtdTodayServer() =
     let now = DateTime.Now
     let n = now.AddDays 1.0
     let r = DateTime(n.Year, n.Month, n.Day)
-    let d = (int) (r - now).TotalMilliseconds
-    timer <- new Timer(this.timer_tick, null, d, 86400 * 1000)
+    let msTillTomorrow = (int) (r - now).TotalMilliseconds |> max 5000
+    let waitMs = min (60 * 1000) msTillTomorrow
+    timer <- new Timer(this.timer_tick, null, waitMs, 60 * 1000)
     topics.Clear()
     true
 
   override _.ServerTerminate() =
     timer.Dispose()
 
-  override _.ConnectData(topic, topicInfo:IList<string>, newValues:byref<bool>): obj =
+  override _.ConnectData(topic, _topicInfo: IList<string>, newValues: byref<bool>): obj =
     topics.Add topic
     DateTime.Today :> obj
 
   override _.DisconnectData(topic): unit =
     topics.Remove topic |> ignore
 
-  member _.timer_tick(_unused_state_: obj): unit =
+  member _.timer_tick(_unusedState: obj): unit =
     let today = DateTime.Today
     let tillTomorrow = (today.AddDays(1.0) - DateTime.Now).TotalSeconds
     let r = if (tillTomorrow < 5.0) then today.AddDays 1.0 else today
@@ -51,5 +54,5 @@ module RtdTodayFunction =
   [<ExcelFunction(Category = "WldMr Date", Description = "Non-volatile version of Today()")>]
   let xlToday(): obj =
     // Call the Excel-DNA RTD wrapper, which does dynamic registration of the RTD server
-    // Note that the topic information needs at least one string - it's not used in this sample
+    // Note that the topic information needs at least one string - it's not used here
     XlCall.RTD(RtdTodayServer.progId, null, "")
