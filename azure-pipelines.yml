@@ -35,25 +35,6 @@ steps:
     command: custom
     custom: '--info'
 
-- task: UseDotNet@2
-  displayName: 'Install .NET Core 6 sdk'
-  inputs:
-    packageType: sdk
-    version: 6.0.x
-    installationPath: $(Agent.ToolsDirectory)/dotnet
-
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet --info'
-  inputs:
-    command: custom
-    custom: '--info'
-
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet --info'
-  inputs:
-    command: custom
-    custom: '--info'
-
 - task: DotNetCoreCLI@2
   displayName: 'dotnet tool restore'
   inputs:
