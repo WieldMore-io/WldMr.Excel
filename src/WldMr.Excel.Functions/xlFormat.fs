@@ -42,7 +42,7 @@ let xlFormatA
     try
       System.String.Format(s, List.toArray args) |> XlObj.ofString |> Ok
     with
-      | :? System.FormatException as e -> "Incorrect format string." |> Error
+      | :? System.FormatException as e -> $"Incorrect format string: {e.Message}" |> Error
       | e -> $"{e.Message} ({e.GetType()})" |> Error
 
   let scalarF
@@ -65,8 +65,8 @@ let xlFormatA
   ArrayFunctionBuilder
     .Add("formatString", XlObj.toString, s)
     .Add("o1", Ok, o1).Add("t1", Ok, t1)
-    .Add("o2", Ok, o1).Add("t2", Ok, t1)
-    .Add("o3", Ok, o1).Add("t3", Ok, t1)
-    .Add("o4", Ok, o1).Add("t4", Ok, t1)
+    .Add("o2", Ok, o2).Add("t2", Ok, t2)
+    .Add("o3", Ok, o3).Add("t3", Ok, t3)
+    .Add("o4", Ok, o4).Add("t4", Ok, t4)
     .EvalFunction scalarF
   |> FunctionCall.eval
