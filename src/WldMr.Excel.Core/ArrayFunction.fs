@@ -7,6 +7,12 @@ open WldMr.Excel
 [<RequireQualifiedAccess>]
 module ArrayFunction =
 
+  type ArgValue<'T> =
+    | NotCalculated
+    | Scalar of 'T
+    | Row of 'T[]
+    | Col of 'T[]
+
   let private ofRowColInternal x =
     x
     |> Result.map (Option.fold (fun _ -> fst) 1)
@@ -94,12 +100,41 @@ module ArrayFunction =
       } |> XlObjRange.ofResult
 
 
-  type ArrayFunctionDefinition<'T1>(name: string, value: xlObj[,], rest: UdfArrayArgBase option, conversion: xlObj -> Result<'T1, string> ) =
+  type UdfArrayArgWithValue<'T>(name: string, value: xlObj[,], rest: UdfArrayArgBase option, conversion: xlObj -> Result<'T, string>) =
     inherit UdfArrayArgBase(name, value, rest)
-    member private uaa.Conversion = conversion
+    let parsedValueOpt =
+      let l1 = value |> Array2D.length1
+      let l2 = value |> Array2D.length2
+      if l1 = 1 && l2 = 1 then
+        value.[0, 0] |> (XlObjParser.withArgName name conversion) |> ArgValue.Scalar
+      elif l1 = 1 then
+        Array.init l2 (fun j -> value.[0, j] |> (XlObjParser.withArgName name conversion))
+        |> ArgValue.Row
+      elif l2 = 1 then
+        Array.init l1 (fun i -> value.[i, 0] |> (XlObjParser.withArgName name conversion))
+        |> ArgValue.Col
+      else
+        ArgValue.NotCalculated
 
-    member internal uaa.Eval f i j = uaa.eval f (fun f _ _ -> Ok f ) uaa.Conversion i j
+    member internal uaa.cachedConversion i j =
+      match parsedValueOpt with
+      | ArgValue.Scalar v -> v
+      | ArgValue.Row r -> r.[j]
+      | ArgValue.Col c -> c.[i]
+      | _ -> value |> getPseudoElt i j |> conversion
 
+    member internal uaa.evalCached f subEval i j =
+      result {
+        let! fp = subEval f i j
+        let! v = uaa.cachedConversion i j
+        return fp v
+      }
+
+
+  type ArrayFunctionDefinition<'T1>(name: string, value: xlObj[,], rest: UdfArrayArgBase option, conversion: xlObj -> Result<'T1, string> ) =
+    inherit UdfArrayArgWithValue<'T1>(name, value, rest, conversion)
+
+    member internal uaa.Eval f i j = uaa.evalCached f (fun f _ _ -> Ok f ) i j
     member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval f)
     member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f)
 
@@ -107,10 +142,9 @@ module ArrayFunction =
       ArrayFunctionDefinition<_, _>(name, value, uaa, c)
 
   and ArrayFunctionDefinition<'T1, 'T2>(name: string, value: xlObj[,], rest: ArrayFunctionDefinition<'T2>, conversion: xlObj -> Result<'T1, string> ) =
-    inherit UdfArrayArgBase(name, value, rest :> UdfArrayArgBase |> Some)
+    inherit UdfArrayArgWithValue<'T1>(name, value, rest :> UdfArrayArgBase |> Some, conversion)
 
-    member private uaa.Conversion = conversion
-    member internal uaa.Eval f i j = uaa.eval f rest.Eval uaa.Conversion i j
+    member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j
     member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval f)
     member uaa.EvalFunction f = uaa.returnArray2d (fun i j -> (uaa.Eval f) i j |> Ok)
     member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f)
@@ -119,10 +153,9 @@ module ArrayFunction =
       ArrayFunctionDefinition<_, _, _>(name, value, uaa, c)
 
   and ArrayFunctionDefinition<'T1, 'T2, 'T3>(name: string, value: xlObj[,], rest: ArrayFunctionDefinition<'T2, 'T3>, conversion: xlObj -> Result<'T1, string> ) =
-    inherit UdfArrayArgBase(name, value, rest :> UdfArrayArgBase |> Some)
+    inherit UdfArrayArgWithValue<'T1>(name, value, rest :> UdfArrayArgBase |> Some, conversion)
 
-    member private uaa.Conversion = conversion
-    member internal uaa.Eval f i j = uaa.eval f rest.Eval uaa.Conversion i j
+    member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j
     member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval f)
     member uaa.EvalFunction f = uaa.returnArray2d (fun i j -> (uaa.Eval f) i j |> Ok)
     member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f)
@@ -131,10 +164,9 @@ module ArrayFunction =
       ArrayFunctionDefinition<_, _, _, _>(name, value, uaa, c)
 
   and ArrayFunctionDefinition<'T1, 'T2, 'T3, 'T4>(name: string, value: xlObj[,], rest: ArrayFunctionDefinition<'T2, 'T3, 'T4>, conversion: xlObj -> Result<'T1, string> ) =
-    inherit UdfArrayArgBase(name, value, rest :> UdfArrayArgBase |> Some)
+    inherit UdfArrayArgWithValue<'T1>(name, value, rest :> UdfArrayArgBase |> Some, conversion)
 
-    member private uaa.Conversion = conversion
-    member internal uaa.Eval f i j = uaa.eval f rest.Eval uaa.Conversion i j
+    member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j
     member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval f)
     member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f)
 
@@ -142,10 +174,9 @@ module ArrayFunction =
       ArrayFunctionDefinition<_, _, _, _, _>(name, value, uaa, c)
 
   and ArrayFunctionDefinition<'T1, 'T2, 'T3, 'T4, 'T5>(name: string, value: xlObj[,], rest: ArrayFunctionDefinition<'T2, 'T3, 'T4, 'T5>, conversion: xlObj -> Result<'T1, string> ) =
-    inherit UdfArrayArgBase(name, value, rest :> UdfArrayArgBase |> Some)
+    inherit UdfArrayArgWithValue<'T1>(name, value, rest :> UdfArrayArgBase |> Some, conversion)
 
-    member private uaa.Conversion = conversion
-    member internal uaa.Eval f i j = uaa.eval f rest.Eval uaa.Conversion i j
+    member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j
     member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval f)
     member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f)
 
@@ -153,10 +184,9 @@ module ArrayFunction =
       ArrayFunctionDefinition<_, _, _, _, _, _>(name, value, uaa, c)
 
   and ArrayFunctionDefinition<'T1, 'T2, 'T3, 'T4, 'T5, 'T6>(name: string, value: xlObj[,], rest: ArrayFunctionDefinition<'T2, 'T3, 'T4, 'T5, 'T6>, conversion: xlObj -> Result<'T1, string> ) =
-    inherit UdfArrayArgBase(name, value, rest :> UdfArrayArgBase |> Some)
+    inherit UdfArrayArgWithValue<'T1>(name, value, rest :> UdfArrayArgBase |> Some, conversion)
 
-    member private uaa.Conversion = conversion
-    member internal uaa.Eval f i j = uaa.eval f rest.Eval uaa.Conversion i j
+    member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j
     member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval f)
     member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f)
 
@@ -164,10 +194,9 @@ module ArrayFunction =
       ArrayFunctionDefinition<_, _, _, _, _, _, _>(name, value, uaa, c)
 
   and ArrayFunctionDefinition<'T1, 'T2, 'T3, 'T4, 'T5, 'T6, 'T7>(name: string, value: xlObj[,], rest: ArrayFunctionDefinition<'T2, 'T3, 'T4, 'T5, 'T6, 'T7>, conversion: xlObj -> Result<'T1, string> ) =
-    inherit UdfArrayArgBase(name, value, rest :> UdfArrayArgBase |> Some)
+    inherit UdfArrayArgWithValue<'T1>(name, value, rest :> UdfArrayArgBase |> Some, conversion)
 
-    member private uaa.Conversion = conversion
-    member internal uaa.Eval f i j = uaa.eval f rest.Eval uaa.Conversion i j
+    member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j
     member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval f)
     member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f)
 
@@ -175,10 +204,9 @@ module ArrayFunction =
       ArrayFunctionDefinition<_, _, _, _, _, _, _, _>(name, value, uaa, c)
 
   and ArrayFunctionDefinition<'T1, 'T2, 'T3, 'T4, 'T5, 'T6, 'T7, 'T8>(name: string, value: xlObj[,], rest: ArrayFunctionDefinition<'T2, 'T3, 'T4, 'T5, 'T6, 'T7, 'T8>, conversion: xlObj -> Result<'T1, string> ) =
-    inherit UdfArrayArgBase(name, value, rest :> UdfArrayArgBase |> Some)
+    inherit UdfArrayArgWithValue<'T1>(name, value, rest :> UdfArrayArgBase |> Some, conversion)
 
-    member private uaa.Conversion = conversion
-    member internal uaa.Eval f i j = uaa.eval f rest.Eval uaa.Conversion i j
+    member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j
     member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval f)
     member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f)
 
@@ -186,10 +214,9 @@ module ArrayFunction =
       ArrayFunctionDefinition<_, _, _, _, _, _, _, _, _>(name, value, uaa, c)
 
   and ArrayFunctionDefinition<'T1, 'T2, 'T3, 'T4, 'T5, 'T6, 'T7, 'T8, 'T9>(name: string, value: xlObj[,], rest: ArrayFunctionDefinition<'T2, 'T3, 'T4, 'T5, 'T6, 'T7, 'T8, 'T9>, conversion: xlObj -> Result<'T1, string> ) =
-    inherit UdfArrayArgBase(name, value, rest :> UdfArrayArgBase |> Some)
+    inherit UdfArrayArgWithValue<'T1>(name, value, rest :> UdfArrayArgBase |> Some, conversion)
 
-    member private uaa.Conversion = conversion
-    member internal uaa.Eval f i j = uaa.eval f rest.Eval uaa.Conversion i j
+    member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j
     member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval f)
     member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f)
 
