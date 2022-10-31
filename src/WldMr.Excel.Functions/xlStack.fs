@@ -110,11 +110,22 @@ let xlStackH (
   rng16: xlObj[,],
   rng17: xlObj[,],
   rng18: xlObj[,],
-  rng19: xlObj[,]
+  rng19: xlObj[,],
+  rng20: xlObj[,],
+  rng21: xlObj[,],
+  rng22: xlObj[,],
+  rng23: xlObj[,],
+  rng24: xlObj[,],
+  rng25: xlObj[,],
+  rng26: xlObj[,],
+  rng27: xlObj[,],
+  rng28: xlObj[,],
+  rng29: xlObj[,]
   ) =
   let ranges = [
     rng1; rng2; rng3; rng4; rng5; rng6; rng7; rng8; rng9;
     rng10; rng11; rng12; rng13; rng14; rng15; rng16; rng17; rng18; rng19;
+    rng20; rng21; rng22; rng23; rng24; rng25; rng26; rng27; rng28; rng29;
   ]
   let revRanges = ranges |> List.rev |> List.skipWhile (fun rng -> rng |> XlObjRange.isMissing)
 
@@ -186,11 +197,22 @@ let xlStackV (
   rng16: xlObj[,],
   rng17: xlObj[,],
   rng18: xlObj[,],
-  rng19: xlObj[,]
+  rng19: xlObj[,],
+  rng20: xlObj[,],
+  rng21: xlObj[,],
+  rng22: xlObj[,],
+  rng23: xlObj[,],
+  rng24: xlObj[,],
+  rng25: xlObj[,],
+  rng26: xlObj[,],
+  rng27: xlObj[,],
+  rng28: xlObj[,],
+  rng29: xlObj[,]
   ) =
   let ranges = [
     rng1; rng2; rng3; rng4; rng5; rng6; rng7; rng8; rng9;
-    rng10; rng11; rng12; rng13; rng14; rng15; rng16; rng17; rng18; rng19;
+    rng10; rng11; rng12; rng13; rng14; rng15; rng16; rng17; rng18; rng19
+    rng20; rng21; rng22; rng23; rng24; rng25; rng26; rng27; rng28; rng29;
   ]
   let revRanges = ranges |> List.rev |> List.skipWhile (fun rng -> rng |> XlObjRange.isMissing)
 

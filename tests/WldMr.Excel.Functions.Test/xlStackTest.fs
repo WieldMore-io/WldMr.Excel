@@ -11,10 +11,12 @@ type ``xlStackV``() =
   [<Test>]
   member __.``returns NA when inputs are empty``() =
     (
-       emptyArray, emptyArray,
-       missingArray, missingArray, missingArray, missingArray, missingArray, missingArray,
-       missingArray, missingArray, missingArray, missingArray, missingArray, missingArray,
-       missingArray, missingArray, missingArray, missingArray, missingArray)
+      emptyArray, emptyArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray, missingArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray, missingArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray)
     |> Stack.xlStackV
     |> Array2D.shouldEqual (singleCell XlObj.Error.xlNA)
 
@@ -25,6 +27,8 @@ type ``xlStackV``() =
       singleCell 2.0,
       missingArray, missingArray, missingArray, missingArray, missingArray, missingArray,
       missingArray, missingArray, missingArray, missingArray, missingArray, missingArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray,
       missingArray, missingArray, missingArray, missingArray, missingArray)
     |> Stack.xlStackV
     |> Array2D.shouldEqual ( [[1.0 |> XlObj.ofFloat]; [2.0 |> XlObj.ofFloat]] |> array2D )
@@ -34,6 +38,8 @@ type ``xlStackV``() =
       singleCell XlObj.xlMissing,
       missingArray, missingArray, missingArray, missingArray, missingArray, missingArray,
       missingArray, missingArray, missingArray, missingArray, missingArray, missingArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray,
       missingArray, missingArray, missingArray, missingArray, missingArray
     )
     |> Stack.xlStackV
@@ -44,6 +50,8 @@ type ``xlStackV``() =
       singleCell "a",
       missingArray, missingArray, missingArray, missingArray, missingArray, missingArray,
       missingArray, missingArray, missingArray, missingArray, missingArray, missingArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray,
       missingArray, missingArray, missingArray, missingArray, missingArray)
     |> Stack.xlStackV
     |> Array2D.shouldEqual ( [[1.0 |> XlObj.ofFloat]; ["a" |> XlObj.ofString]] |> array2D )
@@ -55,6 +63,8 @@ type ``xlStackV``() =
       [[1.0 |> XlObj.ofFloat; 2.0 |> XlObj.ofFloat]] |> array2D,
       missingArray, missingArray, missingArray, missingArray, missingArray, missingArray,
       missingArray, missingArray, missingArray, missingArray, missingArray, missingArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray,
       missingArray, missingArray, missingArray, missingArray, missingArray
     )
     |> Stack.xlStackV
@@ -75,6 +85,8 @@ type ``xlStackH``() =
       emptyArray, emptyArray,
       missingArray, missingArray, missingArray, missingArray, missingArray, missingArray,
       missingArray, missingArray, missingArray, missingArray, missingArray, missingArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray,
       missingArray, missingArray, missingArray, missingArray, missingArray
     )
     |> Array2D.shouldEqual (singleCell XlObj.Error.xlNA)
@@ -86,6 +98,8 @@ type ``xlStackH``() =
       singleCell 2.0,
       missingArray, missingArray, missingArray, missingArray, missingArray, missingArray,
       missingArray, missingArray, missingArray, missingArray, missingArray, missingArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray,
       missingArray, missingArray, missingArray, missingArray, missingArray
     )
     |> Stack.xlStackH
@@ -96,6 +110,8 @@ type ``xlStackH``() =
       singleCell XlObj.xlMissing,
       missingArray, missingArray, missingArray, missingArray, missingArray, missingArray,
       missingArray, missingArray, missingArray, missingArray, missingArray, missingArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray,
       missingArray, missingArray, missingArray, missingArray, missingArray
     )
     |> Stack.xlStackH
@@ -106,6 +122,8 @@ type ``xlStackH``() =
       singleCell "a",
       missingArray, missingArray, missingArray, missingArray, missingArray, missingArray,
       missingArray, missingArray, missingArray, missingArray, missingArray, missingArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray,
+      missingArray, missingArray, missingArray, missingArray, missingArray,
       missingArray, missingArray, missingArray, missingArray, missingArray
     )
     |> Stack.xlStackH
