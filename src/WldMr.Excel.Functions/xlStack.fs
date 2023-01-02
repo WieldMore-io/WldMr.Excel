@@ -43,7 +43,7 @@ let stackParameter (rng: xlObj[,]) =
       match XlObjRange.getSize rng with
       | 1, 1 -> Some rng.[0, 0]
       | _ -> None
-    let! v = xlObjV |> XlObj.toString |> Result.fold Some (fun _ -> None)
+    let! v = xlObjV |> XlObj.toString |> Result.toOption
     let! vl = v.ToLower()
     let! trimParam =
       if vl.StartsWith("trim:") then
