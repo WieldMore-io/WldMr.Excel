@@ -127,3 +127,13 @@ module RowColumn =
         else
           Array2D.init 1 v.Length (fun _ j -> v.[j])
 
+    /// <summary>
+    /// Returns a range from a sequence of rows
+    /// </summary>
+    [<RequireQualifiedAccess>]
+    module Rows =
+      let ofSeqWithEmpty (emptyVal: xlObj) (r: #seq<#seq<xlObj>>) =
+        if r |> Seq.length = 0 then
+          emptyVal |> XlObjRange.ofCell
+        else
+          array2D r
