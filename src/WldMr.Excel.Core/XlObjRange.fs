@@ -55,7 +55,7 @@ module OfConversions =
       else
         a
 
-    let ofRows(rows: xlObj seq seq) =
+    let ofRows(rows: #seq<#seq<xlObj>>) =
       let maxLength = rows |> Seq.map Seq.length |> Seq.max
       let nRows = rows |> Seq.length
       let a = Array2D.create nRows maxLength (XlObj.ofString "")
@@ -133,14 +133,14 @@ module RowColumn =
     /// </summary>
     [<RequireQualifiedAccess>]
     module Row =
-      let ofSeq (r: seq<xlObj>) =
+      let ofSeq (r: #seq<xlObj>) =
         let v = r |> Array.ofSeq
         if v.Length = 0 then
           XlObj.Error.xlNA |> XlObjRange.ofCell
         else
           Array2D.init 1 v.Length (fun _ j -> v.[j])
 
-      let ofSeqWithEmpty (emptyVal: xlObj) (r: seq<xlObj>) =
+      let ofSeqWithEmpty (emptyVal: xlObj) (r: #seq<xlObj>) =
         let v = r |> Array.ofSeq
         if v.Length = 0 then
           emptyVal |> XlObjRange.ofCell
