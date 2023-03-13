@@ -90,7 +90,7 @@ module ArrayFunction =
 
         let access i j = res.[i] |> (Array.tryItem j >> Option.map XlObj.ofResult >> Option.defaultValue XlObj.Error.xlNA)
         let resRows, resCols, flippedAccess =
-          if nRows > nCols then
+          if nRows >= nCols then
             nRows, resWidth, access
           else
             resWidth, nCols, flip access
