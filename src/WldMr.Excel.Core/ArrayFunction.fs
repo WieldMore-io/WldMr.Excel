@@ -69,7 +69,7 @@ module ArrayFunction =
         return fp v
       }
 
-    member internal uaa.returnArray2dFromArrays f () =
+    member internal uaa.returnArray2dFromArrays f preferHorizontal ()  =
       result {
         let! nRows = uaa.Rows()
         let! nCols = uaa.Cols()
@@ -90,7 +90,9 @@ module ArrayFunction =
 
         let access i j = res.[i] |> (Array.tryItem j >> Option.map XlObj.ofResult >> Option.defaultValue XlObj.Error.xlNA)
         let resRows, resCols, flippedAccess =
-          if nRows >= nCols then
+          if preferHorizontal && nRows = nCols then
+            nRows, resWidth, access
+          elif nRows > nCols then
             nRows, resWidth, access
           else
             resWidth, nCols, flip access
@@ -136,7 +138,8 @@ module ArrayFunction =
 
     member internal uaa.Eval f i j = uaa.evalCached f (fun f _ _ -> Ok f ) i j
     member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval f)
-    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f)
+    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f) false
+    member uaa.EvalArrayFunctionHorizontal f = uaa.returnArray2dFromArrays (uaa.Eval f) true
 
     member uaa.Add(name: string, c: xlObj -> _, value: xlObj[,]) =
       ArrayFunctionDefinition<_, _>(name, value, uaa, c)
@@ -147,7 +150,8 @@ module ArrayFunction =
     member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j
     member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval f)
     member uaa.EvalFunction f = uaa.returnArray2d (fun i j -> (uaa.Eval f) i j |> Ok)
-    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f)
+    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f) false
+    member uaa.EvalArrayFunctionHorizontal f = uaa.returnArray2dFromArrays (uaa.Eval f) true
 
     member uaa.Add(name: string, c: xlObj -> _, value: xlObj[,]) =
       ArrayFunctionDefinition<_, _, _>(name, value, uaa, c)
@@ -158,7 +162,8 @@ module ArrayFunction =
     member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j
     member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval f)
     member uaa.EvalFunction f = uaa.returnArray2d (fun i j -> (uaa.Eval f) i j |> Ok)
-    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f)
+    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f) false
+    member uaa.EvalArrayFunctionHorizontal f = uaa.returnArray2dFromArrays (uaa.Eval f) true
 
     member uaa.Add(name: string, c: xlObj -> _, value: xlObj[,]) =
       ArrayFunctionDefinition<_, _, _, _>(name, value, uaa, c)
@@ -168,7 +173,8 @@ module ArrayFunction =
 
     member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j
     member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval f)
-    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f)
+    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f) false
+    member uaa.EvalArrayFunctionHorizontal f = uaa.returnArray2dFromArrays (uaa.Eval f) true
 
     member uaa.Add(name: string, c: xlObj -> _, value: xlObj[,]) =
       ArrayFunctionDefinition<_, _, _, _, _>(name, value, uaa, c)
@@ -178,7 +184,8 @@ module ArrayFunction =
 
     member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j
     member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval f)
-    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f)
+    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f) false
+    member uaa.EvalArrayFunctionHorizontal f = uaa.returnArray2dFromArrays (uaa.Eval f) true
 
     member uaa.Add(name: string, c: xlObj -> _, value: xlObj[,]) =
       ArrayFunctionDefinition<_, _, _, _, _, _>(name, value, uaa, c)
@@ -188,7 +195,8 @@ module ArrayFunction =
 
     member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j
     member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval f)
-    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f)
+    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f) false
+    member uaa.EvalArrayFunctionHorizontal f = uaa.returnArray2dFromArrays (uaa.Eval f) true
 
     member uaa.Add(name: string, c: xlObj -> _, value: xlObj[,]) =
       ArrayFunctionDefinition<_, _, _, _, _, _, _>(name, value, uaa, c)
@@ -198,7 +206,8 @@ module ArrayFunction =
 
     member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j
     member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval f)
-    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f)
+    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f) false
+    member uaa.EvalArrayFunctionHorizontal f = uaa.returnArray2dFromArrays (uaa.Eval f) true
 
     member uaa.Add(name: string, c: xlObj -> _, value: xlObj[,]) =
       ArrayFunctionDefinition<_, _, _, _, _, _, _, _>(name, value, uaa, c)
@@ -208,7 +217,8 @@ module ArrayFunction =
 
     member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j
     member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval f)
-    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f)
+    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f) false
+    member uaa.EvalArrayFunctionHorizontal f = uaa.returnArray2dFromArrays (uaa.Eval f) true
 
     member uaa.Add(name: string, c: xlObj -> _, value: xlObj[,]) =
       ArrayFunctionDefinition<_, _, _, _, _, _, _, _, _>(name, value, uaa, c)
@@ -218,7 +228,8 @@ module ArrayFunction =
 
     member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j
     member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval f)
-    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f)
+    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval f) false
+    member uaa.EvalArrayFunctionHorizontal f = uaa.returnArray2dFromArrays (uaa.Eval f) true
 
 type ArrayFunctionBuilder() =
   static member Add(name: string, c: xlObj -> _, value: xlObj[,]) =
