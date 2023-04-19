@@ -68,6 +68,21 @@ module OfConversions =
       )
       a
 
+    let ofRowsWithEmpty (emptyVal: xlObj) (rows: #seq<#seq<xlObj>>) =
+      let nRows = rows |> Seq.length
+      if nRows = 0 then emptyVal |> ofCell else
+
+      let maxLength = rows |> Seq.map Seq.length |> Seq.max
+      let a = Array2D.create nRows maxLength (XlObj.ofString "")
+
+      rows
+      |> Seq.iteri (fun i ->
+        Seq.iteri (fun j item ->
+          a.[i, j] <- item
+        )
+      )
+      a
+
 
 [<AutoOpen>]
 module ToConversions =
