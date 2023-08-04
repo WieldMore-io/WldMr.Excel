@@ -32,7 +32,7 @@ NUGET
     NuGet.Frameworks (6.1) - restriction: || (&& (== net48) (>= netcoreapp1.0)) (&& (== net48) (>= netcoreapp2.1)) (== net6.0-windows7.0)
     NUnit (3.13.3)
       NETStandard.Library (>= 2.0) - restriction: || (&& (== net48) (< net35)) (== net6.0-windows7.0)
-    NUnit3TestAdapter (4.2.1)
+    NUnit3TestAdapter (4.5)
     System.Collections.Immutable (6.0) - restriction: || (&& (== net48) (>= netcoreapp1.0)) (&& (== net48) (>= netcoreapp2.1)) (== net6.0-windows7.0)
       System.Runtime.CompilerServices.Unsafe (>= 6.0)
     System.Reflection.Emit.Lightweight (4.7) - restriction: || (== net48) (&& (== net6.0-windows7.0) (< netcoreapp3.1))
