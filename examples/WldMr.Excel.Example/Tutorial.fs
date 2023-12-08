@@ -18,7 +18,7 @@ let myStringContains1 (text:xlObj, substring: xlObj): xlObj =
 [<ExcelFunction(Name="myStringContain2")>]
 let myStringContainsWithRange (text:xlObj[,], subString: xlObj[,]): xlObj[,] =
   let stringContains (text: string) (subString: string) =
-    text.Contains(subString) |> XlObj.ofBool
+    text.Contains(subString) |> XlObj.ofBool |> Ok
 
   ArrayFunctionBuilder
     .Add("Text", XlObj.toString, text)
@@ -31,9 +31,9 @@ let myStringContainsWithRange (text:xlObj[,], subString: xlObj[,]): xlObj[,] =
 let myStringContainsWithCase (text:xlObj[,], subString: xlObj[,], ignoreCase: xlObj[,]): xlObj[,] =
   let stringContains (text: string) (subString: string) ignoreCase =
     if ignoreCase then
-      text.ToLowerInvariant().Contains(subString.ToLowerInvariant()) |> XlObj.ofBool
+      text.ToLowerInvariant().Contains(subString.ToLowerInvariant()) |> XlObj.ofBool |> Ok
     else
-      text.Contains(subString) |> XlObj.ofBool
+      text.Contains(subString) |> XlObj.ofBool |> Ok
 
   ArrayFunctionBuilder
     .Add("Text", XlObj.toString, text)
