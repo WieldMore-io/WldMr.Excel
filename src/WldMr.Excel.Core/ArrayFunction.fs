@@ -127,7 +127,7 @@ module ArrayFunction =
 
     member internal uaa.evalCached f subEval i j =
       result {
-        let! fp = subEval (f) i j
+        let! fp = subEval f i j
         let! v = uaa.cachedConversion i j
         return fp v
       }
@@ -246,6 +246,62 @@ module ArrayFunction =
       ArrayFunctionDefinition<_, _, _, _, _, _, _, _, _>(name, value, uaa, c)
 
   and ArrayFunctionDefinition<'T1, 'T2, 'T3, 'T4, 'T5, 'T6, 'T7, 'T8, 'T9>(name: string, value: xlObj[,], rest: ArrayFunctionDefinition<'T2, 'T3, 'T4, 'T5, 'T6, 'T7, 'T8, 'T9>, conversion: xlObj -> Result<'T1, string> ) =
+    inherit UdfArrayArgWithValue<'T1>(name, value, rest :> UdfArrayArgBase |> Some, conversion)
+
+    member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j
+    member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval (fun _ _ -> f))
+    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval (fun _ _ -> f)) false
+    member uaa.EvalArrayFunctionHorizontal f = uaa.returnArray2dFromArrays (uaa.Eval (fun _ _ -> f)) true
+    member uaa.EvalIndexedFunction f = uaa.returnArray2d (uaa.Eval f)
+    member uaa.EvalArrayIndexedFunction f = uaa.returnArray2dFromArrays (uaa.Eval f) false
+    member uaa.EvalArrayIndexedFunctionHorizontal f = uaa.returnArray2dFromArrays (uaa.Eval f) true
+
+    member uaa.Add(name: string, c: xlObj -> _, value: xlObj[,]) =
+      ArrayFunctionDefinition<_, _, _, _, _, _, _, _, _, _>(name, value, uaa, c)
+
+  and ArrayFunctionDefinition<'T1, 'T2, 'T3, 'T4, 'T5, 'T6, 'T7, 'T8, 'T9, 'T10>(name: string, value: xlObj[,], rest: ArrayFunctionDefinition<'T2, 'T3, 'T4, 'T5, 'T6, 'T7, 'T8, 'T9, 'T10>, conversion: xlObj -> Result<'T1, string> ) =
+    inherit UdfArrayArgWithValue<'T1>(name, value, rest :> UdfArrayArgBase |> Some, conversion)
+
+    member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j
+    member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval (fun _ _ -> f))
+    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval (fun _ _ -> f)) false
+    member uaa.EvalArrayFunctionHorizontal f = uaa.returnArray2dFromArrays (uaa.Eval (fun _ _ -> f)) true
+    member uaa.EvalIndexedFunction f = uaa.returnArray2d (uaa.Eval f)
+    member uaa.EvalArrayIndexedFunction f = uaa.returnArray2dFromArrays (uaa.Eval f) false
+    member uaa.EvalArrayIndexedFunctionHorizontal f = uaa.returnArray2dFromArrays (uaa.Eval f) true
+
+    member uaa.Add(name: string, c: xlObj -> _, value: xlObj[,]) =
+      ArrayFunctionDefinition<_, _, _, _, _, _, _, _, _, _, _>(name, value, uaa, c)
+
+  and ArrayFunctionDefinition<'T1, 'T2, 'T3, 'T4, 'T5, 'T6, 'T7, 'T8, 'T9, 'T10, 'T11>(name: string, value: xlObj[,], rest: ArrayFunctionDefinition<'T2, 'T3, 'T4, 'T5, 'T6, 'T7, 'T8, 'T9, 'T10, 'T11>, conversion: xlObj -> Result<'T1, string> ) =
+    inherit UdfArrayArgWithValue<'T1>(name, value, rest :> UdfArrayArgBase |> Some, conversion)
+
+    member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j
+    member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval (fun _ _ -> f))
+    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval (fun _ _ -> f)) false
+    member uaa.EvalArrayFunctionHorizontal f = uaa.returnArray2dFromArrays (uaa.Eval (fun _ _ -> f)) true
+    member uaa.EvalIndexedFunction f = uaa.returnArray2d (uaa.Eval f)
+    member uaa.EvalArrayIndexedFunction f = uaa.returnArray2dFromArrays (uaa.Eval f) false
+    member uaa.EvalArrayIndexedFunctionHorizontal f = uaa.returnArray2dFromArrays (uaa.Eval f) true
+
+    member uaa.Add(name: string, c: xlObj -> _, value: xlObj[,]) =
+      ArrayFunctionDefinition<_, _, _, _, _, _, _, _, _, _, _, _>(name, value, uaa, c)
+
+  and ArrayFunctionDefinition<'T1, 'T2, 'T3, 'T4, 'T5, 'T6, 'T7, 'T8, 'T9, 'T10, 'T11, 'T12>(name: string, value: xlObj[,], rest: ArrayFunctionDefinition<'T2, 'T3, 'T4, 'T5, 'T6, 'T7, 'T8, 'T9, 'T10, 'T11, 'T12>, conversion: xlObj -> Result<'T1, string> ) =
+    inherit UdfArrayArgWithValue<'T1>(name, value, rest :> UdfArrayArgBase |> Some, conversion)
+
+    member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j
+    member uaa.EvalFunction f = uaa.returnArray2d (uaa.Eval (fun _ _ -> f))
+    member uaa.EvalArrayFunction f = uaa.returnArray2dFromArrays (uaa.Eval (fun _ _ -> f)) false
+    member uaa.EvalArrayFunctionHorizontal f = uaa.returnArray2dFromArrays (uaa.Eval (fun _ _ -> f)) true
+    member uaa.EvalIndexedFunction f = uaa.returnArray2d (uaa.Eval f)
+    member uaa.EvalArrayIndexedFunction f = uaa.returnArray2dFromArrays (uaa.Eval f) false
+    member uaa.EvalArrayIndexedFunctionHorizontal f = uaa.returnArray2dFromArrays (uaa.Eval f) true
+
+    member uaa.Add(name: string, c: xlObj -> _, value: xlObj[,]) =
+      ArrayFunctionDefinition<_, _, _, _, _, _, _, _, _, _, _, _, _>(name, value, uaa, c)
+
+  and ArrayFunctionDefinition<'T1, 'T2, 'T3, 'T4, 'T5, 'T6, 'T7, 'T8, 'T9, 'T10, 'T11, 'T12, 'T13>(name: string, value: xlObj[,], rest: ArrayFunctionDefinition<'T2, 'T3, 'T4, 'T5, 'T6, 'T7, 'T8, 'T9, 'T10, 'T11, 'T12, 'T13>, conversion: xlObj -> Result<'T1, string> ) =
     inherit UdfArrayArgWithValue<'T1>(name, value, rest :> UdfArrayArgBase |> Some, conversion)
 
     member internal uaa.Eval f i j = uaa.evalCached f rest.Eval i j

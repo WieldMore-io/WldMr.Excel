@@ -22,7 +22,9 @@ let xlFormatA
     o1: xlObj[,], t1: xlObj[,],
     o2: xlObj[,], t2: xlObj[,],
     o3: xlObj[,], t3: xlObj[,],
-    o4: xlObj[,], t4: xlObj[,]
+    o4: xlObj[,], t4: xlObj[,],
+    o5: xlObj[,], t5: xlObj[,],
+    o6: xlObj[,], t6: xlObj[,]
   ): xlObj[,] =
   let convertXlObj (o: xlObj) (t: xlObj) =
     match o, t with
@@ -51,11 +53,13 @@ let xlFormatA
     (o2: xlObj) (t2: xlObj)
     (o3: xlObj) (t3: xlObj)
     (o4: xlObj) (t4: xlObj)
+    (o5: xlObj) (t5: xlObj)
+    (o6: xlObj) (t6: xlObj)
     =
     result {
       let! args =
-        ([ o1; o2; o3; o4],
-         [ t1; t2; t3; t4])
+        ([ o1; o2; o3; o4; o5; o6],
+         [ t1; t2; t3; t4; t5; t6])
         ||> List.map2 convertXlObj
         |> List.sequenceResultM
 
@@ -68,5 +72,7 @@ let xlFormatA
     .Add("o2", Ok, o2).Add("t2", Ok, t2)
     .Add("o3", Ok, o3).Add("t3", Ok, t3)
     .Add("o4", Ok, o4).Add("t4", Ok, t4)
+    .Add("o5", Ok, o5).Add("t5", Ok, t5)
+    .Add("o6", Ok, o6).Add("t6", Ok, t6)
     .EvalFunction scalarF
   |> FunctionCall.eval

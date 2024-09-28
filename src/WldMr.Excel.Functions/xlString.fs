@@ -38,7 +38,7 @@ let regexFilter regex ignoreCase input: Result<xlObj[,], string> =
     "This function also operates on arrays\r\n" +
     "Returns FALSE for any non text input\r\n"
 )>]
-let xlStringStartsWith
+let xlStartsWith
   (
     [<ExcelArgument(Description="The text string value (or range of values) which start is being queried")>]
       input: xlObj[,],
@@ -62,6 +62,27 @@ let xlStringStartsWith
   } |> XlObjRange.ofResult
 
 
+[<ExcelFunction(Category= "WldMr Text",
+  IsThreadSafe=true,
+  IsHidden=true,
+  Description=
+    "Returns TRUE if the text string starts with the specified prefix\r\n" +
+    "This function also operates on arrays\r\n" +
+    "Returns FALSE for any non text input\r\n"
+)>]
+let xlStringStartsWith   (
+    [<ExcelArgument(Description="The text string value (or range of values) which start is being queried")>]
+      input: xlObj[,],
+    [<ExcelArgument(Description="The text string value to be searched for at the start of the input")>]
+      prefix: string,
+    [<ExcelArgument(Description="If TRUE or omitted, a and A are considered equal, if FALSE, a and A are different")>]
+      ignoreCase: xlObj,
+    [<ExcelArgument(Description="If TRUE, 'prefix' is a regular expression, if FALSE or omitted, 'prefix' is a literal")>]
+      useRegex: xlObj
+  ) =
+  xlStartsWith(input, prefix, ignoreCase, useRegex)
+
+
 [<ExcelFunction(
   Category= "WldMr Text",
   IsThreadSafe=true,
@@ -70,7 +91,7 @@ let xlStringStartsWith
     "This function also operates on arrays\r\n" +
     "Returns FALSE for any non text input\r\n"
 )>]
-let xlStringEndsWith
+let xlEndsWith
   (
     [<ExcelArgument(Description="The text string value (or range of values) which end is being queried")>]
       input: xlObj[,],
@@ -92,6 +113,28 @@ let xlStringEndsWith
         input
         |> stringFilter (fun s -> s.EndsWith(suffix, ic, System.Globalization.CultureInfo.InvariantCulture))
   } |> XlObjRange.ofResult
+
+[<ExcelFunction(
+  Category= "WldMr Text",
+  IsThreadSafe=true,
+  IsHidden=true,
+  Description=
+    "Returns TRUE if the text string ends with the specified suffix\r\n" +
+    "This function also operates on arrays\r\n" +
+    "Returns FALSE for any non text input\r\n"
+)>]
+let xlStringEndsWith
+  (
+    [<ExcelArgument(Description="The text string value (or range of values) which end is being queried")>]
+      input: xlObj[,],
+    [<ExcelArgument(Description="The text string value to be searched for at the end of the input")>]
+      suffix: string,
+    [<ExcelArgument(Description="If TRUE or omitted, a and A are considered equal, if FALSE, a and A are different")>]
+      ignoreCase: xlObj,
+    [<ExcelArgument(Description="If TRUE, 'suffix' is a regular expression, if FALSE or omitted, 'suffix' is a literal")>]
+      useRegex: xlObj
+  ) =
+  xlEndsWith(input, suffix, ignoreCase, useRegex)
 
 
 [<ExcelFunction(Category= "WldMr Text",
