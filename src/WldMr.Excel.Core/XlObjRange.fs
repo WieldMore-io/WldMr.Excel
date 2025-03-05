@@ -121,6 +121,25 @@ module ToConversions =
       | None -> Ok strings
 
     /// <summary>
+    /// Empty cells are treated as empty strings
+    /// Number cells are converted to string
+    /// Error cells still produce an Error
+    /// </summary>
+    let toStringArrayPermissive (o: xlObj[]) =
+      let strings = Array.zeroCreate o.Length
+      let mutable error = None
+      for i = 0 to o.Length - 1 do
+        match o.[i] with
+        | ExcelEmpty _ -> strings.[i] <- ""
+        | ExcelNum f when abs ( f - (f |> int |> float) ) < 1e-8 -> strings.[i] <- f |> int |> string
+        | ExcelNum f -> strings.[i] <- f |> string
+        | ExcelString s -> strings.[i] <- s
+        | _ -> error <- Some $"Could not parse {o.[i]} as a string."
+      match error with
+      | Some e -> Error e
+      | None -> Ok strings
+
+    /// <summary>
     /// </summary>
     let toIntArray (o: xlObj[]) =
       o
@@ -136,6 +155,13 @@ module RowColumn =
     /// </summary>
     [<RequireQualifiedAccess>]
     module Column =
+      let ofSeq (r: #seq<xlObj>) =
+        let v = r |> Array.ofSeq
+        if v.Length = 0 then
+          XlObj.Error.xlNA |> XlObjRange.ofCell
+        else
+          Array2D.init v.Length 1 (fun _ j -> v.[j])
+
       let ofSeqWithEmpty (emptyVal: xlObj) (r: seq<xlObj>) =
         let v = r |> Array.ofSeq
         if v.Length = 0 then
@@ -172,3 +198,12 @@ module RowColumn =
           emptyVal |> XlObjRange.ofCell
         else
           array2D r
+
+    /// <summary>
+    /// Returns a range from a sequence of rows
+    /// </summary>
+    [<RequireQualifiedAccess>]
+    module Columns =
+      let ofSeqWithEmpty (emptyVal: xlObj) (r: #seq<#seq<xlObj>>) =
+        let rowsR = Rows.ofSeqWithEmpty emptyVal r
+        Array2D.init (rowsR.GetLength 1) (rowsR.GetLength 0) (fun i j -> rowsR.[j, i])
