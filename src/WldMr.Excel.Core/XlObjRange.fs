@@ -155,38 +155,30 @@ module RowColumn =
     /// </summary>
     [<RequireQualifiedAccess>]
     module Column =
-      let ofSeq (r: #seq<xlObj>) =
-        let v = r |> Array.ofSeq
-        if v.Length = 0 then
-          XlObj.Error.xlNA |> XlObjRange.ofCell
-        else
-          Array2D.init v.Length 1 (fun _ j -> v.[j])
-
-      let ofSeqWithEmpty (emptyVal: xlObj) (r: seq<xlObj>) =
+      let ofSeqWithEmpty (emptyVal: xlObj) (r: #seq<xlObj>) =
         let v = r |> Array.ofSeq
         if v.Length = 0 then
           emptyVal |> XlObjRange.ofCell
         else
           Array2D.init v.Length 1 (fun i _ -> v.[i])
 
+      let ofSeq r =
+        ofSeqWithEmpty XlObj.Error.xlNA r
+
     /// <summary>
     /// Returns a row array from a sequence
     /// </summary>
     [<RequireQualifiedAccess>]
     module Row =
-      let ofSeq (r: #seq<xlObj>) =
-        let v = r |> Array.ofSeq
-        if v.Length = 0 then
-          XlObj.Error.xlNA |> XlObjRange.ofCell
-        else
-          Array2D.init 1 v.Length (fun _ j -> v.[j])
-
       let ofSeqWithEmpty (emptyVal: xlObj) (r: #seq<xlObj>) =
         let v = r |> Array.ofSeq
         if v.Length = 0 then
           emptyVal |> XlObjRange.ofCell
         else
           Array2D.init 1 v.Length (fun _ j -> v.[j])
+
+      let ofSeq r =
+        ofSeqWithEmpty XlObj.Error.xlNA r
 
     /// <summary>
     /// Returns a range from a sequence of rows
@@ -199,6 +191,10 @@ module RowColumn =
         else
           array2D r
 
+      let ofSeq r =
+        ofSeqWithEmpty XlObj.Error.xlNA r
+
+
     /// <summary>
     /// Returns a range from a sequence of rows
     /// </summary>
@@ -207,3 +203,6 @@ module RowColumn =
       let ofSeqWithEmpty (emptyVal: xlObj) (r: #seq<#seq<xlObj>>) =
         let rowsR = Rows.ofSeqWithEmpty emptyVal r
         Array2D.init (rowsR.GetLength 1) (rowsR.GetLength 0) (fun i j -> rowsR.[j, i])
+
+      let ofSeq r =
+        ofSeqWithEmpty XlObj.Error.xlNA r
