@@ -7,7 +7,7 @@ pool:
 
 variables:
   major: 1
-  minor: 1
+  minor: 3
   revision: 0
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
@@ -29,6 +29,26 @@ variables:
 name: '$(buildPrefix)$(major).$(minor).$(revision).$(patch) - '
 
 steps:
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet --info'
+  inputs:
+    command: custom
+    custom: '--info'
+
+- task: UseDotNet@2
+  displayName: 'Install .Net 8 sdk'
+  inputs:
+    packageType: sdk
+    version: 8.0.100
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
+- task: UseDotNet@2
+  displayName: 'Install .NET 6 sdk'
+  inputs:
+    packageType: sdk
+    version: 6.0.x
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
 - task: DotNetCoreCLI@2
   displayName: 'dotnet --info'
   inputs:
