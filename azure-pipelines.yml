@@ -102,15 +102,15 @@ steps:
 
 - script: ls '$(Build.ArtifactStagingDirectory)'
 
-- task: GithubRelease@0 
+- task: GithubRelease@1
   displayName: Create GitHub Release
   condition: and(succeeded(), eq(variables.isNotaPR, true), eq(variables['Build.Repository.Uri'], 'https://github.com/WieldMore-io/WldMr.Excel'))
   inputs:
     gitHubConnection: github.com_PierreYvesR
     repositoryName: WieldMore-io/WldMr.Excel
-    tagSource: manual
+    tagSource: userSpecifiedTag
     addChangeLog: false
-    isPreRelease: true
+    isPreRelease: false
     tag: $(packageVersion)
     assets: $(Build.ArtifactStagingDirectory)/*.nupkg
 
