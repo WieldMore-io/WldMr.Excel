@@ -3,9 +3,9 @@ storage: none
 framework: net48, net6.0-windows
 
 nuget FSharp.Core
-nuget ExcelDna.Integration ~> 1.6
-nuget ExcelDna.Addin ~> 1.6
-nuget ExcelDna.IntelliSense ~> 1.6
+nuget ExcelDna.Integration
+nuget ExcelDna.Addin
+nuget ExcelDna.IntelliSense
 nuget FsToolkit.ErrorHandling >= 4
 nuget FsUnit
 nuget TypeShape
