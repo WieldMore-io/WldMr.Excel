@@ -5,10 +5,10 @@
 
 ### Nuget packages
 
-| | WldMr.Excel.Core | WldMr.Excel.Functions |
-|---|---|---|
-| preview | [![Version](https://img.shields.io/nuget/v/WldMr.Excel.Functions.svg)](https://www.nuget.org/packages/WldMr.Excel.Functions) | [![Version](https://img.shields.io/nuget/v/WldMr.Excel.Core.svg)](https://www.nuget.org/packages/WldMr.Excel.Core) |
-| stable | [![Version](https://img.shields.io/nuget/vpre/WldMr.Excel.Functions.svg)](https://www.nuget.org/packages/WldMr.Excel.Functions) | [![Version](https://img.shields.io/nuget/vpre/WldMr.Excel.Core.svg)](https://www.nuget.org/packages/WldMr.Excel.Core) |
+|          | WldMr.Excel.Core | WldMr.Excel.Functions |
+|----------|---|---|
+| stable   | [![Version](https://img.shields.io/nuget/v/WldMr.Excel.Functions.svg)](https://www.nuget.org/packages/WldMr.Excel.Functions) | [![Version](https://img.shields.io/nuget/v/WldMr.Excel.Core.svg)](https://www.nuget.org/packages/WldMr.Excel.Core) |
+| preview  | [![Version](https://img.shields.io/nuget/vpre/WldMr.Excel.Functions.svg)](https://www.nuget.org/packages/WldMr.Excel.Functions) | [![Version](https://img.shields.io/nuget/vpre/WldMr.Excel.Core.svg)](https://www.nuget.org/packages/WldMr.Excel.Core) |
 
 ### Build instructions
 ```

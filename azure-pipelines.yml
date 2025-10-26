@@ -13,7 +13,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   patch: $[counter(format('{0}.{1}.{2}', variables['Major'], variables['Minor'], variables['Revision']), 0)]
-  packageVersion: $(major).$(minor).$(revision).$(patch)-preview
+  packageVersion: $(major).$(minor).$(revision).$(patch)
   NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
   nugetApiKey: $(NUGET_API_KEY)
   isNotaPR: $[ne(variables['Build.Reason'], 'PullRequest')]
