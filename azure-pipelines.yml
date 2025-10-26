@@ -8,12 +8,11 @@ pool:
 variables:
   major: 1
   minor: 3
-  revision: 0
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  patch: $[counter(format('{0}.{1}.{2}', variables['Major'], variables['Minor'], variables['Revision']), 0)]
-  packageVersion: $(major).$(minor).$(revision).$(patch)
+  patch: $[counter(format('{0}.{1}', variables['Major'], variables['Minor']), 0)]
+  packageVersion: $(major).$(minor).$(patch)
   NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
   nugetApiKey: $(NUGET_API_KEY)
   isNotaPR: $[ne(variables['Build.Reason'], 'PullRequest')]
@@ -26,7 +25,7 @@ variables:
       buildPrefix: $[ variables['Build.SourceBranchName'] ]
 
 
-name: '$(buildPrefix)$(major).$(minor).$(revision).$(patch) - '
+name: '$(buildPrefix)$(major).$(minor).$(patch)'
 
 steps:
 - task: DotNetCoreCLI@2
