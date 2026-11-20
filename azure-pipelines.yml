@@ -35,17 +35,10 @@ steps:
     custom: '--info'
 
 - task: UseDotNet@2
-  displayName: 'Install .Net 8 sdk'
+  displayName: 'Install the .NET SDK from global.json'
   inputs:
     packageType: sdk
-    version: 8.0.100
-    installationPath: $(Agent.ToolsDirectory)/dotnet
-
-- task: UseDotNet@2
-  displayName: 'Install .NET 6 sdk'
-  inputs:
-    packageType: sdk
-    version: 6.0.x
+    useGlobalJson: true
     installationPath: $(Agent.ToolsDirectory)/dotnet
 
 - task: DotNetCoreCLI@2

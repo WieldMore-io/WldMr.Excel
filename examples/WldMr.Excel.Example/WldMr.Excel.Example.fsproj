@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
+    <!-- net48 only: ExcelDna.AddIn 1.6's targets pick the .NET Core xll by the first digit of
+         TargetFrameworkVersion (Substring(1,1) >= '6'), so net10.0-windows finds no xll.
+         Fixed in ExcelDna.AddIn 1.9; add net10.0-windows back with that bump. -->
+    <TargetFrameworks>net48</TargetFrameworks>
     <!--<EmbedUntrackedSources>true</EmbedUntrackedSources>-->
     <!--<DebugType>embedded</DebugType>-->
     <!--<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
