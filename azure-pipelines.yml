@@ -41,6 +41,16 @@ steps:
     useGlobalJson: true
     installationPath: $(Agent.ToolsDirectory)/dotnet
 
+# The tests are net10.0-windows. The step above leaves only SDK/runtime 11 on PATH (the
+# host does not fall back to the image's own runtimes), so the 10 runtime has to come in
+# beside it, in the same installationPath, or `dotnet test` finds no framework to run on.
+- task: UseDotNet@2
+  displayName: 'Install the .NET 10 SDK (runtime for the net10.0-windows tests)'
+  inputs:
+    packageType: sdk
+    version: 10.0.x
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
 - task: DotNetCoreCLI@2
   displayName: 'dotnet --info'
   inputs:
