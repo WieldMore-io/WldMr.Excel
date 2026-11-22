@@ -16,6 +16,9 @@ variables:
   NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
   nugetApiKey: $(NUGET_API_KEY)
   isNotaPR: $[ne(variables['Build.Reason'], 'PullRequest')]
+  # Releases (GitHub release + nuget.org push) come from master only. The trigger is '*',
+  # so without this every pushed branch built and published as a stable version.
+  isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
   ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
     buildPrefix: 'PR - '
   ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
@@ -106,7 +109,7 @@ steps:
 
 - task: GithubRelease@1
   displayName: Create GitHub Release
-  condition: and(succeeded(), eq(variables.isNotaPR, true), eq(variables['Build.Repository.Uri'], 'https://github.com/WieldMore-io/WldMr.Excel'))
+  condition: and(succeeded(), eq(variables.isNotaPR, true), eq(variables.isMaster, true), eq(variables['Build.Repository.Uri'], 'https://github.com/WieldMore-io/WldMr.Excel'))
   inputs:
     gitHubConnection: github.com_PierreYvesR
     repositoryName: WieldMore-io/WldMr.Excel
@@ -120,7 +123,7 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: Push to nuget.org
-  condition: and(succeeded(), eq(variables.isNotaPR, true), eq(variables['Build.Repository.Uri'], 'https://github.com/WieldMore-io/WldMr.Excel'))
+  condition: and(succeeded(), eq(variables.isNotaPR, true), eq(variables.isMaster, true), eq(variables['Build.Repository.Uri'], 'https://github.com/WieldMore-io/WldMr.Excel'))
   inputs:
     command: custom
     custom: nuget
