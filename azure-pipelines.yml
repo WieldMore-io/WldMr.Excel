@@ -16,6 +16,9 @@ variables:
   NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
   nugetApiKey: $(NUGET_API_KEY)
   isNotaPR: $[ne(variables['Build.Reason'], 'PullRequest')]
+  # Releases (GitHub release + nuget.org push) come from master only. The trigger is '*',
+  # so without this every pushed branch built and published as a stable version.
+  isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
   ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
     buildPrefix: 'PR - '
   ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
@@ -35,17 +38,20 @@ steps:
     custom: '--info'
 
 - task: UseDotNet@2
-  displayName: 'Install .Net 8 sdk'
+  displayName: 'Install the .NET SDK from global.json'
   inputs:
     packageType: sdk
-    version: 8.0.100
+    useGlobalJson: true
     installationPath: $(Agent.ToolsDirectory)/dotnet
 
+# The tests are net10.0-windows. The step above leaves only SDK/runtime 11 on PATH (the
+# host does not fall back to the image's own runtimes), so the 10 runtime has to come in
+# beside it, in the same installationPath, or `dotnet test` finds no framework to run on.
 - task: UseDotNet@2
-  displayName: 'Install .NET 6 sdk'
+  displayName: 'Install the .NET 10 SDK (runtime for the net10.0-windows tests)'
   inputs:
     packageType: sdk
-    version: 6.0.x
+    version: 10.0.x
     installationPath: $(Agent.ToolsDirectory)/dotnet
 
 - task: DotNetCoreCLI@2
@@ -103,7 +109,7 @@ steps:
 
 - task: GithubRelease@1
   displayName: Create GitHub Release
-  condition: and(succeeded(), eq(variables.isNotaPR, true), eq(variables['Build.Repository.Uri'], 'https://github.com/WieldMore-io/WldMr.Excel'))
+  condition: and(succeeded(), eq(variables.isNotaPR, true), eq(variables.isMaster, true), eq(variables['Build.Repository.Uri'], 'https://github.com/WieldMore-io/WldMr.Excel'))
   inputs:
     gitHubConnection: github.com_PierreYvesR
     repositoryName: WieldMore-io/WldMr.Excel
@@ -117,7 +123,7 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: Push to nuget.org
-  condition: and(succeeded(), eq(variables.isNotaPR, true), eq(variables['Build.Repository.Uri'], 'https://github.com/WieldMore-io/WldMr.Excel'))
+  condition: and(succeeded(), eq(variables.isNotaPR, true), eq(variables.isMaster, true), eq(variables['Build.Repository.Uri'], 'https://github.com/WieldMore-io/WldMr.Excel'))
   inputs:
     command: custom
     custom: nuget

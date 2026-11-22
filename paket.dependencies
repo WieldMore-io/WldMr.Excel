@@ -1,16 +1,20 @@
 source https://api.nuget.org/v3/index.json
 storage: none
-framework: net48, net6.0-windows
+framework: net48, net10.0-windows
 
-nuget FSharp.Core
-nuget ExcelDna.Integration
-nuget ExcelDna.Addin
-nuget ExcelDna.IntelliSense
-nuget FsToolkit.ErrorHandling >= 4
-nuget FsUnit
-nuget TypeShape
+// The shipped packages' nuspec takes these floors from the lock: lowest_matching keeps
+// them where they were instead of letting a re-resolve raise them for consumers.
+nuget FSharp.Core >= 7.0 lowest_matching: true
+nuget ExcelDna.Integration >= 1.6 lowest_matching: true
+nuget ExcelDna.Addin >= 1.6 lowest_matching: true
+nuget ExcelDna.IntelliSense >= 1.6 lowest_matching: true
+nuget FsToolkit.ErrorHandling >= 4.2.1 lowest_matching: true
+nuget FsUnit ~> 5.0
+nuget TypeShape >= 10.0 lowest_matching: true
 
 
 nuget Microsoft.NET.Test.Sdk
-nuget NUnit
-nuget NUnit3TestAdapter
+nuget NUnit ~> 3.13
+// 5.0+ moves to Microsoft.Testing.Platform (and its OpenTelemetry/Azure telemetry closure);
+// FsUnit 6+ needs NUnit 4. Test tooling stays on its current majors.
+nuget NUnit3TestAdapter ~> 4.5
